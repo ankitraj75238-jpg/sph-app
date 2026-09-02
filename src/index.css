@@ -26,7 +26,14 @@
     radial-gradient(at 50% 50%, rgba(241, 245, 249, 0.5) 0px, transparent 100%);
 }
 
-/* Modern Frosted Glass Light Utilities (Apple / Notion Aesthetic) */
+/* Modern Dark Glassmorphism Navigation Bar (Theme Blended) */
+.glass-dark-nav {
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .glass-light-nav {
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(20px);
@@ -65,11 +72,11 @@
 
 /* Safe area insets for mobile / notch / cutouts */
 .safe-top-inset {
-  padding-top: max(env(safe-area-inset-top, 0px), 16px);
+  padding-top: max(env(safe-area-inset-top, 0px), 40px);
 }
 
 .safe-bottom-inset {
-  padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px);
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px);
 }
 
 @keyframes pulse-subtle {

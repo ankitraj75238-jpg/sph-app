@@ -100,7 +100,10 @@ export const WebViewContainer: React.FC<WebViewContainerProps> = ({
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className="w-full h-full flex-1 flex flex-col bg-[#F8FAFC] relative overflow-hidden select-none m-0 p-0"
+      className="w-full h-full flex-1 flex flex-col bg-[#0F172A] relative overflow-hidden select-none m-0 p-0"
+      style={{
+        paddingTop: 'max(env(safe-area-inset-top, 0px), 40px)',
+      }}
     >
       {/* Pull-To-Refresh Top Indicator */}
       {(pullMoveY > 0 || isRefreshingPull) && (

@@ -11,6 +11,7 @@ import { AndroidFrame } from './components/AndroidFrame';
 import { WebViewContainer } from './components/WebViewContainer';
 import { BooksPracticeSection } from './components/BooksPracticeSection';
 import { InteractiveModuleViewer } from './components/InteractiveModuleViewer';
+import { recordAppOpen, recordTabVisit, recordModuleRead } from './utils/telemetry';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<TabType>('ankitprep');
@@ -21,6 +22,11 @@ export default function App() {
   const [activeModule, setActiveModule] = useState<StudyModule | null>(null);
   const [refreshKey, setRefreshKey] = useState<number>(0);
   const [dynamicModulesCount, setDynamicModulesCount] = useState<number>(1);
+
+  // Initialize private anonymous telemetry on mount
+  useEffect(() => {
+    recordAppOpen();
+  }, []);
 
   // Sync browser online / offline state
   useEffect(() => {
@@ -39,8 +45,19 @@ export default function App() {
   // Handle Tab Switch
   const handleTabChange = (newTab: TabType) => {
     if (newTab === currentTab) return;
+    recordTabVisit(newTab);
     setTabHistory((prev) => [...prev, newTab]);
     setCurrentTab(newTab);
+  };
+
+  const handleSelectModule = (module: StudyModule) => {
+    recordModuleRead(module.id, module.title, {
+      subject: module.category || module.subject,
+      category: module.category,
+      badge: module.badge,
+      url: module.url,
+    });
+    setActiveModule(module);
   };
 
   // Back Button Navigation handler
@@ -127,7 +144,7 @@ export default function App() {
         {currentTab === 'books_practice' && (
           <BooksPracticeSection
             key={`books-${refreshKey}`}
-            onSelectModule={(module) => setActiveModule(module)}
+            onSelectModule={handleSelectModule}
             onModulesCountChange={(count) => setDynamicModulesCount(count)}
           />
         )}

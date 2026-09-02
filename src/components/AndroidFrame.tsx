@@ -36,25 +36,6 @@ export const AndroidFrame: React.FC<AndroidFrameProps> = ({
   if (!isPhoneFrame) {
     return (
       <div className="h-screen w-screen bg-[#F8FAFC] bg-porcelain-mesh text-slate-900 flex flex-col antialiased overflow-hidden select-none m-0 p-0">
-        {/* Safe Area Top Padding & Android Status Bar (Shown on Books & Practice tab) */}
-        {currentTab === 'books_practice' && (
-          <div 
-            className="bg-white/95 backdrop-blur-md text-slate-600 text-[11px] font-mono px-4 flex items-center justify-between border-b border-slate-200 select-none shrink-0 z-50 transition-all"
-            style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 10px)', paddingBottom: '6px' }}
-          >
-            <span className="font-bold text-slate-900">{currentTime || '10:00'}</span>
-            <div className="flex items-center gap-2 text-slate-700">
-              <span className="text-[10px] font-black text-emerald-600 tracking-wider">5G SPH</span>
-              <Signal className="w-3.5 h-3.5 text-slate-600" />
-              <Wifi className="w-3.5 h-3.5 text-emerald-600" />
-              <div className="flex items-center gap-0.5">
-                <span className="text-[10px] font-bold text-slate-700">99%</span>
-                <Battery className="w-3.5 h-3.5 text-slate-900" />
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Content Container with 100% Full Viewport */}
         <div className="flex-1 flex flex-col relative overflow-hidden h-full w-full m-0 p-0">
           {children}

@@ -44,7 +44,12 @@ export const TopBar: React.FC<TopBarProps> = ({
   };
 
   return (
-    <header className="glass-light-header text-slate-900 z-40 sticky top-0 transition-all select-none border-b border-slate-200/90 shadow-xs">
+    <header 
+      className="glass-light-header text-slate-900 z-40 sticky top-0 transition-all select-none border-b border-slate-200/90 shadow-xs"
+      style={{
+        paddingTop: 'max(env(safe-area-inset-top, 0px), 40px)',
+      }}
+    >
       {/* App Bar Main Row */}
       <div className="px-3.5 sm:px-6 py-2.5 flex items-center justify-between gap-3 max-w-7xl mx-auto">
         

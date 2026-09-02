@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { StudyModule } from '../types';
 import { LoadingFlowerSpinner } from './LoadingFlowerSpinner';
+import { logFirebaseCustomEvent } from '../lib/firebase';
 
 interface InteractiveModuleViewerProps {
   module: StudyModule;
@@ -190,6 +191,16 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
     setQuizScore({ correct, incorrect, unattempted });
     setIsQuizSubmitted(true);
     if (navigator.vibrate) navigator.vibrate([40, 60, 40]);
+
+    logFirebaseCustomEvent('quiz_submitted', {
+      module_id: module.id,
+      module_title: module.title,
+      score_correct: correct,
+      score_incorrect: incorrect,
+      score_unattempted: unattempted,
+      total_questions: questions.length,
+      accuracy_percentage: questions.length > 0 ? Math.round((correct / questions.length) * 100) : 0,
+    });
   };
 
   // Reset Quiz
