@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
+import { App as CapacitorApp } from '@capacitor/app';
 import { TabType, StudyModule } from './types';
 import { TopBar } from './components/TopBar';
 import { BottomNavBar } from './components/BottomNavBar';
@@ -14,6 +15,7 @@ import { BooksPracticeSection } from './components/BooksPracticeSection';
 import { InteractiveModuleViewer } from './components/InteractiveModuleViewer';
 import { SplashScreen } from './components/SplashScreen';
 import { ForceUpdateModal } from './components/ForceUpdateModal';
+import { ExitToast } from './components/ExitToast';
 import { recordAppOpen, recordTabVisit, recordModuleRead } from './utils/telemetry';
 import { checkAppVersionLock, CURRENT_APP_VERSION, VersionCheckResult } from './utils/versionLock';
 
@@ -28,6 +30,26 @@ export default function App() {
   const [refreshKey, setRefreshKey] = useState<number>(0);
   const [dynamicModulesCount, setDynamicModulesCount] = useState<number>(1);
   const [versionLock, setVersionLock] = useState<VersionCheckResult | null>(null);
+  const [showExitToast, setShowExitToast] = useState<boolean>(false);
+
+  // Synchronized state refs to prevent stale closure in async native Capacitor & hardware listeners
+  const activeModuleRef = useRef<StudyModule | null>(activeModule);
+  const currentTabRef = useRef<TabType>(currentTab);
+  const tabHistoryRef = useRef<TabType[]>(tabHistory);
+  const lastBackPressRef = useRef<number>(0);
+  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    activeModuleRef.current = activeModule;
+  }, [activeModule]);
+
+  useEffect(() => {
+    currentTabRef.current = currentTab;
+  }, [currentTab]);
+
+  useEffect(() => {
+    tabHistoryRef.current = tabHistory;
+  }, [tabHistory]);
 
   // Initialize private anonymous telemetry & check remote version lock on mount
   useEffect(() => {
@@ -75,23 +97,105 @@ export default function App() {
     setActiveModule(module);
   };
 
-  // Back Button Navigation handler
-  const canGoBack = activeModule !== null || tabHistory.length > 1;
-
-  const handleBack = useCallback(() => {
-    if (activeModule) {
+  /**
+   * Professional Native Back Navigation (Deep Stack Routing):
+   * Condition 1: If an HTML book reader or test modal is open, smoothly close the modal.
+   * Condition 2: If webview has history, send back command to active iframe.
+   * Condition 3: If on 'pareeksha' or 'books_practice' tab, switch back to Tab 1 ('ankitprep' Home).
+   * Condition 4: If on Tab 1 root with no open modals, prevent immediate app exit and show sleek floating toast:
+   *              "ऐप से बाहर निकलने के लिए दोबारा बैक दबाएं". Double-tap within 2s triggers exitApp().
+   */
+  const handleDeepBackNavigation = useCallback(() => {
+    // Condition 1 (Active Modal): Close HTML reader / test modal
+    if (activeModuleRef.current) {
       setActiveModule(null);
       return;
     }
 
-    if (tabHistory.length > 1) {
-      const newHistory = [...tabHistory];
-      newHistory.pop(); // remove current
-      const previousTab = newHistory[newHistory.length - 1];
-      setTabHistory(newHistory);
-      setCurrentTab(previousTab);
+    // Condition 2: If on active WebView, attempt iframe history back
+    const activeIframe = document.querySelector<HTMLIFrameElement>(`#webview-${currentTabRef.current}`);
+    if (activeIframe && activeIframe.contentWindow) {
+      try {
+        activeIframe.contentWindow.postMessage({ type: 'SPH_NAV_BACK' }, '*');
+      } catch {
+        // Cross-origin safe
+      }
     }
-  }, [activeModule, tabHistory]);
+
+    // Condition 3 (Tab Navigation): Return to Tab 1 (AnkitPrep Home)
+    if (currentTabRef.current !== 'ankitprep') {
+      setCurrentTab('ankitprep');
+      setTabHistory(['ankitprep']);
+      return;
+    }
+
+    // Condition 4 (Exit Prevention / Double-Tap to Exit) on Tab 1 Root
+    const now = Date.now();
+    const timeDiff = now - lastBackPressRef.current;
+
+    if (timeDiff < 2000) {
+      // User tapped back twice within 2 seconds -> Exit App
+      try {
+        CapacitorApp.exitApp();
+      } catch {
+        // Fallback for web environments
+      }
+    } else {
+      // First back tap -> Prevent exit and display floating Hindi confirmation toast
+      lastBackPressRef.current = now;
+      setShowExitToast(true);
+
+      if (navigator.vibrate) {
+        navigator.vibrate(35);
+      }
+
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+
+      toastTimeoutRef.current = setTimeout(() => {
+        setShowExitToast(false);
+      }, 2000);
+    }
+  }, []);
+
+  // Back Navigation listener for Capacitor Hardware / Gesture back button and Browser popstate
+  useEffect(() => {
+    let backListenerHandle: { remove: () => Promise<void> | void } | null = null;
+
+    try {
+      CapacitorApp.addListener('backButton', () => {
+        handleDeepBackNavigation();
+      }).then((handle) => {
+        backListenerHandle = handle;
+      }).catch(() => {
+        // Safe fallback in web mode
+      });
+    } catch {
+      // Non-native fallback
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleDeepBackNavigation();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      if (backListenerHandle?.remove) {
+        backListenerHandle.remove();
+      }
+      window.removeEventListener('keydown', handleKeyDown);
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, [handleDeepBackNavigation]);
+
+  // Back Button state for top bar
+  const canGoBack = activeModule !== null || currentTab !== 'ankitprep';
 
   // Global Refresh Action
   const handleGlobalRefresh = () => {
@@ -115,7 +219,14 @@ export default function App() {
         />
       )}
 
-      {/* Luxury Animated Cold Launch Splash Screen */}
+      {/* Floating Double-Tap Exit Confirmation Toast */}
+      <AnimatePresence>
+        {showExitToast && (
+          <ExitToast message="ऐप से बाहर निकलने के लिए दोबारा बैक दबाएं" />
+        )}
+      </AnimatePresence>
+
+      {/* Luxury Animated Cold Launch Splash Screen (2-second Silky Easing) */}
       <AnimatePresence mode="wait">
         {showSplash && (
           <motion.div
@@ -128,12 +239,12 @@ export default function App() {
             }}
             transition={{ 
               duration: 0.55, 
-              ease: [0.32, 0.72, 0, 1] 
+              ease: [0.16, 1, 0.3, 1] 
             }}
             className="fixed inset-0 z-[9999] pointer-events-auto"
           >
             <SplashScreen 
-              durationMs={2200}
+              durationMs={2000}
               onFinish={() => setShowSplash(false)} 
             />
           </motion.div>
@@ -142,7 +253,7 @@ export default function App() {
 
       <AndroidFrame
         isPhoneFrame={false}
-        onBackPress={handleBack}
+        onBackPress={handleDeepBackNavigation}
         canGoBack={canGoBack}
         currentTab={currentTab}
       >
@@ -151,7 +262,7 @@ export default function App() {
           <TopBar
             currentTab={currentTab}
             canGoBack={canGoBack}
-            onBack={handleBack}
+            onBack={handleDeepBackNavigation}
             onRefresh={handleGlobalRefresh}
             isRefreshing={isRefreshing}
             isDarkMode={isDarkMode}
