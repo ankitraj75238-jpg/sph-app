@@ -30,9 +30,9 @@ jobs:
           npm install --legacy-peer-deps || npm install --force
           npm run build || npx vite build
 
-      - name: Configure Capacitor & Official Assets Tool
+      - name: Configure Capacitor
         run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/assets --legacy-peer-deps
+          npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
           cat << 'EOF' > capacitor.config.json
           {
             "appId": "com.sph.prepapp",
@@ -47,30 +47,29 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Generate Official SPH Adaptive Icons
+      - name: Apply High-Resolution SPH 3D Icon
         run: |
-          ICON_FILE=$(find public/ -maxdepth 1 -type f \( -iname "*icon*" -o -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) | head -n 1)
+          ICON_FILE=""
+          if [ -f "app-icon.png" ]; then
+            ICON_FILE="app-icon.png"
+          elif [ -f "public/app-icon.png" ]; then
+            ICON_FILE="public/app-icon.png"
+          fi
 
           if [ -n "$ICON_FILE" ] && [ -f "$ICON_FILE" ]; then
-            echo "Generating Official Adaptive Icons from $ICON_FILE..."
-            mkdir -p assets
-            cp "$ICON_FILE" assets/logo.png
-            cp "$ICON_FILE" assets/icon-only.png
-            cp "$ICON_FILE" assets/icon-foreground.png
-            
-            # Use official Capacitor Assets generator
-            npx @capacitor/assets generate --android --iconBackgroundColor '#0F172A' --iconBackgroundColorDark '#0F172A' || true
+            echo "Found Icon File at: $ICON_FILE. Applying SPH 3D Icon..."
+            rm -rf android/app/src/main/res/mipmap-anydpi-v26 || true
 
-            # Fallback direct injection
             for density in "mdpi:48" "hdpi:72" "xhdpi:96" "xxhdpi:144" "xxxhdpi:192"; do
               name="${density%%:*}"
               size="${density##*:}"
               mkdir -p "android/app/src/main/res/mipmap-${name}"
+
               convert "$ICON_FILE" -resize "${size}x${size}" "android/app/src/main/res/mipmap-${name}/ic_launcher.png" || true
               convert "$ICON_FILE" -resize "${size}x${size}" "android/app/src/main/res/mipmap-${name}/ic_launcher_round.png" || true
               convert "$ICON_FILE" -resize "${size}x${size}" "android/app/src/main/res/mipmap-${name}/ic_launcher_foreground.png" || true
             done
-            echo "Official Icons Generated Successfully!"
+            echo "SPH 1:1 High Quality Icon Successfully Applied!"
           fi
 
       - name: Fix Duplicate Kotlin Libraries
