@@ -1,13 +1,9 @@
 {
   "app_control": {
     "min_required_version": 1.0,
-    "latest_version": "1.0",
-    "force_update": false,
-    "update_title": "🚀 New SPH Update Available!",
-    "update_message": "A critical update with newly added Books, Sanjeev Sir 31 Sets, Error Pro chapter practice, and performance improvements is now available. Please update to the latest version to continue your preparation seamlessly.",
-    "telegram_url": "https://t.me/ankit_123422",
-    "whatsapp_url": "https://whatsapp.com/channel/0029VbCAg0h3gvWdFXenzf37",
-    "apk_download_url": "https://t.me/ankit_123422"
+    "update_title": "⚠️ नया अपडेट उपलब्ध है!",
+    "update_message": "बेहतर अनुभव और नए टेस्ट्स के लिए कृपया Telegram से नया APK डाउनलोड करें।",
+    "telegram_link": "https://t.me/pareekshakendraankit"
   },
   "books": [
     {
