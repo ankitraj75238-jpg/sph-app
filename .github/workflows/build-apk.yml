@@ -11,6 +11,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -35,7 +40,7 @@ jobs:
           npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
           cat << 'EOF' > capacitor.config.json
           {
-            "appId": "com.sph.prepapp",
+            "appId": "com.sph.silentprep",
             "appName": "Silent Preparation Hub",
             "webDir": "dist",
             "server": {
@@ -47,30 +52,42 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Apply High-Resolution SPH 3D Icon
+      - name: Generate SPH HD Icons with Python Engine
         run: |
-          ICON_FILE=""
-          if [ -f "app-icon.png" ]; then
-            ICON_FILE="app-icon.png"
-          elif [ -f "public/app-icon.png" ]; then
-            ICON_FILE="public/app-icon.png"
-          fi
+          python3 -m pip install --upgrade Pillow
+          python3 - << 'EOF'
+          import os, shutil
+          from PIL import Image
 
-          if [ -n "$ICON_FILE" ] && [ -f "$ICON_FILE" ]; then
-            echo "Found Icon File at: $ICON_FILE. Applying SPH 3D Icon..."
-            rm -rf android/app/src/main/res/mipmap-anydpi-v26 || true
+          icon_path = 'app-icon.png'
+          if not os.path.exists(icon_path):
+              icon_path = 'public/app-icon.png'
 
-            for density in "mdpi:48" "hdpi:72" "xhdpi:96" "xxhdpi:144" "xxxhdpi:192"; do
-              name="${density%%:*}"
-              size="${density##*:}"
-              mkdir -p "android/app/src/main/res/mipmap-${name}"
+          print(f"Loading SPH Logo from: {icon_path}")
+          img = Image.open(icon_path).convert('RGBA')
 
-              convert "$ICON_FILE" -resize "${size}x${size}" "android/app/src/main/res/mipmap-${name}/ic_launcher.png" || true
-              convert "$ICON_FILE" -resize "${size}x${size}" "android/app/src/main/res/mipmap-${name}/ic_launcher_round.png" || true
-              convert "$ICON_FILE" -resize "${size}x${size}" "android/app/src/main/res/mipmap-${name}/ic_launcher_foreground.png" || true
-            done
-            echo "SPH 1:1 High Quality Icon Successfully Applied!"
-          fi
+          densities = {
+              'mipmap-mdpi': 48,
+              'mipmap-hdpi': 72,
+              'mipmap-xhdpi': 96,
+              'mipmap-xxhdpi': 144,
+              'mipmap-xxxhdpi': 192,
+          }
+
+          res_dir = 'android/app/src/main/res'
+          anydpi = os.path.join(res_dir, 'mipmap-anydpi-v26')
+          if os.path.exists(anydpi):
+              shutil.rmtree(anydpi)
+
+          for folder, size in densities.items():
+              target_dir = os.path.join(res_dir, folder)
+              os.makedirs(target_dir, exist_ok=True)
+              resized = img.resize((size, size), Image.Resampling.LANCZOS)
+              for name in ['ic_launcher.png', 'ic_launcher_round.png', 'ic_launcher_foreground.png']:
+                  resized.save(os.path.join(target_dir, name), 'PNG')
+
+          print("100% SPH HD Icons Created Successfully!")
+          EOF
 
       - name: Fix Duplicate Kotlin Libraries
         run: |
