@@ -1,0 +1,6 @@
+{
+  "name": "Silent Preparation Hub (SPH)",
+  "description": "Clean Android preparation app with AnkitPrep, Pareeksha Kendra, and Books & Practice interactive study modules.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
