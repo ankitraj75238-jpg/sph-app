@@ -1,34 +1,26 @@
-{
-  "app_control": {
-    "min_required_version": 1.0,
-    "update_title": "⚠️ नया अपडेट उपलब्ध है!",
-    "update_message": "बेहतर अनुभव और नए टेस्ट्स के लिए कृपया Telegram से नया APK डाउनलोड करें।",
-    "telegram_link": "https://t.me/pareekshakendraankit"
+[
+  {
+    "id": "1",
+    "title": "IDIOMS & PHRASES Complete Set 31 (Sanjeev Sir RWA Practice)",
+    "subject": "English Vocab",
+    "tag": "31 MASTER SETS",
+    "itemsCount": "31 Complete Sets",
+    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/idioms31.html"
   },
-  "books": [
-    {
-      "id": "1",
-      "title": "IDIOMS & PHRASES Complete Set 31 (Sanjeev Sir RWA Practice)",
-      "subject": "English Vocab",
-      "tag": "31 MASTER SETS",
-      "itemsCount": "31 Complete Sets",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/idioms31.html"
-    },
-    {
-      "id": "2",
-      "title": "Error Pro Complete Grammar Book (All Chapters)",
-      "subject": "English Grammar",
-      "tag": "ERROR PRO BOOK",
-      "itemsCount": "Complete Book",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/error-pro.html"
-    },
-    {
-      "id": "3",
-      "title": "SSC Synonyms 15 Years PYQ (2010–2025) All Exam Master Deck",
-      "subject": "English Vocab",
-      "tag": "🔥 15 YEARS PYQ",
-      "itemsCount": "2010–2025 All SSC PYQs",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-synonyms.html"
-    }
-  ]
-}
+  {
+    "id": "2",
+    "title": "Error Pro Complete Grammar Book (All Chapters)",
+    "subject": "English Grammar",
+    "tag": "ERROR PRO BOOK",
+    "itemsCount": "Complete Book",
+    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/error-pro.html"
+  },
+  {
+    "id": "3",
+    "title": "SSC Synonyms 15 Years PYQ (2010–2025) All Exam Master Deck",
+    "subject": "English Vocab",
+    "tag": "🔥 15 YEARS PYQ",
+    "itemsCount": "2010–2025 All SSC PYQs",
+    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-synonyms.html"
+  }
+]
