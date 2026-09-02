@@ -2,9 +2,8 @@ import React from 'react';
 import { 
   RotateCw, 
   ArrowLeft, 
-  Smartphone, 
-  Maximize2, 
-  Minimize2,
+  Sun, 
+  Moon,
   Share2
 } from 'lucide-react';
 import { TabType } from '../types';
@@ -16,12 +15,8 @@ interface TopBarProps {
   onBack: () => void;
   onRefresh: () => void;
   isRefreshing: boolean;
-  isOnline: boolean;
-  onToggleOnline: () => void;
-  isPhoneFrame: boolean;
-  onTogglePhoneFrame: () => void;
-  isFullscreen: boolean;
-  onToggleFullscreen: () => void;
+  isDarkMode?: boolean;
+  onToggleDarkMode?: () => void;
   activeModuleTitle?: string | null;
 }
 
@@ -31,53 +26,35 @@ export const TopBar: React.FC<TopBarProps> = ({
   onBack,
   onRefresh,
   isRefreshing,
-  isOnline,
-  onToggleOnline,
-  isPhoneFrame,
-  onTogglePhoneFrame,
-  isFullscreen,
-  onToggleFullscreen,
-  activeModuleTitle
+  isDarkMode = false,
+  onToggleDarkMode,
+  activeModuleTitle,
 }) => {
-  const getTabSubtitle = () => {
-    if (activeModuleTitle) return `Reading: ${activeModuleTitle}`;
-    switch (currentTab) {
-      case 'ankitprep':
-        return 'AnkitPrep • SSC | Railway | Police';
-      case 'pareeksha':
-        return 'Pareeksha Kendra • Online Exam Platform';
-      case 'books_practice':
-        return 'बुक्स & प्रैक्टिस • Master Study Library';
-      default:
-        return 'SSC | Railway | Police';
-    }
-  };
-
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
         title: 'Silent Preparation Hub (SPH)',
-        text: 'Silent Preparation Hub (SPH) - High-performance Android preparation portal with AnkitPrep, Pareeksha Kendra, and Books & Practice study modules!',
+        text: 'Silent Preparation Hub (SPH) - SSC, Railway, Police & Defence Master Study Platform',
         url: window.location.href,
       }).catch(() => {});
     } else {
       navigator.clipboard?.writeText(window.location.href);
-      alert('Link copied to clipboard!');
+      if (navigator.vibrate) navigator.vibrate(20);
     }
   };
 
   return (
-    <header className="glass-light-header text-slate-900 z-40 sticky top-0 transition-all select-none">
+    <header className="glass-light-header text-slate-900 z-40 sticky top-0 transition-all select-none border-b border-slate-200/90 shadow-xs">
       {/* App Bar Main Row */}
       <div className="px-3.5 sm:px-6 py-2.5 flex items-center justify-between gap-3 max-w-7xl mx-auto">
         
-        {/* Left Side: Back Button & SPH Shield Logo / Title */}
-        <div className="flex items-center gap-3 min-w-0">
+        {/* Left Side: Back Button (if canGoBack) & SPH Shield Logo / Brand */}
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
           {canGoBack && (
             <button
               id="topbar-back-btn"
               onClick={onBack}
-              className="p-2 -ml-1 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-xl transition-colors active:scale-95 flex items-center justify-center shrink-0 border border-slate-200"
+              className="p-2 -ml-1 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-2xl transition-colors active:scale-95 flex items-center justify-center shrink-0 border border-slate-200 shadow-2xs"
               aria-label="Go Back"
               title="Go Back"
             >
@@ -88,92 +65,67 @@ export const TopBar: React.FC<TopBarProps> = ({
           {/* SPH Academic Shield Logo Emblem */}
           <SphLogo size={36} />
 
-          {/* Title & Subtitle */}
+          {/* Brand Name & Required Subtitle */}
           <div className="flex flex-col min-w-0">
-            <div className="flex items-center gap-2">
-              <h1 className="text-base sm:text-lg font-black text-slate-900 tracking-tight uppercase truncate leading-tight">
-                Silent Preparation Hub
-              </h1>
-            </div>
-            <span className="text-[10px] sm:text-[11px] font-bold text-emerald-600 tracking-[0.14em] uppercase truncate leading-tight">
-              {getTabSubtitle()}
+            <h1 className="text-sm sm:text-base md:text-lg font-black text-slate-900 tracking-tight uppercase truncate leading-tight">
+              Silent Preparation Hub
+            </h1>
+            <span className="text-[10px] sm:text-[11px] font-bold text-emerald-600 tracking-wide uppercase truncate leading-tight mt-0.5">
+              {activeModuleTitle ? `Reading: ${activeModuleTitle}` : 'SSC • Railway • Police • Defence'}
             </span>
           </div>
         </div>
 
-        {/* Right Side Actions */}
-        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-          {/* Server / Network Status Indicator Pill */}
-          <button
-            id="network-toggle-btn"
-            onClick={onToggleOnline}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono font-bold uppercase transition-all ${
-              isOnline
-                ? 'bg-white border-slate-200 text-slate-700 hover:border-emerald-400 shadow-sm'
-                : 'bg-rose-50 border-rose-300 text-rose-700 animate-pulse'
-            }`}
-            title={isOnline ? 'Server: Active' : 'Simulating Offline (Click to reconnect)'}
-          >
-            <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse' : 'bg-rose-500'}`} />
-            <span className="hidden xs:inline">{isOnline ? 'Active' : 'Offline'}</span>
-          </button>
+        {/* Right Side Actions: Theme Toggle, Refresh, Share */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* Subtle Dark / Light Mode Toggle */}
+          {onToggleDarkMode && (
+            <button
+              id="theme-mode-toggle-btn"
+              onClick={onToggleDarkMode}
+              className="p-2 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-2xl border border-slate-200 transition-all active:scale-95 shadow-2xs"
+              aria-label="Toggle Theme Mode"
+              title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {isDarkMode ? (
+                <Sun className="w-4 h-4 text-amber-500 fill-amber-500" />
+              ) : (
+                <Moon className="w-4 h-4 text-slate-700" />
+              )}
+            </button>
+          )}
 
-          {/* Refresh Action Button */}
+          {/* Subtle Refresh Button */}
           <button
             id="topbar-refresh-btn"
             onClick={onRefresh}
             disabled={isRefreshing}
-            className={`p-2 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-xl border border-slate-200 transition-all active:scale-95 ${
+            className={`p-2 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-2xl border border-slate-200 transition-all active:scale-95 shadow-2xs ${
               isRefreshing ? 'opacity-70 cursor-not-allowed' : ''
             }`}
-            aria-label="Refresh Page"
-            title="Refresh current portal"
+            aria-label="Refresh Current Page"
+            title="Refresh current page"
           >
             <RotateCw className={`w-4 h-4 text-blue-600 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
 
-          {/* Phone Frame Toggle */}
-          <button
-            id="phone-frame-toggle-btn"
-            onClick={onTogglePhoneFrame}
-            className={`p-2 rounded-xl transition-all border border-slate-200 text-slate-700 hover:text-blue-600 hover:bg-slate-100 hidden md:flex items-center justify-center ${
-              isPhoneFrame ? 'text-blue-600 bg-blue-50 border-blue-300' : ''
-            }`}
-            aria-label="Toggle Phone Frame Mode"
-            title={isPhoneFrame ? 'Switch to Full Screen layout' : 'Switch to Android Handset Frame mode'}
-          >
-            <Smartphone className="w-4 h-4" />
-          </button>
-
-          {/* Fullscreen Toggle */}
-          <button
-            id="fullscreen-toggle-btn"
-            onClick={onToggleFullscreen}
-            className="p-2 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-xl border border-slate-200 transition-all hidden sm:flex items-center justify-center"
-            aria-label="Toggle Fullscreen"
-            title="Toggle Fullscreen"
-          >
-            {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-          </button>
-
-          {/* Share */}
+          {/* Share Button */}
           <button
             id="share-app-btn"
             onClick={handleShare}
-            className="p-2 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-xl border border-slate-200 transition-all"
+            className="p-2 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-2xl border border-slate-200 transition-all active:scale-95 shadow-2xs hidden sm:flex items-center justify-center"
             aria-label="Share App"
             title="Share Silent Preparation Hub"
           >
-            <Share2 className="w-4 h-4" />
+            <Share2 className="w-4 h-4 text-slate-700" />
           </button>
         </div>
       </div>
 
       {/* Accent Glowing Border Line */}
-      <div className="h-[2px] w-full bg-slate-100">
-        <div className={`h-full ${isRefreshing ? 'w-full animate-pulse' : 'w-full'} bg-gradient-to-r from-transparent via-blue-500 to-emerald-500 transition-all duration-300`} />
+      <div className="h-[2px] w-full bg-slate-100 overflow-hidden">
+        <div className={`h-full ${isRefreshing ? 'w-full animate-progress-indeterminate' : 'w-full'} bg-gradient-to-r from-blue-600 via-emerald-500 to-blue-600 transition-all duration-300`} />
       </div>
     </header>
   );
 };
-

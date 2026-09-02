@@ -1,32 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   ArrowLeft, 
-  Search, 
-  BookOpen, 
-  CheckCircle2, 
-  XCircle, 
-  HelpCircle, 
   Volume2, 
   Bookmark, 
   BookmarkCheck, 
-  Sparkles, 
-  Share2, 
   RotateCcw, 
   Check, 
-  Eye, 
   Zap, 
   Layers, 
   Award,
-  ChevronRight,
-  ChevronLeft,
-  Settings,
+  BookOpen,
+  CheckCircle2, 
+  XCircle,
   Flame,
   Sun,
   Moon,
   ExternalLink,
-  Maximize2
+  RefreshCw,
+  WifiOff
 } from 'lucide-react';
-import { StudyModule, VocabularyItem, PracticeQuestion, OneLinerItem } from '../types';
+import { StudyModule } from '../types';
+import { LoadingFlowerSpinner } from './LoadingFlowerSpinner';
 
 interface InteractiveModuleViewerProps {
   module: StudyModule;
@@ -37,19 +31,25 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
   module,
   onClose
 }) => {
-  // Determine available tabs
+  // Resolve item URL cleanly (with fallback support)
+  const itemUrl = module.url || module.link || module.pdfUrl;
+  const hasExternalUrl = Boolean(itemUrl);
   const hasHtmlContent = Boolean(module.htmlContent || module.rawHtmlContent);
-  const hasExternalUrl = Boolean(module.url || module.link || module.pdfUrl);
   const hasQuestions = Boolean(module.practiceQuestions && module.practiceQuestions.length > 0);
   const hasVocab = Boolean(module.vocabItems && module.vocabItems.length > 0);
   const hasOneLiners = Boolean(module.oneLiners && module.oneLiners.length > 0);
 
-  // Tabs inside viewer: 'reader' | 'quiz' | 'flashcards' | 'web_reader'
-  const [viewMode, setViewMode] = useState<'reader' | 'quiz' | 'flashcards' | 'web_reader'>(
-    hasHtmlContent || hasVocab || hasOneLiners ? 'reader' : hasExternalUrl ? 'web_reader' : 'reader'
+  // Default to 'web_reader' whenever a URL is present
+  const [viewMode, setViewMode] = useState<'web_reader' | 'reader' | 'quiz' | 'flashcards'>(
+    hasExternalUrl ? 'web_reader' : hasQuestions ? 'quiz' : 'reader'
   );
   
-  // Search within module
+  // Iframe states
+  const [isIframeLoading, setIsIframeLoading] = useState<boolean>(true);
+  const [iframeKey, setIframeKey] = useState<number>(0);
+  const [isIframeError, setIsIframeError] = useState<boolean>(false);
+
+  // Search & Reader states
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedSubSet, setSelectedSubSet] = useState<number>(1);
   const [fontSize, setFontSize] = useState<'sm' | 'md' | 'lg'>('md');
@@ -58,7 +58,6 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
   const [speakingId, setSpeakingId] = useState<string | null>(null);
 
   // Quiz Mode state
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{ [qId: string]: number }>({});
   const [isQuizSubmitted, setIsQuizSubmitted] = useState<boolean>(false);
   const [quizScore, setQuizScore] = useState<{ correct: number; incorrect: number; unattempted: number }>({ correct: 0, incorrect: 0, unattempted: 0 });
@@ -66,7 +65,45 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
   // Flashcards state
   const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState<number>(0);
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
-  const [masteredCount, setMasteredCount] = useState<number>(0);
+
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Android Hardware Back Gesture and Keyboard Escape support
+  useEffect(() => {
+    // Push dummy state to capture back button gesture
+    window.history.pushState({ modal: 'sph_reader' }, '');
+
+    const handlePopState = () => {
+      onClose();
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
+
+  // Reset loading state on URL/Key change
+  useEffect(() => {
+    setIsIframeLoading(true);
+    setIsIframeError(false);
+    
+    // Safety timer to prevent perpetual loading screen
+    const timer = setTimeout(() => {
+      setIsIframeLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [itemUrl, iframeKey]);
 
   // Filter items
   const filteredVocab = (module.vocabItems || []).filter((item) => {
@@ -159,8 +196,15 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
   const handleResetQuiz = () => {
     setSelectedAnswers({});
     setIsQuizSubmitted(false);
-    setCurrentQuestionIndex(0);
     setQuizScore({ correct: 0, incorrect: 0, unattempted: 0 });
+  };
+
+  // Reload iframe
+  const handleReloadIframe = () => {
+    if (navigator.vibrate) navigator.vibrate(20);
+    setIsIframeLoading(true);
+    setIsIframeError(false);
+    setIframeKey((prev) => prev + 1);
   };
 
   const getThemeClass = () => {
@@ -171,7 +215,7 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
         return 'bg-[#0F172A] text-slate-100';
       case 'light':
       default:
-        return 'bg-[#F8FAFC] bg-porcelain-mesh text-slate-900';
+        return 'bg-[#F8FAFC] text-slate-900';
     }
   };
 
@@ -183,7 +227,7 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
         return 'bg-[#1E293B] border-slate-800 text-slate-100 shadow-md';
       case 'light':
       default:
-        return 'bg-white border-slate-200 text-slate-900 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.04)]';
+        return 'bg-white border-slate-200 text-slate-900 shadow-sm';
     }
   };
 
@@ -202,180 +246,230 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
   const rawHtml = module.htmlContent || module.rawHtmlContent;
 
   return (
-    <div className={`fixed inset-0 z-50 flex flex-col antialiased select-none overflow-hidden ${getThemeClass()}`}>
+    <div className={`fixed inset-0 z-50 flex flex-col antialiased select-none overflow-hidden ${getThemeClass()} transition-colors duration-200`}>
       
-      {/* Top Header Bar */}
-      <header className="glass-light-header border-b border-slate-200 px-3.5 sm:px-6 py-3 flex items-center justify-between gap-3 shrink-0 shadow-sm">
+      {/* Top Header Bar with Safe-Area Inset Padding */}
+      <header 
+        className="bg-white/95 backdrop-blur-md border-b border-slate-200 px-3.5 sm:px-6 pb-2.5 flex items-center justify-between gap-3 shrink-0 shadow-sm z-30"
+        style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 44px)' }}
+      >
         
-        {/* Left: Back Button & Title */}
+        {/* Left: Rounded Back Button, Subject Tag & Title */}
         <div className="flex items-center gap-3 min-w-0">
           <button
             id="reader-back-btn"
             onClick={onClose}
-            className="p-2 -ml-1 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-xl transition-all active:scale-95 border border-slate-200 shrink-0"
-            title="Back to Books & Practice"
+            className="p-2.5 -ml-1 text-slate-800 hover:text-blue-600 bg-slate-100 hover:bg-slate-200/80 rounded-2xl transition-all active:scale-90 border border-slate-200 shrink-0 shadow-2xs"
+            title="Back to Hub"
+            aria-label="Back to Books & Practice"
           >
             <ArrowLeft className="w-5 h-5 text-blue-600 stroke-[2.5]" />
           </button>
 
-          <div className="truncate">
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
-              {module.category && (
-                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-                  {module.category}
-                </span>
-              )}
+              <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 shrink-0">
+                {module.category || 'Study Module'}
+              </span>
               {module.badge && (
-                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 hidden sm:inline">
+                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shrink-0 hidden sm:inline">
                   {module.badge}
                 </span>
               )}
             </div>
-            <h2 className="text-sm sm:text-base font-black text-slate-900 truncate mt-0.5">
+            <h2 className="text-xs sm:text-sm md:text-base font-black text-slate-900 truncate mt-0.5 leading-snug">
               {module.title}
             </h2>
           </div>
         </div>
 
-        {/* Right Controls: Font & Theme */}
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Theme Switcher */}
-          <div className="hidden sm:flex items-center bg-slate-100 border border-slate-200 rounded-xl p-1 gap-1">
+        {/* Right Controls: Reload & External */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {hasExternalUrl && viewMode === 'web_reader' && (
             <button
-              onClick={() => setTheme('light')}
-              className={`p-1.5 rounded-lg text-xs font-bold transition-all ${theme === 'light' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`}
-              title="Light Theme"
+              onClick={handleReloadIframe}
+              className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl border border-slate-200 text-xs font-bold transition-all shadow-2xs"
+              title="Reload Page"
+              aria-label="Reload"
             >
-              <Sun className="w-3.5 h-3.5" />
+              <RefreshCw className={`w-4 h-4 text-blue-600 ${isIframeLoading ? 'animate-spin' : ''}`} />
             </button>
-            <button
-              onClick={() => setTheme('dark')}
-              className={`p-1.5 rounded-lg text-xs font-bold transition-all ${theme === 'dark' ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-500'}`}
-              title="Dark Theme"
-            >
-              <Moon className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          )}
 
-          {/* Font Resizer */}
-          <button
-            onClick={() => setFontSize(fontSize === 'sm' ? 'md' : fontSize === 'md' ? 'lg' : 'sm')}
-            className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl border border-slate-200 text-xs font-black uppercase tracking-wider shadow-sm"
-            title="Cycle Font Size"
-          >
-            A{fontSize === 'sm' ? '↓' : fontSize === 'lg' ? '↑' : ''}
-          </button>
+          {itemUrl && (
+            <a
+              href={itemUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl border border-slate-200 text-xs font-bold transition-all shadow-2xs hidden sm:flex items-center gap-1"
+              title="Open in Browser"
+              aria-label="Open in external browser"
+            >
+              <ExternalLink className="w-4 h-4 text-slate-700" />
+            </a>
+          )}
+
+          {viewMode === 'reader' && (
+            <div className="hidden sm:flex items-center bg-slate-100 border border-slate-200 rounded-xl p-0.5 gap-1">
+              <button
+                onClick={() => setTheme('light')}
+                className={`p-1.5 rounded-lg text-xs font-bold transition-all ${theme === 'light' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`}
+                title="Light Theme"
+              >
+                <Sun className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => setTheme('dark')}
+                className={`p-1.5 rounded-lg text-xs font-bold transition-all ${theme === 'dark' ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-500'}`}
+                title="Dark Theme"
+              >
+                <Moon className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </div>
       </header>
 
-      {/* Sub-Header Navigation Tabs: Reader Mode vs Quiz vs Flashcards vs Online URL */}
-      {(hasQuestions || hasVocab || (hasExternalUrl && rawHtml)) && (
-        <div className="bg-white/95 border-b border-slate-200 px-3.5 sm:px-6 py-2 flex items-center justify-between gap-3 shrink-0 shadow-sm">
-          <div className="flex items-center gap-2 overflow-x-auto">
-            <button
-              id="tab-reader-mode"
-              onClick={() => setViewMode('reader')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
-                viewMode === 'reader'
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                  : 'bg-slate-100 text-slate-600 hover:text-slate-900 border-slate-200'
-              }`}
-            >
-              <BookOpen className="w-3.5 h-3.5 stroke-[2.5]" />
-              <span>Full Reader</span>
-            </button>
-
+      {/* Sub-Mode Tabs (if extra quiz or notes available) */}
+      {((hasQuestions && hasExternalUrl) || (hasVocab && hasExternalUrl) || (hasQuestions && hasHtmlContent)) && (
+        <div className="bg-slate-50 border-b border-slate-200 px-3.5 sm:px-6 py-1.5 flex items-center justify-between gap-2 shrink-0 shadow-2xs">
+          <div className="flex items-center gap-1.5 overflow-x-auto">
             {hasExternalUrl && (
               <button
-                id="tab-web-mode"
+                id="tab-interactive-html-mode"
                 onClick={() => setViewMode('web_reader')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
                   viewMode === 'web_reader'
                     ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                    : 'bg-slate-100 text-slate-600 hover:text-slate-900 border-slate-200'
+                    : 'bg-white text-slate-600 hover:text-slate-900 border-slate-200'
                 }`}
               >
-                <ExternalLink className="w-3.5 h-3.5 stroke-[2.5]" />
-                <span>Web / PDF View</span>
+                <BookOpen className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Interactive Reader</span>
+              </button>
+            )}
+
+            {(hasHtmlContent || hasVocab || hasOneLiners) && (
+              <button
+                id="tab-notes-reader-mode"
+                onClick={() => setViewMode('reader')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
+                  viewMode === 'reader'
+                    ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                    : 'bg-white text-slate-600 hover:text-slate-900 border-slate-200'
+                }`}
+              >
+                <Layers className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Study Notes</span>
               </button>
             )}
 
             {questions.length > 0 && (
               <button
-                id="tab-quiz-mode"
+                id="tab-practice-quiz-mode"
                 onClick={() => setViewMode('quiz')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
                   viewMode === 'quiz'
                     ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                    : 'bg-slate-100 text-slate-600 hover:text-slate-900 border-slate-200'
+                    : 'bg-white text-slate-600 hover:text-slate-900 border-slate-200'
                 }`}
               >
                 <Zap className="w-3.5 h-3.5 stroke-[2.5]" />
-                <span>Interactive Quiz ({questions.length} Qs)</span>
+                <span>Practice Drill ({questions.length} Qs)</span>
               </button>
             )}
 
             {module.vocabItems && module.vocabItems.length > 0 && (
               <button
-                id="tab-flashcards-mode"
+                id="tab-vocab-flashcards-mode"
                 onClick={() => setViewMode('flashcards')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
                   viewMode === 'flashcards'
                     ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                    : 'bg-slate-100 text-slate-600 hover:text-slate-900 border-slate-200'
+                    : 'bg-white text-slate-600 hover:text-slate-900 border-slate-200'
                 }`}
               >
-                <Layers className="w-3.5 h-3.5 stroke-[2.5]" />
-                <span>Flashcard Drill</span>
+                <Award className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Flashcards</span>
               </button>
             )}
           </div>
-
-          {/* Search Bar in Reader Mode */}
-          {viewMode === 'reader' && (
-            <div className="relative w-36 sm:w-64 shrink-0">
-              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search in book..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-1 text-xs text-slate-900 placeholder-slate-400 focus:border-blue-500 outline-none"
-              />
-            </div>
-          )}
         </div>
       )}
 
-      {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto p-3.5 sm:p-6">
-        <div className="max-w-4xl mx-auto space-y-4">
+      {/* Main Full-Screen Viewport Content */}
+      <div className="flex-1 w-full h-full relative overflow-hidden flex flex-col bg-white">
 
-          {/* ================= VIEW MODE: WEB / PDF IFRAME ================= */}
-          {viewMode === 'web_reader' && (module.url || module.link || module.pdfUrl) && (
-            <div className="w-full h-[calc(100vh-140px)] bg-white rounded-2xl border border-slate-200 overflow-hidden relative shadow-sm">
-              <iframe
-                src={module.url || module.link || module.pdfUrl}
-                title={module.title}
-                className="w-full h-full border-0 bg-white"
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-              />
-            </div>
-          )}
+        {/* ================= 1. FULL-SCREEN INTERACTIVE HTML / WEB READER ================= */}
+        {viewMode === 'web_reader' && itemUrl && (
+          <div className="flex-1 w-full h-full relative overflow-hidden flex flex-col bg-white">
+            
+            {/* Smooth Glowing Floral / Orbital Loading Spinner Overlay */}
+            {isIframeLoading && !isIframeError && (
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#F8FAFC] p-6 text-center animate-fade-in pointer-events-none">
+                <LoadingFlowerSpinner 
+                  message="तैयारी शुरू हो रही है..." 
+                  subMessage={module.title}
+                />
+              </div>
+            )}
 
-          {/* ================= VIEW MODE 1: DIGITAL BOOK / HTML READER ================= */}
-          {viewMode === 'reader' && (
-            <div className="space-y-4 animate-fade-in">
+            {/* Offline / Error Fallback */}
+            {isIframeError && (
+              <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-[#F8FAFC]">
+                <div className="w-16 h-16 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-500 mb-4 shadow-sm">
+                  <WifiOff className="w-8 h-8" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2">
+                  Unable to Load Book Resource
+                </h3>
+                <p className="text-xs text-slate-600 max-w-sm mb-4 leading-relaxed">
+                  Please verify your network connection or try reopening the study module.
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleReloadIframe}
+                    className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase text-xs tracking-wider rounded-xl shadow-sm flex items-center gap-1.5 transition-all"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                    <span>Retry Loading</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Edge-to-Edge 100% Fullscreen Iframe */}
+            <iframe
+              key={iframeKey}
+              ref={iframeRef}
+              src={itemUrl}
+              title={module.title}
+              onLoad={() => {
+                setIsIframeLoading(false);
+                setIsIframeError(false);
+              }}
+              onError={() => {
+                setIsIframeLoading(false);
+                setIsIframeError(true);
+              }}
+              className="w-full h-full flex-1 border-0 bg-white m-0 p-0 block"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-presentation allow-pointer-lock allow-top-navigation-by-user-activation"
+            />
+          </div>
+        )}
+
+        {/* ================= 2. FORMATTED STUDY NOTES / HTML VIEWER ================= */}
+        {viewMode === 'reader' && (
+          <div className="flex-1 overflow-y-auto p-4 sm:p-8">
+            <div className="max-w-3xl mx-auto space-y-5">
               
-              {/* Module Info Banner */}
-              <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              {/* Module Header Card */}
+              <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">
-                      {module.authorOrCurator || 'Silent Preparation Hub'}
-                    </span>
-                  </div>
-                  <h3 className="text-base sm:text-lg font-black text-slate-900">
+                  <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest block mb-1">
+                    {module.authorOrCurator || 'Silent Preparation Hub'}
+                  </span>
+                  <h3 className="text-lg font-black text-slate-900">
                     {module.titleHindi || module.title}
                   </h3>
                   {module.description && (
@@ -385,26 +479,32 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                   )}
                 </div>
 
-                <div className="flex items-center gap-3 shrink-0">
-                  <div className="bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-200 text-center">
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Total</span>
-                    <span className="text-sm font-black text-blue-600 font-mono">
-                      {module.totalItemsCount || (module.vocabItems?.length || 10)}+ Items
-                    </span>
+                {(module.itemsCount || module.totalItemsCount || module.readTimeEstimate) && (
+                  <div className="flex items-center gap-2.5 shrink-0">
+                    {(module.itemsCount || module.totalItemsCount) && (
+                      <div className="bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-center">
+                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Total</span>
+                        <span className="text-xs font-black text-blue-600 font-mono">
+                          {module.itemsCount || `${module.totalItemsCount} Items`}
+                        </span>
+                      </div>
+                    )}
+                    {module.readTimeEstimate && (
+                      <div className="bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-center">
+                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Time</span>
+                        <span className="text-xs font-black text-slate-700 font-mono">
+                          {module.readTimeEstimate}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                  <div className="bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-200 text-center">
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Read Time</span>
-                    <span className="text-sm font-black text-slate-700 font-mono">
-                      {module.readTimeEstimate || '15 mins'}
-                    </span>
-                  </div>
-                </div>
+                )}
               </div>
 
-              {/* Direct HTML Content Render (Admin Provided) */}
+              {/* Direct HTML Content Render */}
               {rawHtml && (
                 <div 
-                  className={`${getCardThemeClass()} border rounded-2xl p-5 sm:p-8 shadow-sm leading-relaxed prose prose-slate max-w-none ${getFontSizeClass()}`}
+                  className={`${getCardThemeClass()} border rounded-3xl p-5 sm:p-8 shadow-sm leading-relaxed prose prose-slate max-w-none ${getFontSizeClass()}`}
                   dangerouslySetInnerHTML={{ __html: rawHtml }}
                 />
               )}
@@ -451,7 +551,6 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                         key={item.id}
                         className={`${getCardThemeClass()} border rounded-2xl p-4 sm:p-5 shadow-sm transition-all hover:border-blue-400 group`}
                       >
-                        {/* Top Line: Index, Word, Exam Tag, TTS & Bookmark */}
                         <div className="flex items-start justify-between gap-3 mb-2">
                           <div className="flex items-center gap-2.5 flex-wrap">
                             <span className="px-2.5 py-1 bg-slate-100 text-blue-600 font-black text-xs rounded-lg border border-slate-200 font-mono">
@@ -468,7 +567,6 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                           </div>
 
                           <div className="flex items-center gap-1.5 shrink-0">
-                            {/* Audio Listen */}
                             <button
                               onClick={() => speakText(item.id, `${item.word}. Meaning: ${item.englishMeaning}`)}
                               className={`p-1.5 rounded-lg border transition-all ${
@@ -481,7 +579,6 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                               <Volume2 className="w-4 h-4 stroke-[2.5]" />
                             </button>
 
-                            {/* Bookmark */}
                             <button
                               onClick={() => toggleBookmark(item.id)}
                               className={`p-1.5 rounded-lg border transition-all ${
@@ -496,7 +593,6 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                           </div>
                         </div>
 
-                        {/* Hindi Meaning */}
                         {item.hindiMeaning && (
                           <div className="bg-amber-50/70 p-2.5 sm:p-3 rounded-xl border border-amber-200/80 mb-3">
                             <span className="text-[10px] font-black uppercase text-amber-800 tracking-wider block mb-0.5">
@@ -508,7 +604,6 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                           </div>
                         )}
 
-                        {/* English Meaning & Usage */}
                         <div className={`space-y-1.5 ${getFontSizeClass()}`}>
                           {item.englishMeaning && (
                             <p className="text-slate-700 font-medium leading-relaxed">
@@ -522,24 +617,6 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                               <strong className="text-blue-600 not-italic font-bold">Example: </strong>
                               "{item.exampleSentence}"
                             </p>
-                          )}
-
-                          {item.originOrHint && (
-                            <p className="text-xs text-slate-500 leading-relaxed pt-1">
-                              <strong className="text-indigo-600">Trick / Mnemonic: </strong>
-                              {item.originOrHint}
-                            </p>
-                          )}
-
-                          {item.synonyms && item.synonyms.length > 0 && (
-                            <div className="flex items-center gap-1.5 flex-wrap pt-1 text-xs">
-                              <span className="font-bold text-slate-500">Synonyms:</span>
-                              {item.synonyms.map((s, sIdx) => (
-                                <span key={sIdx} className="bg-slate-100 px-2 py-0.5 rounded text-slate-700 font-medium">
-                                  {s}
-                                </span>
-                              ))}
-                            </div>
                           )}
                         </div>
                       </div>
@@ -574,25 +651,16 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                         )}
                       </div>
 
-                      {/* Hindi Statement */}
                       {item.statementHi && (
                         <p className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
                           {item.statementHi}
                         </p>
                       )}
 
-                      {/* English Statement */}
                       {item.statementEn && (
                         <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal border-l-2 border-slate-300 pl-3">
                           {item.statementEn}
                         </p>
-                      )}
-
-                      {item.highlightKey && (
-                        <div className="bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 flex items-center justify-between text-xs font-mono font-bold text-emerald-600">
-                          <span>KEY POINTER</span>
-                          <span>{item.highlightKey}</span>
-                        </div>
                       )}
                     </div>
                   ))}
@@ -600,11 +668,13 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
               )}
 
             </div>
-          )}
+          </div>
+        )}
 
-          {/* ================= VIEW MODE 2: INTERACTIVE CBT QUIZ ================= */}
-          {viewMode === 'quiz' && questions.length > 0 && (
-            <div className="space-y-5 animate-fade-in">
+        {/* ================= 3. INTERACTIVE PRACTICE DRILL ================= */}
+        {viewMode === 'quiz' && questions.length > 0 && (
+          <div className="flex-1 overflow-y-auto p-4 sm:p-8">
+            <div className="max-w-3xl mx-auto space-y-5 animate-fade-in">
               
               {/* Quiz Header Stats */}
               <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-3 shadow-sm">
@@ -613,7 +683,7 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                     Interactive Practice Drill
                   </h3>
                   <p className="text-xs text-slate-500">
-                    Test your mastery on {module.title} with instant evaluation.
+                    Instant scoring and detailed solution explanations.
                   </p>
                 </div>
 
@@ -682,7 +752,6 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                       key={q.id}
                       className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-sm space-y-4"
                     >
-                      {/* Question Header */}
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-2">
                           <span className="px-2.5 py-1 bg-slate-100 text-blue-600 font-black text-xs rounded-lg border border-slate-200 font-mono">
@@ -714,7 +783,6 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                         )}
                       </div>
 
-                      {/* Question Text */}
                       <div className="space-y-1">
                         <p className="text-sm sm:text-base font-black text-slate-900 leading-snug">
                           {q.question}
@@ -726,7 +794,6 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                         )}
                       </div>
 
-                      {/* Options Grid */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         {q.options.map((opt, optIdx) => {
                           const isSelected = userAns === optIdx;
@@ -769,7 +836,6 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                         })}
                       </div>
 
-                      {/* Explanation if Submitted */}
                       {isQuizSubmitted && (
                         <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1 text-xs animate-fade-in">
                           <span className="font-black text-blue-600 uppercase tracking-wider block">
@@ -790,7 +856,6 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                 })}
               </div>
 
-              {/* Submit Quiz Action Button */}
               {!isQuizSubmitted && (
                 <div className="pt-2">
                   <button
@@ -804,13 +869,14 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
               )}
 
             </div>
-          )}
+          </div>
+        )}
 
-          {/* ================= VIEW MODE 3: FLASHCARDS DRILL ================= */}
-          {viewMode === 'flashcards' && module.vocabItems && module.vocabItems.length > 0 && (
-            <div className="space-y-5 animate-fade-in">
+        {/* ================= 4. FLASHCARDS DRILL ================= */}
+        {viewMode === 'flashcards' && module.vocabItems && module.vocabItems.length > 0 && (
+          <div className="flex-1 overflow-y-auto p-4 sm:p-8">
+            <div className="max-w-xl mx-auto space-y-5 animate-fade-in">
               
-              {/* Top Controls */}
               <div className="flex items-center justify-between text-xs text-slate-500">
                 <span className="font-mono font-bold text-blue-600">
                   Card {currentFlashcardIndex + 1} of {module.vocabItems.length}
@@ -820,7 +886,6 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                 </span>
               </div>
 
-              {/* Flashcard Component */}
               {module.vocabItems[currentFlashcardIndex] && (
                 <div
                   onClick={() => setIsFlipped(!isFlipped)}
@@ -851,69 +916,45 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                         <p className="text-sm sm:text-base text-slate-700 font-medium max-w-lg mx-auto">
                           {module.vocabItems[currentFlashcardIndex].englishMeaning}
                         </p>
-                        {module.vocabItems[currentFlashcardIndex].exampleSentence && (
-                          <p className="text-xs text-slate-500 italic mt-2">
-                            "{module.vocabItems[currentFlashcardIndex].exampleSentence}"
-                          </p>
-                        )}
                       </>
                     )}
                   </div>
 
-                  <div className="text-[11px] text-slate-400">
-                    Click anywhere on this card to flip
+                  <div className="flex justify-center items-center text-xs text-slate-400 font-bold">
+                    <span>Click anywhere on card to flip</span>
                   </div>
                 </div>
               )}
 
-              {/* Prev / Next Card Controls */}
+              {/* Navigation */}
               <div className="flex items-center justify-between gap-3">
                 <button
                   disabled={currentFlashcardIndex === 0}
                   onClick={() => {
                     setIsFlipped(false);
-                    setCurrentFlashcardIndex((prev) => Math.max(prev - 1, 0));
+                    setCurrentFlashcardIndex((prev) => Math.max(0, prev - 1));
                   }}
-                  className="px-4 py-2.5 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 font-black rounded-xl border border-slate-200 transition-all flex items-center gap-1.5 text-xs uppercase shadow-sm"
+                  className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 shadow-sm"
                 >
-                  <ChevronLeft className="w-4 h-4" />
-                  <span>Previous</span>
+                  ← Previous
                 </button>
-
                 <button
-                  onClick={() => {
-                    if (navigator.vibrate) navigator.vibrate(20);
-                    setMasteredCount((prev) => prev + 1);
-                    if (currentFlashcardIndex < (module.vocabItems?.length || 1) - 1) {
-                      setIsFlipped(false);
-                      setCurrentFlashcardIndex((prev) => prev + 1);
-                    }
-                  }}
-                  className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-xl text-xs uppercase tracking-wider shadow-sm flex items-center gap-1.5"
-                >
-                  <Check className="w-4 h-4 stroke-[3]" />
-                  <span>Got It (+1)</span>
-                </button>
-
-                <button
-                  disabled={currentFlashcardIndex >= (module.vocabItems?.length || 1) - 1}
+                  disabled={currentFlashcardIndex === module.vocabItems.length - 1}
                   onClick={() => {
                     setIsFlipped(false);
-                    setCurrentFlashcardIndex((prev) => Math.min(prev + 1, (module.vocabItems?.length || 1) - 1));
+                    setCurrentFlashcardIndex((prev) => Math.min(module.vocabItems!.length - 1, prev + 1));
                   }}
-                  className="px-4 py-2.5 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 font-black rounded-xl border border-slate-200 transition-all flex items-center gap-1.5 text-xs uppercase shadow-sm"
+                  className="px-4 py-2.5 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 disabled:opacity-40 shadow-sm"
                 >
-                  <span>Next</span>
-                  <ChevronRight className="w-4 h-4" />
+                  Next Card →
                 </button>
               </div>
 
             </div>
-          )}
+          </div>
+        )}
 
-        </div>
       </div>
-
     </div>
   );
 };

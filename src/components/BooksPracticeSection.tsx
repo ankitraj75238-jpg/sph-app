@@ -11,59 +11,79 @@ import {
   ShieldAlert,
   RotateCw,
   FileText,
-  ExternalLink
+  Sparkles,
+  Layers,
+  Clock
 } from 'lucide-react';
 import { StudyModule } from '../types';
 import { SphLogo } from './SphLogo';
+import { OfficialCommunityCard } from './OfficialCommunityCard';
+import { LoadingFlowerSpinner } from './LoadingFlowerSpinner';
 
 interface BooksPracticeSectionProps {
   onSelectModule: (module: StudyModule) => void;
   onModulesCountChange?: (count: number) => void;
 }
 
-const PRIMARY_BOOKS_DATA_URL = 'https://ankitraj75238-jpg.github.io/sph-app/books-data.json';
-const FALLBACK_BOOKS_DATA_URL = 'https://raw.githubusercontent.com/ankitraj75238-jpg/sph-app/main/public/books-data.json';
+const PRIMARY_BOOKS_JSON_URL = 'https://raw.githubusercontent.com/ankitraj75238-jpg/sph-app/main/public/books-data.json';
+const SECONDARY_BOOKS_JSON_URL = 'https://ankitraj75238-jpg.github.io/sph-app/books-data.json';
+const LOCAL_BOOKS_JSON_URL = '/books-data.json';
+
+// Static baseline fallback to ensure students can always study even offline
+const BASELINE_FALLBACK_MODULES: StudyModule[] = [
+  {
+    id: '1',
+    title: 'IDIOMS & PHRASES Complete Set 31 (Sanjeev Sir RWA Practice)',
+    category: 'English Vocab',
+    badge: '31 MASTER SETS',
+    url: 'https://ankitraj75238-jpg.github.io/sph-app/public/idioms31.html',
+    iconName: 'SpellCheck',
+  }
+];
 
 export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
   onSelectModule,
   onModulesCountChange,
 }) => {
-  const [modules, setModules] = useState<StudyModule[]>([]);
+  const [modules, setModules] = useState<StudyModule[]>(BASELINE_FALLBACK_MODULES);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [fetchError, setFetchError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [lastFetchedTime, setLastFetchedTime] = useState<string | null>(null);
 
-  // Fetch dynamic books list from Admin JSON endpoint with fallback
+  // Helper fetcher
+  const tryFetchJson = async (url: string) => {
+    const response = await fetch(`${url}${url.includes('?') ? '&' : '?'}_t=${Date.now()}`, {
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+      }
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const text = await response.text();
+    return JSON.parse(text);
+  };
+
+  // Fetch dynamic books list with multi-tier fallback
   const fetchBooksData = useCallback(async (showRefreshingState = false) => {
     if (showRefreshingState) setIsRefreshing(true);
     else setIsLoading(true);
-    setFetchError(null);
 
     let parsedData: any = null;
 
-    // Helper fetcher
-    const tryFetch = async (url: string) => {
-      const response = await fetch(`${url}?_t=${Date.now()}`, {
-        cache: 'no-store',
-        headers: {
-          'Accept': 'application/json, text/plain, */*',
-        }
-      });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const text = await response.text();
-      return JSON.parse(text);
-    };
-
     try {
-      // Try primary URL first
+      // 1. Try Primary GitHub Raw URL
       try {
-        parsedData = await tryFetch(PRIMARY_BOOKS_DATA_URL);
+        parsedData = await tryFetchJson(PRIMARY_BOOKS_JSON_URL);
       } catch {
-        // Try fallback URL
-        parsedData = await tryFetch(FALLBACK_BOOKS_DATA_URL);
+        // 2. Try Secondary GitHub Pages URL
+        try {
+          parsedData = await tryFetchJson(SECONDARY_BOOKS_JSON_URL);
+        } catch {
+          // 3. Try Local Public Asset URL
+          parsedData = await tryFetchJson(LOCAL_BOOKS_JSON_URL);
+        }
       }
 
       // Extract raw modules array
@@ -77,40 +97,75 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
         else if (Array.isArray(parsedData.data)) rawList = parsedData.data;
       }
 
-      // Normalize modules data safely
-      const normalizedModules: StudyModule[] = rawList.map((item: any, idx: number) => ({
-        id: item.id || item._id || item.slug || `book-${idx + 1}`,
-        title: item.title || item.name || item.bookTitle || `Study Material #${idx + 1}`,
-        titleHindi: item.titleHindi || item.title_hi || item.hindiTitle || '',
-        authorOrCurator: item.authorOrCurator || item.author || item.curator || 'SPH Admin',
-        category: item.category || item.genre || item.subject || 'General',
-        badge: item.badge || item.tag || (item.isFeatured ? 'FEATURED' : undefined),
-        description: item.description || item.desc || item.summary || 'Interactive study module curated for SSC, Railway & Police aspirants.',
-        totalItemsCount: item.totalItemsCount || item.itemsCount || item.pages || item.totalCount || 10,
-        readTimeEstimate: item.readTimeEstimate || item.readTime || item.duration || '20 mins',
-        isPopular: Boolean(item.isPopular),
-        isFeatured: Boolean(item.isFeatured),
-        coverGradient: item.coverGradient || item.gradient || 'from-emerald-600 via-teal-700 to-slate-900',
-        iconName: item.iconName || item.icon || 'BookOpen',
-        subSetsCount: item.subSetsCount || item.setsCount || item.sets || 1,
-        url: item.url || item.link || item.pdfUrl || item.readerUrl,
-        link: item.link || item.url,
-        pdfUrl: item.pdfUrl,
-        htmlContent: item.htmlContent || item.rawHtmlContent || item.html || item.content,
-        rawHtmlContent: item.rawHtmlContent || item.htmlContent || item.html || item.content,
-        vocabItems: item.vocabItems || item.vocabulary || item.words,
-        practiceQuestions: item.practiceQuestions || item.questions || item.quiz,
-        oneLiners: item.oneLiners || item.pointers || item.notes,
-      }));
+      if (rawList.length > 0) {
+        // Normalize modules data safely without injecting any dummy stats
+        const normalizedModules: StudyModule[] = rawList.map((item: any, idx: number) => {
+          let resolvedUrl = item.url || item.link || item.pdfUrl || item.readerUrl;
+          
+          // If URL points to local idioms31.html on GitHub or web, ensure smooth path
+          if (resolvedUrl && resolvedUrl.includes('idioms31.html') && !resolvedUrl.startsWith('http')) {
+            resolvedUrl = '/idioms31.html';
+          }
 
-      setModules(normalizedModules);
-      if (onModulesCountChange) onModulesCountChange(normalizedModules.length);
+          // Extract itemsCount ONLY if explicitly provided in JSON
+          let itemsCountVal: string | undefined = undefined;
+          if (item.itemsCount !== undefined && item.itemsCount !== null && item.itemsCount !== '') {
+            itemsCountVal = typeof item.itemsCount === 'number' ? `${item.itemsCount} Sets` : String(item.itemsCount);
+          } else if (item.totalItemsCount !== undefined && item.totalItemsCount !== null && item.totalItemsCount !== '') {
+            itemsCountVal = typeof item.totalItemsCount === 'number' ? `${item.totalItemsCount} Items` : String(item.totalItemsCount);
+          } else if (item.setsCount !== undefined && item.setsCount !== null && item.setsCount !== '') {
+            itemsCountVal = typeof item.setsCount === 'number' ? `${item.setsCount} Sets` : String(item.setsCount);
+          }
+
+          // Extract time / duration ONLY if explicitly provided in JSON
+          let timeVal: string | undefined = undefined;
+          if (item.time !== undefined && item.time !== null && item.time !== '') {
+            timeVal = String(item.time);
+          } else if (item.readTimeEstimate !== undefined && item.readTimeEstimate !== null && item.readTimeEstimate !== '') {
+            timeVal = String(item.readTimeEstimate);
+          } else if (item.duration !== undefined && item.duration !== null && item.duration !== '') {
+            timeVal = String(item.duration);
+          } else if (item.readTime !== undefined && item.readTime !== null && item.readTime !== '') {
+            timeVal = String(item.readTime);
+          }
+
+          return {
+            id: String(item.id || item._id || item.slug || `book-${idx + 1}`),
+            title: item.title || item.name || item.bookTitle || `Study Material #${idx + 1}`,
+            titleHindi: item.titleHindi || item.title_hi || item.hindiTitle || undefined,
+            authorOrCurator: item.authorOrCurator || item.author || item.curator || undefined,
+            category: item.subject || item.category || item.genre || 'Study Material',
+            badge: item.tag || item.badge || (item.isFeatured ? 'FEATURED' : undefined),
+            description: item.description || item.desc || item.summary || undefined,
+            itemsCount: itemsCountVal,
+            readTimeEstimate: timeVal,
+            isPopular: Boolean(item.isPopular),
+            isFeatured: Boolean(item.isFeatured),
+            coverGradient: item.coverGradient || item.gradient || undefined,
+            iconName: item.iconName || item.icon || (item.subject?.includes('English') ? 'SpellCheck' : 'BookOpen'),
+            url: resolvedUrl || '/idioms31.html',
+            link: resolvedUrl || '/idioms31.html',
+            pdfUrl: item.pdfUrl,
+            htmlContent: item.htmlContent || item.rawHtmlContent || item.html || item.content,
+            rawHtmlContent: item.rawHtmlContent || item.htmlContent || item.html || item.content,
+            vocabItems: item.vocabItems || item.vocabulary || item.words,
+            practiceQuestions: item.practiceQuestions || item.questions || item.quiz,
+            oneLiners: item.oneLiners || item.pointers || item.notes,
+          };
+        });
+
+        setModules(normalizedModules);
+        if (onModulesCountChange) onModulesCountChange(normalizedModules.length);
+      } else {
+        setModules(BASELINE_FALLBACK_MODULES);
+        if (onModulesCountChange) onModulesCountChange(BASELINE_FALLBACK_MODULES.length);
+      }
+
       setLastFetchedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-    } catch (err: any) {
-      console.warn('Admin books-data.json not ready or offline:', err.message);
-      setFetchError(err.message || 'Unable to connect to books endpoint.');
-      setModules([]);
-      if (onModulesCountChange) onModulesCountChange(0);
+    } catch {
+      // Fallback cleanly to baseline data without breaking UI
+      setModules(BASELINE_FALLBACK_MODULES);
+      if (onModulesCountChange) onModulesCountChange(BASELINE_FALLBACK_MODULES.length);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -121,7 +176,7 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
     fetchBooksData();
   }, [fetchBooksData]);
 
-  // Compute dynamic categories based on what the Admin has actually added
+  // Compute dynamic categories based on available modules
   const dynamicCategories = [
     'All',
     ...Array.from(new Set(modules.map((m) => m.category).filter(Boolean))) as string[],
@@ -138,7 +193,8 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
       (mod.titleHindi && mod.titleHindi.toLowerCase().includes(q)) ||
       (mod.description && mod.description.toLowerCase().includes(q)) ||
       (mod.authorOrCurator && mod.authorOrCurator.toLowerCase().includes(q)) ||
-      (mod.badge && mod.badge.toLowerCase().includes(q));
+      (mod.badge && mod.badge.toLowerCase().includes(q)) ||
+      (mod.category && mod.category.toLowerCase().includes(q));
 
     return matchesCategory && matchesSearch;
   });
@@ -146,13 +202,13 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
   const getModuleIcon = (iconName?: string) => {
     switch (iconName) {
       case 'SpellCheck':
-        return <SpellCheck className="w-5 h-5 text-indigo-600 stroke-[2.5]" />;
+        return <SpellCheck className="w-5 h-5 text-blue-600 stroke-[2.5]" />;
       case 'Globe':
         return <Globe className="w-5 h-5 text-blue-600 stroke-[2.5]" />;
       case 'Calculator':
         return <Calculator className="w-5 h-5 text-emerald-600 stroke-[2.5]" />;
       case 'Cpu':
-        return <Cpu className="w-5 h-5 text-purple-600 stroke-[2.5]" />;
+        return <Cpu className="w-5 h-5 text-indigo-600 stroke-[2.5]" />;
       case 'ShieldAlert':
         return <ShieldAlert className="w-5 h-5 text-rose-600 stroke-[2.5]" />;
       case 'FileText':
@@ -165,21 +221,21 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
 
   return (
     <div className="flex-1 flex flex-col bg-[#F8FAFC] bg-porcelain-mesh text-slate-900 overflow-y-auto select-none p-3.5 sm:p-6">
-      <div className="max-w-7xl mx-auto w-full space-y-5">
+      <div className="max-w-7xl mx-auto w-full space-y-5 pb-8">
         
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pt-1 border-b border-slate-200 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pt-1 border-b border-slate-200/90 pb-4">
           <div>
             <div className="flex items-end gap-2.5 sm:gap-3 flex-wrap">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 leading-none tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 leading-none tracking-tight">
                 बुक्स & प्रैक्टिस
               </h2>
-              <span className="text-blue-600 font-black text-xs sm:text-sm md:text-base uppercase tracking-wider mb-0.5">
+              <span className="text-blue-600 font-black text-xs sm:text-sm uppercase tracking-wider mb-0.5">
                 BOOKS & PRACTICE
               </span>
             </div>
-            <p className="text-xs sm:text-sm text-slate-600 mt-1.5 max-w-xl font-medium leading-relaxed">
-              Admin-curated study library, master test sets, e-books & interactive HTML readers.
+            <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-xl font-medium leading-relaxed">
+              Curated master test sets, e-books & interactive HTML readers for competitive exams.
             </p>
           </div>
 
@@ -187,25 +243,32 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
           <div className="flex items-center gap-2 shrink-0">
             <button
               id="refresh-books-library-btn"
-              onClick={() => fetchBooksData(true)}
+              onClick={() => {
+                if (navigator.vibrate) navigator.vibrate(20);
+                fetchBooksData(true);
+              }}
               disabled={isRefreshing || isLoading}
-              className="bg-white hover:bg-slate-50 border border-slate-200 hover:border-blue-300 px-3.5 py-2 rounded-2xl flex items-center gap-2.5 shadow-sm transition-all active:scale-95 text-slate-700 hover:text-slate-900"
-              title="Fetch latest updates from Admin endpoint"
+              className="bg-white hover:bg-slate-50 border border-slate-200 hover:border-blue-300 px-3.5 py-2 rounded-2xl flex items-center gap-2.5 shadow-2xs transition-all active:scale-95 text-slate-700 hover:text-slate-900"
+              title="Sync latest study materials"
+              aria-label="Refresh Books Library"
             >
               <RotateCw className={`w-4 h-4 text-blue-600 ${isRefreshing || isLoading ? 'animate-spin' : ''}`} />
               <div className="text-left">
-                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block leading-none">
-                  {isRefreshing ? 'Checking...' : 'Admin Sync'}
+                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block leading-none">
+                  {isRefreshing ? 'Syncing...' : 'Library Sync'}
                 </span>
                 <span className="text-xs font-black text-emerald-600 font-mono leading-tight">
-                  {modules.length > 0 ? `${modules.length} Live Items` : 'Live Feed'}
+                  {modules.length > 0 ? `${modules.length} Modules Live` : 'Live'}
                 </span>
               </div>
             </button>
           </div>
         </div>
 
-        {/* Search Bar & Dynamic Category Filter */}
+        {/* 1. Official WhatsApp & Telegram Community Card */}
+        <OfficialCommunityCard />
+
+        {/* 2. Search Bar & Dynamic Category Filter */}
         <div className="space-y-3">
           {/* Main Search Bar */}
           <div className="relative w-full">
@@ -213,10 +276,10 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
             <input
               id="search-books-practice-input"
               type="text"
-              placeholder="Search books, study sets, topics, author..."
+              placeholder="Search books, master sets, vocab, PYQs..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-2xl pl-11 pr-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none shadow-sm transition-all"
+              className="w-full bg-white border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-2xl pl-11 pr-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 placeholder-slate-400 outline-none shadow-2xs transition-all"
             />
             {searchQuery && (
               <button
@@ -234,7 +297,10 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
               {dynamicCategories.map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setSelectedCategory(cat)}
+                  onClick={() => {
+                    if (navigator.vibrate) navigator.vibrate(10);
+                    setSelectedCategory(cat);
+                  }}
                   className={`px-3.5 py-1.5 rounded-xl whitespace-nowrap transition-all border ${
                     selectedCategory === cat
                       ? 'bg-blue-600 text-white border-blue-600 shadow-sm font-bold'
@@ -248,218 +314,155 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
           )}
         </div>
 
-        {/* Loading State Skeletons */}
+        {/* Loading State with Glowing Flower Spinner */}
         {isLoading && (
-          <div className="space-y-4 animate-pulse">
-            <div className="bg-white border border-slate-200 rounded-3xl p-8 text-center space-y-3 shadow-sm">
-              <div className="w-12 h-12 rounded-2xl bg-slate-100 mx-auto flex items-center justify-center">
-                <RotateCw className="w-6 h-6 text-blue-600 animate-spin" />
-              </div>
-              <h3 className="text-base font-bold text-slate-800">
-                Connecting to Admin Books & Practice Server...
-              </h3>
-              <p className="text-xs text-slate-500 font-mono">
-                Checking {PRIMARY_BOOKS_DATA_URL}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[1, 2].map((n) => (
-                <div key={n} className="bg-white border border-slate-200 rounded-2xl p-6 h-48 flex flex-col justify-between shadow-sm">
-                  <div className="space-y-2">
-                    <div className="w-24 h-4 bg-slate-100 rounded" />
-                    <div className="w-48 h-6 bg-slate-100 rounded" />
-                    <div className="w-full h-3 bg-slate-50 rounded" />
-                  </div>
-                  <div className="w-32 h-8 bg-slate-100 rounded-xl" />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Empty / Placeholder State */}
-        {!isLoading && modules.length === 0 && (
-          <div className="card-light-clean rounded-3xl p-7 sm:p-12 text-center shadow-soft-subtle space-y-5 animate-fade-in my-auto">
-            {/* Custom SPH Academic Shield Brand Logo */}
-            <div className="flex justify-center">
-              <SphLogo size={76} />
-            </div>
-
-            {/* Exact Required Placeholder Text */}
-            <div className="space-y-2 max-w-lg mx-auto">
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 leading-tight tracking-tight">
-                📚 जल्द ही नई बुक्स और प्रैक्टिस सेट्स जोड़े जाएंगे
-              </h3>
-              <p className="text-xs sm:text-sm font-bold text-emerald-600 uppercase tracking-wider">
-                New Books & Practice Sets Will Be Added Soon
-              </p>
-              <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed pt-1">
-                Admin is updating the study materials repository. When new PDF books, master sets, or HTML notes are published to the Admin config, they will appear here automatically.
-              </p>
-            </div>
-
-            {/* Check Updates / Refresh Button */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <button
-                id="check-updates-empty-btn"
-                onClick={() => fetchBooksData(true)}
-                disabled={isRefreshing}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase text-xs sm:text-sm tracking-wider rounded-2xl shadow-md flex items-center justify-center gap-2 active:scale-95 transition-all w-full sm:w-auto"
-              >
-                <RotateCw className={`w-4 h-4 stroke-[2.5] ${isRefreshing ? 'animate-spin' : ''}`} />
-                <span>{isRefreshing ? 'Checking Repository...' : 'Check For Updates'}</span>
-              </button>
-
-              <a
-                href={PRIMARY_BOOKS_DATA_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-2xl border border-slate-200 flex items-center justify-center gap-1.5 transition-all w-full sm:w-auto"
-              >
-                <ExternalLink className="w-3.5 h-3.5 text-slate-600" />
-                <span>View Admin JSON Source</span>
-              </a>
-            </div>
-
-            {/* Admin Source Info Footnote */}
-            <div className="pt-3 border-t border-slate-100 text-[11px] text-slate-500 font-mono">
-              <span>Admin Endpoint: </span>
-              <span className="text-slate-600 truncate max-w-xs inline-block align-bottom">{PRIMARY_BOOKS_DATA_URL}</span>
-            </div>
+          <div className="card-light-clean rounded-3xl p-8 text-center my-6">
+            <LoadingFlowerSpinner 
+              message="स्टडी लाइब्रेरी लोड हो रही है..." 
+              subMessage="Silent Preparation Hub • Dynamic Engine"
+            />
           </div>
         )}
 
         {/* Modules List when Items Exist */}
-        {!isLoading && modules.length > 0 && (
+        {!isLoading && (
           <div className="space-y-4">
             
-            {/* Search result count */}
-            <div className="flex items-center justify-between text-xs text-slate-500 font-black uppercase tracking-wider">
+            {/* Header info */}
+            <div className="flex items-center justify-between text-xs text-slate-400 font-bold uppercase tracking-wider">
               <span>
-                Available Modules ({filteredModules.length} of {modules.length})
+                Study Modules ({filteredModules.length})
               </span>
               {lastFetchedTime && (
-                <span className="font-mono text-slate-500">
-                  Synced at {lastFetchedTime}
+                <span className="font-mono text-slate-400 text-[11px]">
+                  Updated {lastFetchedTime}
                 </span>
               )}
             </div>
 
             {/* No match for search filter */}
             {filteredModules.length === 0 && (
-              <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center space-y-2 shadow-sm">
+              <div className="bg-white border border-slate-200 rounded-3xl p-8 text-center space-y-2 shadow-sm">
                 <Search className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-                <h4 className="text-base font-bold text-slate-900">No matching books found</h4>
+                <h4 className="text-base font-bold text-slate-900">No matching study material found</h4>
                 <p className="text-xs text-slate-500">
-                  Try adjusting your search query or category filter.
+                  Try adjusting your search keywords or select another subject category.
                 </p>
                 <button
                   onClick={() => {
                     setSearchQuery('');
                     setSelectedCategory('All');
                   }}
-                  className="mt-2 px-3.5 py-1.5 bg-slate-100 text-blue-600 text-xs font-bold rounded-xl border border-slate-200 hover:bg-slate-200"
+                  className="mt-2 px-4 py-2 bg-slate-100 text-blue-600 text-xs font-bold rounded-xl border border-slate-200 hover:bg-slate-200"
                 >
                   Reset Filters
                 </button>
               </div>
             )}
 
-            {/* Grid of Admin modules */}
+            {/* Grid of Minimalist Study Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredModules.map((module, idx) => (
-                <div
-                  key={module.id}
-                  onClick={() => onSelectModule(module)}
-                  className="group bg-white border border-slate-200 hover:border-blue-400 rounded-2xl p-5 sm:p-6 transition-all cursor-pointer shadow-[0_4px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_30px_-4px_rgba(37,99,235,0.08)] flex flex-col justify-between active:scale-[0.99]"
-                >
-                  <div>
-                    {/* Top Row: Icon, Category & Index */}
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200">
-                        {getModuleIcon(module.iconName)}
+              {filteredModules.map((module) => {
+                const hasStats = Boolean(module.itemsCount || module.readTimeEstimate);
+
+                return (
+                  <div
+                    key={module.id}
+                    onClick={() => {
+                      if (navigator.vibrate) navigator.vibrate(20);
+                      onSelectModule(module);
+                    }}
+                    className="group bg-white border border-slate-200 hover:border-blue-500/80 rounded-3xl p-5 sm:p-6 transition-all duration-200 cursor-pointer shadow-[0_4px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_30px_-4px_rgba(37,99,235,0.08)] flex flex-col justify-between active:scale-[0.99] relative overflow-hidden"
+                  >
+                    <div>
+                      {/* Top Row: Icon, Tag & Subject/Category */}
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="p-2.5 rounded-2xl bg-blue-50/80 border border-blue-100 group-hover:scale-105 transition-transform">
+                          {getModuleIcon(module.iconName)}
+                        </div>
+
+                        <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                          {module.category && (
+                            <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wider">
+                              {module.category}
+                            </span>
+                          )}
+                          {module.badge && (
+                            <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 uppercase tracking-wider">
+                              {module.badge}
+                            </span>
+                          )}
+                        </div>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        {module.badge && (
-                          <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 uppercase tracking-wider">
-                            {module.badge}
-                          </span>
-                        )}
-                        <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                          #{idx + 1}
+                      {/* Curator / Author (only if provided in JSON) */}
+                      {module.authorOrCurator && (
+                        <span className="text-[11px] font-black text-emerald-600 uppercase tracking-wider block mb-1">
+                          {module.authorOrCurator}
                         </span>
-                      </div>
+                      )}
+
+                      {/* Title */}
+                      <h3 className="text-base sm:text-lg font-black text-slate-900 group-hover:text-blue-600 transition-colors leading-snug tracking-tight mb-1">
+                        {module.title}
+                      </h3>
+
+                      {/* Hindi Title (only if provided in JSON) */}
+                      {module.titleHindi && (
+                        <p className="text-xs font-bold text-slate-600 mb-2">
+                          {module.titleHindi}
+                        </p>
+                      )}
+
+                      {/* Description (only if provided in JSON) */}
+                      {module.description && (
+                        <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-3">
+                          {module.description}
+                        </p>
+                      )}
+
+                      {/* Dynamic Stats Row (ONLY if explicitly defined in JSON) */}
+                      {hasStats && (
+                        <div className="flex items-center gap-2 mt-2 mb-3 flex-wrap">
+                          {module.itemsCount && (
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-800 text-xs font-bold font-mono">
+                              <Layers className="w-3.5 h-3.5 text-blue-600" />
+                              <span>{module.itemsCount}</span>
+                            </div>
+                          )}
+                          {module.readTimeEstimate && (
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-800 text-xs font-bold font-mono">
+                              <Clock className="w-3.5 h-3.5 text-emerald-600" />
+                              <span>{module.readTimeEstimate}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
 
-                    {/* Curator / Author */}
-                    {module.authorOrCurator && (
-                      <span className="text-[11px] font-black text-emerald-600 uppercase tracking-wider block mb-1">
-                        {module.authorOrCurator}
+                    {/* Bottom Action Button */}
+                    <div className="pt-3.5 border-t border-slate-100 flex items-center justify-between mt-3">
+                      <span className="text-xs font-bold text-slate-500 flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        Interactive Reader
                       </span>
-                    )}
 
-                    {/* Title */}
-                    <h3 className="text-base sm:text-lg font-black text-slate-900 group-hover:text-blue-600 transition-colors leading-snug mb-1">
-                      {module.title}
-                    </h3>
-
-                    {module.titleHindi && (
-                      <p className="text-xs font-bold text-slate-600 mb-2">
-                        {module.titleHindi}
-                      </p>
-                    )}
-
-                    {module.description && (
-                      <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-4">
-                        {module.description}
-                      </p>
-                    )}
-
-                    {/* Specs Pill Grid */}
-                    <div className="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200/80 text-center mb-4">
-                      <div>
-                        <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">Items</span>
-                        <span className="text-xs sm:text-sm font-black text-slate-800 font-mono">
-                          {module.totalItemsCount || (module.vocabItems?.length || module.practiceQuestions?.length || 10)}+
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">Est. Time</span>
-                        <span className="text-xs sm:text-sm font-black text-slate-800 font-mono">
-                          {module.readTimeEstimate || '15 mins'}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">Category</span>
-                        <span className="text-[11px] font-black text-blue-600 truncate block">
-                          {module.category || 'Study Set'}
-                        </span>
-                      </div>
+                      <button
+                        id={`open-reader-${module.id}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (navigator.vibrate) navigator.vibrate(20);
+                          onSelectModule(module);
+                        }}
+                        className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase text-xs tracking-wider rounded-xl shadow-xs transition-all flex items-center gap-1.5 group-hover:shadow-md active:scale-95 shrink-0"
+                      >
+                        <span>OPEN READER</span>
+                        <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                      </button>
                     </div>
                   </div>
-
-                  {/* Bottom Action Button */}
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-500 flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                      Full-Screen HTML Reader
-                    </span>
-
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSelectModule(module);
-                      }}
-                      className="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase text-xs tracking-wider rounded-xl shadow-sm transition-all flex items-center gap-1.5"
-                    >
-                      <span>Open Reader</span>
-                      <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}

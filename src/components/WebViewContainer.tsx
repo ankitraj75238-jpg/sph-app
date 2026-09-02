@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { NoInternetScreen } from './NoInternetScreen';
+import { LoadingFlowerSpinner } from './LoadingFlowerSpinner';
 
 interface WebViewContainerProps {
   url: string;
@@ -19,7 +20,6 @@ export const WebViewContainer: React.FC<WebViewContainerProps> = ({
   onRefreshTrigger,
   tabKey,
 }) => {
-  const [loadingProgress, setLoadingProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [iframeKey, setIframeKey] = useState<number>(1);
 
@@ -31,35 +31,21 @@ export const WebViewContainer: React.FC<WebViewContainerProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // High-performance loading simulation bar
-  const startLoadingSimulation = () => {
-    setIsLoading(true);
-    setLoadingProgress(30);
-
-    const timer1 = setTimeout(() => setLoadingProgress(70), 120);
-    const timer2 = setTimeout(() => setLoadingProgress(95), 350);
-    const timer3 = setTimeout(() => {
-      setLoadingProgress(100);
-      setTimeout(() => setIsLoading(false), 200);
-    }, 600);
-
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-    };
-  };
-
+  // Reset loading state on URL / tab change
   useEffect(() => {
-    const cleanup = startLoadingSimulation();
-    return cleanup;
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      // Fallback timeout to ensure loader smoothly fades if onload event is absorbed
+      setIsLoading(false);
+    }, 1800);
+    return () => clearTimeout(timer);
   }, [url, iframeKey, tabKey]);
 
   const handleManualReload = () => {
     if (navigator.vibrate) navigator.vibrate(25);
+    setIsLoading(true);
     setIframeKey((prev) => prev + 1);
     if (onRefreshTrigger) onRefreshTrigger();
-    startLoadingSimulation();
   };
 
   // Pull-to-refresh touch handlers
@@ -91,7 +77,7 @@ export const WebViewContainer: React.FC<WebViewContainerProps> = ({
         setIsRefreshingPull(false);
         setPullMoveY(0);
         setIsPulling(false);
-      }, 700);
+      }, 800);
     } else {
       setPullMoveY(0);
       setIsPulling(false);
@@ -103,7 +89,6 @@ export const WebViewContainer: React.FC<WebViewContainerProps> = ({
       <NoInternetScreen
         onRetry={handleManualReload}
         isRetrying={isLoading}
-        targetUrl={url}
         errorMessage={`Cannot connect to ${title}. Please check your internet connection.`}
       />
     );
@@ -116,7 +101,6 @@ export const WebViewContainer: React.FC<WebViewContainerProps> = ({
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
       className="w-full h-full flex-1 flex flex-col bg-[#F8FAFC] relative overflow-hidden select-none m-0 p-0"
-      style={{ height: 'calc(100vh - 65px)' }}
     >
       {/* Pull-To-Refresh Top Indicator */}
       {(pullMoveY > 0 || isRefreshingPull) && (
@@ -131,12 +115,12 @@ export const WebViewContainer: React.FC<WebViewContainerProps> = ({
         </div>
       )}
 
-      {/* Edge-to-Edge Linear Progress Bar at Top Pixel */}
+      {/* Loading Flower Spinner Overlay on Porcelain White Backdrop */}
       {isLoading && (
-        <div className="absolute top-0 left-0 right-0 h-1 bg-slate-100 z-40 overflow-hidden">
-          <div 
-            className="h-full bg-gradient-to-r from-blue-600 via-indigo-500 to-emerald-500 transition-all duration-200 ease-out shadow-[0_0_8px_rgba(37,99,235,0.4)]"
-            style={{ width: `${loadingProgress}%` }}
+        <div className="absolute inset-0 z-30 flex items-center justify-center bg-[#F8FAFC]/95 backdrop-blur-sm pointer-events-none transition-opacity duration-300">
+          <LoadingFlowerSpinner 
+            message="तैयारी शुरू हो रही है..." 
+            subMessage={`${title} • High Speed Engine`}
           />
         </div>
       )}
@@ -151,11 +135,9 @@ export const WebViewContainer: React.FC<WebViewContainerProps> = ({
           title={title}
           className="w-full h-full min-h-full border-0 block bg-white relative z-10 m-0 p-0"
           style={{ width: '100%', height: '100%', border: 0 }}
-          // Fully enabled JavaScript, DOM Storage, Forms, Popups, Modals, Cache for exam portals
           sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-presentation allow-pointer-lock allow-top-navigation-by-user-activation"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           onLoad={() => {
-            setLoadingProgress(100);
             setIsLoading(false);
           }}
           onError={() => {

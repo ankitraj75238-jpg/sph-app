@@ -47,10 +47,14 @@ export interface StudyModule {
   titleHindi?: string;
   authorOrCurator?: string;
   category?: string;
+  subject?: string;
   badge?: string;
+  tag?: string;
   description?: string;
+  itemsCount?: string | number;
   totalItemsCount?: number;
   readTimeEstimate?: string;
+  time?: string;
   isPopular?: boolean;
   isFeatured?: boolean;
   coverGradient?: string;

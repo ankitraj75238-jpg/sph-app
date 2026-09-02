@@ -17,11 +17,10 @@ export default function App() {
   const [tabHistory, setTabHistory] = useState<TabType[]>(['ankitprep']);
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine ?? true);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const [isPhoneFrame, setIsPhoneFrame] = useState<boolean>(false);
-  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [activeModule, setActiveModule] = useState<StudyModule | null>(null);
   const [refreshKey, setRefreshKey] = useState<number>(0);
-  const [dynamicModulesCount, setDynamicModulesCount] = useState<number>(0);
+  const [dynamicModulesCount, setDynamicModulesCount] = useState<number>(1);
 
   // Sync browser online / offline state
   useEffect(() => {
@@ -62,23 +61,6 @@ export default function App() {
     }
   }, [activeModule, tabHistory]);
 
-  // Listen for browser / mobile back button event (popstate)
-  useEffect(() => {
-    window.history.pushState({ tab: currentTab }, '');
-
-    const handlePopState = (event: PopStateEvent) => {
-      if (activeModule) {
-        event.preventDefault();
-        handleBack();
-      } else if (tabHistory.length > 1) {
-        handleBack();
-      }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [activeModule, tabHistory, currentTab, handleBack]);
-
   // Global Refresh Action
   const handleGlobalRefresh = () => {
     setIsRefreshing(true);
@@ -91,27 +73,14 @@ export default function App() {
     }, 800);
   };
 
-  // Toggle Fullscreen
-  const handleToggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
-      setIsFullscreen(true);
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
-      }
-      setIsFullscreen(false);
-    }
-  };
-
   return (
     <AndroidFrame
-      isPhoneFrame={isPhoneFrame}
+      isPhoneFrame={false}
       onBackPress={handleBack}
       canGoBack={canGoBack}
       currentTab={currentTab}
     >
-      {/* Top Application Bar - ONLY rendered on Books & Practice tab so Web tabs have their website header at the very top */}
+      {/* Top Application Bar - Clean Production branding for Books & Practice tab */}
       {currentTab === 'books_practice' && (
         <TopBar
           currentTab={currentTab}
@@ -119,12 +88,8 @@ export default function App() {
           onBack={handleBack}
           onRefresh={handleGlobalRefresh}
           isRefreshing={isRefreshing}
-          isOnline={isOnline}
-          onToggleOnline={() => setIsOnline(!isOnline)}
-          isPhoneFrame={isPhoneFrame}
-          onTogglePhoneFrame={() => setIsPhoneFrame(!isPhoneFrame)}
-          isFullscreen={isFullscreen}
-          onToggleFullscreen={handleToggleFullscreen}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
           activeModuleTitle={activeModule?.title}
         />
       )}
