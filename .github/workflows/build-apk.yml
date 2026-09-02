@@ -47,6 +47,28 @@ jobs:
           npx cap add android
           npx cap sync android
 
+      - name: Inject Custom SPH App Icon
+        run: |
+          if [ -f "public/app-icon.png" ]; then
+            echo "Applying Custom SPH App Launcher Icon..."
+            mkdir -p android/app/src/main/res/mipmap-mdpi
+            mkdir -p android/app/src/main/res/mipmap-hdpi
+            mkdir -p android/app/src/main/res/mipmap-xhdpi
+            mkdir -p android/app/src/main/res/mipmap-xxhdpi
+            mkdir -p android/app/src/main/res/mipmap-xxxhdpi
+
+            convert public/app-icon.png -resize 48x48 android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+            convert public/app-icon.png -resize 48x48 android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png
+            convert public/app-icon.png -resize 72x72 android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+            convert public/app-icon.png -resize 72x72 android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png
+            convert public/app-icon.png -resize 96x96 android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+            convert public/app-icon.png -resize 96x96 android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png
+            convert public/app-icon.png -resize 144x144 android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+            convert public/app-icon.png -resize 144x144 android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png
+            convert public/app-icon.png -resize 192x192 android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+            convert public/app-icon.png -resize 192x192 android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
+          fi
+
       - name: Fix Duplicate Kotlin Libraries
         run: |
           cat << 'EOF' >> android/app/build.gradle
