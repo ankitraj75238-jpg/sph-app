@@ -129,8 +129,8 @@ export default function App() {
         />
       )}
 
-      {/* Main Viewport Content Area */}
-      <main className="flex-1 flex flex-col relative overflow-hidden bg-[#0F172A] m-0 p-0">
+      {/* Main Viewport Content Area with Porcelain White Background */}
+      <main className="flex-1 flex flex-col relative overflow-hidden bg-[#F8FAFC] m-0 p-0">
         
         {/* Tab 1: AnkitPrep High-performance Android WebView (100% Fullscreen Viewport) */}
         {currentTab === 'ankitprep' && (

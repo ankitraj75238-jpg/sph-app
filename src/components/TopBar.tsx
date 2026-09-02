@@ -2,13 +2,13 @@ import React from 'react';
 import { 
   RotateCw, 
   ArrowLeft, 
-  Wifi, 
   Smartphone, 
   Maximize2, 
   Minimize2,
   Share2
 } from 'lucide-react';
 import { TabType } from '../types';
+import { SphLogo } from './SphLogo';
 
 interface TopBarProps {
   currentTab: TabType;
@@ -47,7 +47,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       case 'pareeksha':
         return 'Pareeksha Kendra • Online Exam Platform';
       case 'books_practice':
-        return 'बुक्स & प्रैक्टिस • 31 Master Sets & Study Materials';
+        return 'बुक्स & प्रैक्टिस • Master Study Library';
       default:
         return 'SSC | Railway | Police';
     }
@@ -57,7 +57,7 @@ export const TopBar: React.FC<TopBarProps> = ({
     if (navigator.share) {
       navigator.share({
         title: 'Silent Preparation Hub (SPH)',
-        text: 'Silent Preparation Hub (SPH) - High-performance Android preparation portal with AnkitPrep, Pareeksha Kendra, and Books & Practice interactive study modules!',
+        text: 'Silent Preparation Hub (SPH) - High-performance Android preparation portal with AnkitPrep, Pareeksha Kendra, and Books & Practice study modules!',
         url: window.location.href,
       }).catch(() => {});
     } else {
@@ -67,56 +67,54 @@ export const TopBar: React.FC<TopBarProps> = ({
   };
 
   return (
-    <header className="bg-[#1E293B] border-b-2 border-slate-800 text-slate-200 z-40 sticky top-0 transition-all shadow-xl select-none">
+    <header className="glass-light-header text-slate-900 z-40 sticky top-0 transition-all select-none">
       {/* App Bar Main Row */}
-      <div className="px-3.5 sm:px-6 py-3 flex items-center justify-between gap-3 max-w-7xl mx-auto">
+      <div className="px-3.5 sm:px-6 py-2.5 flex items-center justify-between gap-3 max-w-7xl mx-auto">
         
-        {/* Left Side: Back Button & Logo / Title */}
+        {/* Left Side: Back Button & SPH Shield Logo / Title */}
         <div className="flex items-center gap-3 min-w-0">
           {canGoBack && (
             <button
               id="topbar-back-btn"
               onClick={onBack}
-              className="p-2 -ml-1 text-slate-300 hover:text-[#10B981] hover:bg-slate-800 rounded-xl transition-colors active:scale-95 flex items-center justify-center shrink-0 border border-slate-700/50"
+              className="p-2 -ml-1 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-xl transition-colors active:scale-95 flex items-center justify-center shrink-0 border border-slate-200"
               aria-label="Go Back"
               title="Go Back"
             >
-              <ArrowLeft className="w-5 h-5 text-[#10B981] stroke-[2.5]" />
+              <ArrowLeft className="w-5 h-5 text-blue-600 stroke-[2.5]" />
             </button>
           )}
 
-          {/* Logo Badge */}
-          <div className="w-10 h-10 rounded-xl bg-slate-800 border-2 border-slate-700 flex items-center justify-center font-black text-[#10B981] shadow-md shrink-0">
-            <span className="text-xs tracking-tighter font-black text-[#10B981]">SPH</span>
-          </div>
+          {/* SPH Academic Shield Logo Emblem */}
+          <SphLogo size={36} />
 
           {/* Title & Subtitle */}
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-2">
-              <h1 className="text-base sm:text-lg font-black text-white tracking-tighter uppercase truncate leading-tight">
+              <h1 className="text-base sm:text-lg font-black text-slate-900 tracking-tight uppercase truncate leading-tight">
                 Silent Preparation Hub
               </h1>
             </div>
-            <span className="text-[10px] sm:text-[11px] font-bold text-[#10B981] tracking-[0.2em] uppercase truncate leading-tight">
+            <span className="text-[10px] sm:text-[11px] font-bold text-emerald-600 tracking-[0.14em] uppercase truncate leading-tight">
               {getTabSubtitle()}
             </span>
           </div>
         </div>
 
         {/* Right Side Actions */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
           {/* Server / Network Status Indicator Pill */}
           <button
             id="network-toggle-btn"
             onClick={onToggleOnline}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono font-bold uppercase transition-all ${
               isOnline
-                ? 'bg-slate-800/70 border-slate-700 text-slate-300 hover:border-[#10B981]'
-                : 'bg-rose-950/60 border-rose-600 text-rose-300 animate-pulse'
+                ? 'bg-white border-slate-200 text-slate-700 hover:border-emerald-400 shadow-sm'
+                : 'bg-rose-50 border-rose-300 text-rose-700 animate-pulse'
             }`}
-            title={isOnline ? 'Server: Active (Click to simulate offline)' : 'Simulating Offline (Click to reconnect)'}
+            title={isOnline ? 'Server: Active' : 'Simulating Offline (Click to reconnect)'}
           >
-            <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-[#10B981] shadow-[0_0_8px_#10B981] animate-pulse' : 'bg-rose-500'}`} />
+            <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse' : 'bg-rose-500'}`} />
             <span className="hidden xs:inline">{isOnline ? 'Active' : 'Offline'}</span>
           </button>
 
@@ -125,56 +123,57 @@ export const TopBar: React.FC<TopBarProps> = ({
             id="topbar-refresh-btn"
             onClick={onRefresh}
             disabled={isRefreshing}
-            className={`p-2 text-[#10B981] hover:bg-slate-700 rounded-xl border border-slate-700/60 transition-all active:scale-95 ${
+            className={`p-2 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-xl border border-slate-200 transition-all active:scale-95 ${
               isRefreshing ? 'opacity-70 cursor-not-allowed' : ''
             }`}
             aria-label="Refresh Page"
-            title="Refresh current portal (or pull down to refresh)"
+            title="Refresh current portal"
           >
-            <RotateCw className={`w-5 h-5 text-[#10B981] ${isRefreshing ? 'animate-spin' : ''}`} />
+            <RotateCw className={`w-4 h-4 text-blue-600 ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
 
           {/* Phone Frame Toggle */}
           <button
             id="phone-frame-toggle-btn"
             onClick={onTogglePhoneFrame}
-            className={`p-2 rounded-xl transition-all border border-slate-700/60 text-slate-300 hover:text-[#10B981] hover:bg-slate-700 hidden md:flex items-center justify-center ${
-              isPhoneFrame ? 'text-[#10B981] bg-slate-800 border-[#10B981]/50' : ''
+            className={`p-2 rounded-xl transition-all border border-slate-200 text-slate-700 hover:text-blue-600 hover:bg-slate-100 hidden md:flex items-center justify-center ${
+              isPhoneFrame ? 'text-blue-600 bg-blue-50 border-blue-300' : ''
             }`}
             aria-label="Toggle Phone Frame Mode"
             title={isPhoneFrame ? 'Switch to Full Screen layout' : 'Switch to Android Handset Frame mode'}
           >
-            <Smartphone className="w-5 h-5" />
+            <Smartphone className="w-4 h-4" />
           </button>
 
           {/* Fullscreen Toggle */}
           <button
             id="fullscreen-toggle-btn"
             onClick={onToggleFullscreen}
-            className="p-2 text-slate-300 hover:text-[#10B981] hover:bg-slate-700 rounded-xl border border-slate-700/60 transition-all hidden sm:flex items-center justify-center"
+            className="p-2 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-xl border border-slate-200 transition-all hidden sm:flex items-center justify-center"
             aria-label="Toggle Fullscreen"
             title="Toggle Fullscreen"
           >
-            {isFullscreen ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
+            {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </button>
 
           {/* Share */}
           <button
             id="share-app-btn"
             onClick={handleShare}
-            className="p-2 text-slate-300 hover:text-[#10B981] hover:bg-slate-700 rounded-xl border border-slate-700/60 transition-all"
+            className="p-2 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-xl border border-slate-200 transition-all"
             aria-label="Share App"
             title="Share Silent Preparation Hub"
           >
-            <Share2 className="w-5 h-5" />
+            <Share2 className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* Accent Neon Bar */}
-      <div className="h-0.5 w-full bg-slate-900">
-        <div className={`h-full ${isRefreshing ? 'w-full animate-pulse' : 'w-full'} bg-[#10B981] shadow-[0_0_8px_#10B981] transition-all duration-300`} />
+      {/* Accent Glowing Border Line */}
+      <div className="h-[2px] w-full bg-slate-100">
+        <div className={`h-full ${isRefreshing ? 'w-full animate-pulse' : 'w-full'} bg-gradient-to-r from-transparent via-blue-500 to-emerald-500 transition-all duration-300`} />
       </div>
     </header>
   );
 };
+
