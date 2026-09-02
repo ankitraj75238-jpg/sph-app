@@ -13,7 +13,9 @@ import { WebViewContainer } from './components/WebViewContainer';
 import { BooksPracticeSection } from './components/BooksPracticeSection';
 import { InteractiveModuleViewer } from './components/InteractiveModuleViewer';
 import { SplashScreen } from './components/SplashScreen';
+import { ForceUpdateModal } from './components/ForceUpdateModal';
 import { recordAppOpen, recordTabVisit, recordModuleRead } from './utils/telemetry';
+import { checkAppVersionLock, CURRENT_APP_VERSION, VersionCheckResult } from './utils/versionLock';
 
 export default function App() {
   const [showSplash, setShowSplash] = useState<boolean>(true);
@@ -25,10 +27,20 @@ export default function App() {
   const [activeModule, setActiveModule] = useState<StudyModule | null>(null);
   const [refreshKey, setRefreshKey] = useState<number>(0);
   const [dynamicModulesCount, setDynamicModulesCount] = useState<number>(1);
+  const [versionLock, setVersionLock] = useState<VersionCheckResult | null>(null);
 
-  // Initialize private anonymous telemetry on mount
+  // Initialize private anonymous telemetry & check remote version lock on mount
   useEffect(() => {
     recordAppOpen();
+    
+    // Remote Version Lock check
+    checkAppVersionLock().then((result) => {
+      if (result.isUpdateRequired) {
+        setVersionLock(result);
+      }
+    }).catch(() => {
+      // Ignore network errors gracefully
+    });
   }, []);
 
   // Sync browser online / offline state
@@ -95,6 +107,14 @@ export default function App() {
 
   return (
     <>
+      {/* Remote Version Lock Modal (Non-dismissible) */}
+      {versionLock && versionLock.isUpdateRequired && (
+        <ForceUpdateModal
+          currentVersion={CURRENT_APP_VERSION}
+          appControl={versionLock.appControl}
+        />
+      )}
+
       {/* Luxury Animated Cold Launch Splash Screen */}
       <AnimatePresence mode="wait">
         {showSplash && (
