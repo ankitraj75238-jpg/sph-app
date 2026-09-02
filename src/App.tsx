@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import { TabType, StudyModule } from './types';
 import { TopBar } from './components/TopBar';
 import { BottomNavBar } from './components/BottomNavBar';
@@ -11,9 +12,11 @@ import { AndroidFrame } from './components/AndroidFrame';
 import { WebViewContainer } from './components/WebViewContainer';
 import { BooksPracticeSection } from './components/BooksPracticeSection';
 import { InteractiveModuleViewer } from './components/InteractiveModuleViewer';
+import { SplashScreen } from './components/SplashScreen';
 import { recordAppOpen, recordTabVisit, recordModuleRead } from './utils/telemetry';
 
 export default function App() {
+  const [showSplash, setShowSplash] = useState<boolean>(true);
   const [currentTab, setCurrentTab] = useState<TabType>('ankitprep');
   const [tabHistory, setTabHistory] = useState<TabType[]>(['ankitprep']);
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine ?? true);
@@ -91,79 +94,106 @@ export default function App() {
   };
 
   return (
-    <AndroidFrame
-      isPhoneFrame={false}
-      onBackPress={handleBack}
-      canGoBack={canGoBack}
-      currentTab={currentTab}
-    >
-      {/* Top Application Bar - Clean Production branding for Books & Practice tab */}
-      {currentTab === 'books_practice' && (
-        <TopBar
-          currentTab={currentTab}
-          canGoBack={canGoBack}
-          onBack={handleBack}
-          onRefresh={handleGlobalRefresh}
-          isRefreshing={isRefreshing}
-          isDarkMode={isDarkMode}
-          onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
-          activeModuleTitle={activeModule?.title}
-        />
-      )}
-
-      {/* Main Viewport Content Area with Porcelain White Background */}
-      <main className="flex-1 flex flex-col relative overflow-hidden bg-[#F8FAFC] m-0 p-0">
-        
-        {/* Tab 1: AnkitPrep High-performance Android WebView (100% Fullscreen Viewport) */}
-        {currentTab === 'ankitprep' && (
-          <WebViewContainer
-            key={`ankitprep-${refreshKey}`}
-            url="https://ankitprep.silentpreparationhub.workers.dev/"
-            title="AnkitPrep"
-            subtitle="Portal 1"
-            isOnline={isOnline}
-            onRefreshTrigger={() => setIsRefreshing(false)}
-            tabKey="ankitprep"
-          />
+    <>
+      {/* Luxury Animated Cold Launch Splash Screen */}
+      <AnimatePresence mode="wait">
+        {showSplash && (
+          <motion.div
+            key="sph-splash-overlay"
+            initial={{ opacity: 1 }}
+            exit={{ 
+              opacity: 0, 
+              scale: 1.04,
+              filter: 'blur(4px)',
+            }}
+            transition={{ 
+              duration: 0.55, 
+              ease: [0.32, 0.72, 0, 1] 
+            }}
+            className="fixed inset-0 z-[9999] pointer-events-auto"
+          >
+            <SplashScreen 
+              durationMs={2200}
+              onFinish={() => setShowSplash(false)} 
+            />
+          </motion.div>
         )}
+      </AnimatePresence>
 
-        {/* Tab 2: Pareeksha Kendra High-performance Android WebView (100% Fullscreen Viewport) */}
-        {currentTab === 'pareeksha' && (
-          <WebViewContainer
-            key={`pareeksha-${refreshKey}`}
-            url="https://pareekshakendra.pareekshakendraankit.workers.dev/"
-            title="Pareeksha Kendra"
-            subtitle="Portal 2"
-            isOnline={isOnline}
-            onRefreshTrigger={() => setIsRefreshing(false)}
-            tabKey="pareeksha"
-          />
-        )}
-
-        {/* Tab 3: Books & Practice (बुक्स & प्रैक्टिस) Dedicated Educational Section */}
-        {currentTab === 'books_practice' && (
-          <BooksPracticeSection
-            key={`books-${refreshKey}`}
-            onSelectModule={handleSelectModule}
-            onModulesCountChange={(count) => setDynamicModulesCount(count)}
-          />
-        )}
-
-        {/* Full-screen Interactive HTML Quiz & Reader Modal */}
-        {activeModule && (
-          <InteractiveModuleViewer
-            module={activeModule}
-            onClose={() => setActiveModule(null)}
-          />
-        )}
-      </main>
-
-      {/* Bottom Android Navigation Bar (Strictly 3 Tabs Only, 65px height) */}
-      <BottomNavBar
+      <AndroidFrame
+        isPhoneFrame={false}
+        onBackPress={handleBack}
+        canGoBack={canGoBack}
         currentTab={currentTab}
-        onTabChange={handleTabChange}
-        modulesCount={dynamicModulesCount}
-      />
-    </AndroidFrame>
+      >
+        {/* Top Application Bar - Clean Production branding for Books & Practice tab */}
+        {currentTab === 'books_practice' && (
+          <TopBar
+            currentTab={currentTab}
+            canGoBack={canGoBack}
+            onBack={handleBack}
+            onRefresh={handleGlobalRefresh}
+            isRefreshing={isRefreshing}
+            isDarkMode={isDarkMode}
+            onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
+            activeModuleTitle={activeModule?.title}
+          />
+        )}
+
+        {/* Main Viewport Content Area with Porcelain White Background */}
+        <main className="flex-1 flex flex-col relative overflow-hidden bg-[#F8FAFC] m-0 p-0">
+          
+          {/* Tab 1: AnkitPrep High-performance Android WebView (100% Fullscreen Viewport) */}
+          {currentTab === 'ankitprep' && (
+            <WebViewContainer
+              key={`ankitprep-${refreshKey}`}
+              url="https://ankitprep.silentpreparationhub.workers.dev/"
+              title="AnkitPrep"
+              subtitle="Portal 1"
+              isOnline={isOnline}
+              onRefreshTrigger={() => setIsRefreshing(false)}
+              tabKey="ankitprep"
+            />
+          )}
+
+          {/* Tab 2: Pareeksha Kendra High-performance Android WebView (100% Fullscreen Viewport) */}
+          {currentTab === 'pareeksha' && (
+            <WebViewContainer
+              key={`pareeksha-${refreshKey}`}
+              url="https://pareekshakendra.pareekshakendraankit.workers.dev/"
+              title="Pareeksha Kendra"
+              subtitle="Portal 2"
+              isOnline={isOnline}
+              onRefreshTrigger={() => setIsRefreshing(false)}
+              tabKey="pareeksha"
+            />
+          )}
+
+          {/* Tab 3: Books & Practice (बुक्स & प्रैक्टिस) Dedicated Educational Section */}
+          {currentTab === 'books_practice' && (
+            <BooksPracticeSection
+              key={`books-${refreshKey}`}
+              onSelectModule={handleSelectModule}
+              onModulesCountChange={(count) => setDynamicModulesCount(count)}
+            />
+          )}
+
+          {/* Full-screen Interactive HTML Quiz & Reader Modal */}
+          {activeModule && (
+            <InteractiveModuleViewer
+              module={activeModule}
+              onClose={() => setActiveModule(null)}
+            />
+          )}
+        </main>
+
+        {/* Bottom Android Navigation Bar (Strictly 3 Tabs Only, 65px height) */}
+        <BottomNavBar
+          currentTab={currentTab}
+          onTabChange={handleTabChange}
+          modulesCount={dynamicModulesCount}
+        />
+      </AndroidFrame>
+    </>
   );
 }
