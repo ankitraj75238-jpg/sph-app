@@ -21,6 +21,7 @@ export default function App() {
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [activeModule, setActiveModule] = useState<StudyModule | null>(null);
   const [refreshKey, setRefreshKey] = useState<number>(0);
+  const [dynamicModulesCount, setDynamicModulesCount] = useState<number>(0);
 
   // Sync browser online / offline state
   useEffect(() => {
@@ -108,27 +109,30 @@ export default function App() {
       isPhoneFrame={isPhoneFrame}
       onBackPress={handleBack}
       canGoBack={canGoBack}
+      currentTab={currentTab}
     >
-      {/* Top Application Bar */}
-      <TopBar
-        currentTab={currentTab}
-        canGoBack={canGoBack}
-        onBack={handleBack}
-        onRefresh={handleGlobalRefresh}
-        isRefreshing={isRefreshing}
-        isOnline={isOnline}
-        onToggleOnline={() => setIsOnline(!isOnline)}
-        isPhoneFrame={isPhoneFrame}
-        onTogglePhoneFrame={() => setIsPhoneFrame(!isPhoneFrame)}
-        isFullscreen={isFullscreen}
-        onToggleFullscreen={handleToggleFullscreen}
-        activeModuleTitle={activeModule?.title}
-      />
+      {/* Top Application Bar - ONLY rendered on Books & Practice tab so Web tabs have their website header at the very top */}
+      {currentTab === 'books_practice' && (
+        <TopBar
+          currentTab={currentTab}
+          canGoBack={canGoBack}
+          onBack={handleBack}
+          onRefresh={handleGlobalRefresh}
+          isRefreshing={isRefreshing}
+          isOnline={isOnline}
+          onToggleOnline={() => setIsOnline(!isOnline)}
+          isPhoneFrame={isPhoneFrame}
+          onTogglePhoneFrame={() => setIsPhoneFrame(!isPhoneFrame)}
+          isFullscreen={isFullscreen}
+          onToggleFullscreen={handleToggleFullscreen}
+          activeModuleTitle={activeModule?.title}
+        />
+      )}
 
       {/* Main Viewport Content Area */}
-      <main className="flex-1 flex flex-col relative overflow-hidden bg-[#0F172A]">
+      <main className="flex-1 flex flex-col relative overflow-hidden bg-[#0F172A] m-0 p-0">
         
-        {/* Tab 1: AnkitPrep High-performance Android WebView */}
+        {/* Tab 1: AnkitPrep High-performance Android WebView (100% Fullscreen Viewport) */}
         {currentTab === 'ankitprep' && (
           <WebViewContainer
             key={`ankitprep-${refreshKey}`}
@@ -141,7 +145,7 @@ export default function App() {
           />
         )}
 
-        {/* Tab 2: Pareeksha Kendra High-performance Android WebView */}
+        {/* Tab 2: Pareeksha Kendra High-performance Android WebView (100% Fullscreen Viewport) */}
         {currentTab === 'pareeksha' && (
           <WebViewContainer
             key={`pareeksha-${refreshKey}`}
@@ -159,6 +163,7 @@ export default function App() {
           <BooksPracticeSection
             key={`books-${refreshKey}`}
             onSelectModule={(module) => setActiveModule(module)}
+            onModulesCountChange={(count) => setDynamicModulesCount(count)}
           />
         )}
 
@@ -171,10 +176,11 @@ export default function App() {
         )}
       </main>
 
-      {/* Bottom Android Navigation Bar (Strictly 3 Tabs Only) */}
+      {/* Bottom Android Navigation Bar (Strictly 3 Tabs Only, 65px height) */}
       <BottomNavBar
         currentTab={currentTab}
         onTabChange={handleTabChange}
+        modulesCount={dynamicModulesCount}
       />
     </AndroidFrame>
   );

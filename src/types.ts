@@ -23,18 +23,18 @@ export interface VocabularyItem {
   word: string;
   hindiMeaning: string;
   englishMeaning: string;
-  exampleSentence: string;
+  exampleSentence?: string;
   synonyms?: string[];
   antonyms?: string[];
   originOrHint?: string;
-  frequencyScore?: number; // e.g. 5 for highly repeated in SSC
+  frequencyScore?: number;
   examTag?: string;
 }
 
 export interface OneLinerItem {
   id: string;
-  category: string;
-  topic: string;
+  category?: string;
+  topic?: string;
   statementEn: string;
   statementHi: string;
   highlightKey?: string;
@@ -45,19 +45,24 @@ export interface StudyModule {
   id: string;
   title: string;
   titleHindi?: string;
-  authorOrCurator: string;
-  category: 'English Vocab' | 'General Knowledge' | 'Mathematics' | 'Reasoning' | 'Police & Railway';
+  authorOrCurator?: string;
+  category?: string;
   badge?: string;
-  description: string;
-  totalItemsCount: number;
-  readTimeEstimate: string;
+  description?: string;
+  totalItemsCount?: number;
+  readTimeEstimate?: string;
   isPopular?: boolean;
   isFeatured?: boolean;
-  coverGradient: string;
-  iconName: string;
+  coverGradient?: string;
+  iconName?: string;
   subSetsCount?: number;
+  url?: string;
+  link?: string;
+  pdfUrl?: string;
+  htmlContent?: string;
+  rawHtmlContent?: string;
   vocabItems?: VocabularyItem[];
   practiceQuestions?: PracticeQuestion[];
   oneLiners?: OneLinerItem[];
-  rawHtmlContent?: string;
 }
+

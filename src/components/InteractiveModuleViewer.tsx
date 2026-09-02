@@ -22,7 +22,9 @@ import {
   Settings,
   Flame,
   Sun,
-  Moon
+  Moon,
+  ExternalLink,
+  Maximize2
 } from 'lucide-react';
 import { StudyModule, VocabularyItem, PracticeQuestion, OneLinerItem } from '../types';
 
@@ -35,8 +37,17 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
   module,
   onClose
 }) => {
-  // Tabs inside viewer: 'reader' | 'quiz' | 'flashcards'
-  const [viewMode, setViewMode] = useState<'reader' | 'quiz' | 'flashcards'>('reader');
+  // Determine available tabs
+  const hasHtmlContent = Boolean(module.htmlContent || module.rawHtmlContent);
+  const hasExternalUrl = Boolean(module.url || module.link || module.pdfUrl);
+  const hasQuestions = Boolean(module.practiceQuestions && module.practiceQuestions.length > 0);
+  const hasVocab = Boolean(module.vocabItems && module.vocabItems.length > 0);
+  const hasOneLiners = Boolean(module.oneLiners && module.oneLiners.length > 0);
+
+  // Tabs inside viewer: 'reader' | 'quiz' | 'flashcards' | 'web_reader'
+  const [viewMode, setViewMode] = useState<'reader' | 'quiz' | 'flashcards' | 'web_reader'>(
+    hasHtmlContent || hasVocab || hasOneLiners ? 'reader' : hasExternalUrl ? 'web_reader' : 'reader'
+  );
   
   // Search within module
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -63,8 +74,8 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
     const term = searchTerm.toLowerCase();
     return (
       item.word.toLowerCase().includes(term) ||
-      item.hindiMeaning.toLowerCase().includes(term) ||
-      item.englishMeaning.toLowerCase().includes(term)
+      (item.hindiMeaning && item.hindiMeaning.toLowerCase().includes(term)) ||
+      (item.englishMeaning && item.englishMeaning.toLowerCase().includes(term))
     );
   });
 
@@ -74,7 +85,7 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
     return (
       item.statementEn.toLowerCase().includes(term) ||
       item.statementHi.toLowerCase().includes(term) ||
-      item.topic.toLowerCase().includes(term)
+      (item.topic && item.topic.toLowerCase().includes(term))
     );
   });
 
@@ -188,6 +199,8 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
     }
   };
 
+  const rawHtml = module.htmlContent || module.rawHtmlContent;
+
   return (
     <div className={`fixed inset-0 z-50 flex flex-col antialiased select-none overflow-hidden ${getThemeClass()}`}>
       
@@ -207,9 +220,11 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
 
           <div className="truncate">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/30">
-                {module.category}
-              </span>
+              {module.category && (
+                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/30">
+                  {module.category}
+                </span>
+              )}
               {module.badge && (
                 <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30 hidden sm:inline">
                   {module.badge}
@@ -222,7 +237,7 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
           </div>
         </div>
 
-        {/* Right Controls: View Mode Switcher, Font & Theme */}
+        {/* Right Controls: Font & Theme */}
         <div className="flex items-center gap-2 shrink-0">
           {/* Theme Switcher */}
           <div className="hidden sm:flex items-center bg-slate-900 border border-slate-700/60 rounded-xl p-1 gap-1">
@@ -253,73 +268,102 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
         </div>
       </header>
 
-      {/* Sub-Header Navigation Tabs: Reader Mode vs Interactive Quiz vs Flashcards */}
-      <div className="bg-[#1E293B]/70 border-b border-slate-800 px-3.5 sm:px-6 py-2 flex items-center justify-between gap-3 shrink-0">
-        <div className="flex items-center gap-2 overflow-x-auto">
-          <button
-            id="tab-reader-mode"
-            onClick={() => setViewMode('reader')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
-              viewMode === 'reader'
-                ? 'bg-[#10B981] text-[#0F172A] border-[#10B981] shadow-md'
-                : 'bg-slate-800/80 text-slate-400 hover:text-white border-slate-700'
-            }`}
-          >
-            <BookOpen className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>Digital Book Reader</span>
-          </button>
-
-          {questions.length > 0 && (
+      {/* Sub-Header Navigation Tabs: Reader Mode vs Quiz vs Flashcards vs Online URL */}
+      {(hasQuestions || hasVocab || (hasExternalUrl && rawHtml)) && (
+        <div className="bg-[#1E293B]/70 border-b border-slate-800 px-3.5 sm:px-6 py-2 flex items-center justify-between gap-3 shrink-0">
+          <div className="flex items-center gap-2 overflow-x-auto">
             <button
-              id="tab-quiz-mode"
-              onClick={() => setViewMode('quiz')}
+              id="tab-reader-mode"
+              onClick={() => setViewMode('reader')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
-                viewMode === 'quiz'
+                viewMode === 'reader'
                   ? 'bg-[#10B981] text-[#0F172A] border-[#10B981] shadow-md'
                   : 'bg-slate-800/80 text-slate-400 hover:text-white border-slate-700'
               }`}
             >
-              <Zap className="w-3.5 h-3.5 stroke-[2.5]" />
-              <span>Interactive Quiz ({questions.length} Qs)</span>
+              <BookOpen className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>Full Reader</span>
             </button>
-          )}
 
-          {module.vocabItems && module.vocabItems.length > 0 && (
-            <button
-              id="tab-flashcards-mode"
-              onClick={() => setViewMode('flashcards')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
-                viewMode === 'flashcards'
-                  ? 'bg-[#10B981] text-[#0F172A] border-[#10B981] shadow-md'
-                  : 'bg-slate-800/80 text-slate-400 hover:text-white border-slate-700'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5 stroke-[2.5]" />
-              <span>Flashcard Drill</span>
-            </button>
+            {hasExternalUrl && (
+              <button
+                id="tab-web-mode"
+                onClick={() => setViewMode('web_reader')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
+                  viewMode === 'web_reader'
+                    ? 'bg-[#10B981] text-[#0F172A] border-[#10B981] shadow-md'
+                    : 'bg-slate-800/80 text-slate-400 hover:text-white border-slate-700'
+                }`}
+              >
+                <ExternalLink className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Web / PDF View</span>
+              </button>
+            )}
+
+            {questions.length > 0 && (
+              <button
+                id="tab-quiz-mode"
+                onClick={() => setViewMode('quiz')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
+                  viewMode === 'quiz'
+                    ? 'bg-[#10B981] text-[#0F172A] border-[#10B981] shadow-md'
+                    : 'bg-slate-800/80 text-slate-400 hover:text-white border-slate-700'
+                }`}
+              >
+                <Zap className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Interactive Quiz ({questions.length} Qs)</span>
+              </button>
+            )}
+
+            {module.vocabItems && module.vocabItems.length > 0 && (
+              <button
+                id="tab-flashcards-mode"
+                onClick={() => setViewMode('flashcards')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all border ${
+                  viewMode === 'flashcards'
+                    ? 'bg-[#10B981] text-[#0F172A] border-[#10B981] shadow-md'
+                    : 'bg-slate-800/80 text-slate-400 hover:text-white border-slate-700'
+                }`}
+              >
+                <Layers className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Flashcard Drill</span>
+              </button>
+            )}
+          </div>
+
+          {/* Search Bar in Reader Mode */}
+          {viewMode === 'reader' && (
+            <div className="relative w-36 sm:w-64 shrink-0">
+              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search in book..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-1 text-xs text-white placeholder-slate-500 focus:border-[#10B981] outline-none"
+              />
+            </div>
           )}
         </div>
-
-        {/* Search Bar in Reader Mode */}
-        {viewMode === 'reader' && (
-          <div className="relative w-36 sm:w-64 shrink-0">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search in book..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-1 text-xs text-white placeholder-slate-500 focus:border-[#10B981] outline-none"
-            />
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Main Content Area */}
       <div className="flex-1 overflow-y-auto p-3.5 sm:p-6">
         <div className="max-w-4xl mx-auto space-y-4">
 
-          {/* ================= VIEW MODE 1: DIGITAL BOOK READER ================= */}
+          {/* ================= VIEW MODE: WEB / PDF IFRAME ================= */}
+          {viewMode === 'web_reader' && (module.url || module.link || module.pdfUrl) && (
+            <div className="w-full h-[calc(100vh-140px)] bg-slate-950 rounded-2xl border-2 border-slate-800 overflow-hidden relative shadow-2xl">
+              <iframe
+                src={module.url || module.link || module.pdfUrl}
+                title={module.title}
+                className="w-full h-full border-0"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+              />
+            </div>
+          )}
+
+          {/* ================= VIEW MODE 1: DIGITAL BOOK / HTML READER ================= */}
           {viewMode === 'reader' && (
             <div className="space-y-4 animate-fade-in">
               
@@ -328,30 +372,44 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-[10px] font-black text-[#10B981] uppercase tracking-widest">
-                      {module.authorOrCurator}
+                      {module.authorOrCurator || 'Silent Preparation Hub'}
                     </span>
                   </div>
                   <h3 className="text-base sm:text-lg font-black text-white">
                     {module.titleHindi || module.title}
                   </h3>
-                  <p className="text-xs text-slate-400 mt-1">
-                    {module.description}
-                  </p>
+                  {module.description && (
+                    <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                      {module.description}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
                   <div className="bg-[#0F172A] px-3.5 py-2 rounded-xl border border-slate-800 text-center">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Total</span>
-                    <span className="text-sm font-black text-[#10B981] font-mono">{module.totalItemsCount}+ Items</span>
+                    <span className="text-sm font-black text-[#10B981] font-mono">
+                      {module.totalItemsCount || (module.vocabItems?.length || 10)}+ Items
+                    </span>
                   </div>
                   <div className="bg-[#0F172A] px-3.5 py-2 rounded-xl border border-slate-800 text-center">
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Read Time</span>
-                    <span className="text-sm font-black text-slate-300 font-mono">{module.readTimeEstimate}</span>
+                    <span className="text-sm font-black text-slate-300 font-mono">
+                      {module.readTimeEstimate || '15 mins'}
+                    </span>
                   </div>
                 </div>
               </div>
 
-              {/* Master Sets Selector if 31 sets exist */}
+              {/* Direct HTML Content Render (Admin Provided) */}
+              {rawHtml && (
+                <div 
+                  className={`${getCardThemeClass()} border-2 rounded-2xl p-5 sm:p-8 shadow-md leading-relaxed prose prose-invert max-w-none ${getFontSizeClass()}`}
+                  dangerouslySetInnerHTML={{ __html: rawHtml }}
+                />
+              )}
+
+              {/* Master Sets Selector if subSets exist */}
               {module.subSetsCount && module.subSetsCount > 1 && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -365,7 +423,7 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                   </div>
 
                   <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5">
-                    {Array.from({ length: Math.min(module.subSetsCount, 15) }, (_, i) => i + 1).map((setNum) => (
+                    {Array.from({ length: Math.min(module.subSetsCount, 31) }, (_, i) => i + 1).map((setNum) => (
                       <button
                         key={setNum}
                         onClick={() => setSelectedSubSet(setNum)}
@@ -383,7 +441,7 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
               )}
 
               {/* List of Vocabulary / Idioms Items */}
-              {module.vocabItems && (
+              {module.vocabItems && module.vocabItems.length > 0 && (
                 <div className="space-y-3">
                   {filteredVocab.map((item, idx) => {
                     const isBookmarked = bookmarkedIds.has(item.id);
@@ -439,21 +497,25 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                         </div>
 
                         {/* Hindi Meaning */}
-                        <div className="bg-[#0F172A]/80 p-2.5 sm:p-3 rounded-xl border border-slate-800/90 mb-3">
-                          <span className="text-[10px] font-black uppercase text-amber-400 tracking-wider block mb-0.5">
-                            हिन्दी अर्थ (Hindi Meaning)
-                          </span>
-                          <p className="text-sm sm:text-base font-bold text-amber-200">
-                            {item.hindiMeaning}
-                          </p>
-                        </div>
+                        {item.hindiMeaning && (
+                          <div className="bg-[#0F172A]/80 p-2.5 sm:p-3 rounded-xl border border-slate-800/90 mb-3">
+                            <span className="text-[10px] font-black uppercase text-amber-400 tracking-wider block mb-0.5">
+                              हिन्दी अर्थ (Hindi Meaning)
+                            </span>
+                            <p className="text-sm sm:text-base font-bold text-amber-200">
+                              {item.hindiMeaning}
+                            </p>
+                          </div>
+                        )}
 
                         {/* English Meaning & Usage */}
                         <div className={`space-y-1.5 ${getFontSizeClass()}`}>
-                          <p className="text-slate-300 font-medium leading-relaxed">
-                            <strong className="text-white font-bold">English Meaning: </strong>
-                            {item.englishMeaning}
-                          </p>
+                          {item.englishMeaning && (
+                            <p className="text-slate-300 font-medium leading-relaxed">
+                              <strong className="text-white font-bold">English Meaning: </strong>
+                              {item.englishMeaning}
+                            </p>
+                          )}
 
                           {item.exampleSentence && (
                             <p className="text-slate-400 leading-relaxed italic bg-slate-900/40 p-2 rounded-lg border-l-2 border-[#10B981]">
@@ -487,7 +549,7 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
               )}
 
               {/* List of GK One-Liners Items */}
-              {module.oneLiners && (
+              {module.oneLiners && module.oneLiners.length > 0 && (
                 <div className="space-y-3">
                   {filteredOneLiners.map((item, idx) => (
                     <div
@@ -499,9 +561,11 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                           <span className="px-2.5 py-1 bg-slate-800 text-[#10B981] font-black text-xs rounded-lg border border-slate-700 font-mono">
                             #{idx + 1}
                           </span>
-                          <span className="text-xs font-black uppercase tracking-wider text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800">
-                            {item.category} • {item.topic}
-                          </span>
+                          {item.category && (
+                            <span className="text-xs font-black uppercase tracking-wider text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800">
+                              {item.category} {item.topic ? `• ${item.topic}` : ''}
+                            </span>
+                          )}
                         </div>
                         {item.examAppearance && (
                           <span className="text-[10px] font-bold text-slate-400">
@@ -511,14 +575,18 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                       </div>
 
                       {/* Hindi Statement */}
-                      <p className="text-sm sm:text-base font-bold text-white leading-snug">
-                        {item.statementHi}
-                      </p>
+                      {item.statementHi && (
+                        <p className="text-sm sm:text-base font-bold text-white leading-snug">
+                          {item.statementHi}
+                        </p>
+                      )}
 
                       {/* English Statement */}
-                      <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal border-l-2 border-slate-700 pl-3">
-                        {item.statementEn}
-                      </p>
+                      {item.statementEn && (
+                        <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal border-l-2 border-slate-700 pl-3">
+                          {item.statementEn}
+                        </p>
+                      )}
 
                       {item.highlightKey && (
                         <div className="bg-[#0F172A] px-3 py-1.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-mono font-bold text-[#10B981]">
@@ -535,7 +603,7 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
           )}
 
           {/* ================= VIEW MODE 2: INTERACTIVE CBT QUIZ ================= */}
-          {viewMode === 'quiz' && (
+          {viewMode === 'quiz' && questions.length > 0 && (
             <div className="space-y-5 animate-fade-in">
               
               {/* Quiz Header Stats */}
@@ -545,7 +613,7 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
                     Interactive Practice Drill
                   </h3>
                   <p className="text-xs text-slate-400">
-                    Test your mastery on {module.title} with instant feedback.
+                    Test your mastery on {module.title} with instant evaluation.
                   </p>
                 </div>
 
@@ -739,7 +807,7 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
           )}
 
           {/* ================= VIEW MODE 3: FLASHCARDS DRILL ================= */}
-          {viewMode === 'flashcards' && module.vocabItems && (
+          {viewMode === 'flashcards' && module.vocabItems && module.vocabItems.length > 0 && (
             <div className="space-y-5 animate-fade-in">
               
               {/* Top Controls */}
