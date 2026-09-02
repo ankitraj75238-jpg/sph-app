@@ -30,9 +30,9 @@ jobs:
           npm install --legacy-peer-deps || npm install --force
           npm run build || npx vite build
 
-      - name: Configure Capacitor
+      - name: Configure Capacitor & Official Assets Tool
         run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
+          npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/assets --legacy-peer-deps
           cat << 'EOF' > capacitor.config.json
           {
             "appId": "com.sph.prepapp",
@@ -47,25 +47,30 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Force Custom SPH App Icon on All Android Versions
+      - name: Generate Official SPH Adaptive Icons
         run: |
-          ICON_PATH=$(find public/ -maxdepth 1 -type f \( -iname "*icon*" -o -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) | head -n 1)
+          ICON_FILE=$(find public/ -maxdepth 1 -type f \( -iname "*icon*" -o -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" \) | head -n 1)
 
-          if [ -n "$ICON_PATH" ] && [ -f "$ICON_PATH" ]; then
-            echo "Found Icon File at: $ICON_PATH"
+          if [ -n "$ICON_FILE" ] && [ -f "$ICON_FILE" ]; then
+            echo "Generating Official Adaptive Icons from $ICON_FILE..."
+            mkdir -p assets
+            cp "$ICON_FILE" assets/logo.png
+            cp "$ICON_FILE" assets/icon-only.png
+            cp "$ICON_FILE" assets/icon-foreground.png
             
-            # Remove anydpi-v26 folder so modern Android is forced to use the new 3D logo
-            rm -rf android/app/src/main/res/mipmap-anydpi-v26 || true
+            # Use official Capacitor Assets generator
+            npx @capacitor/assets generate --android --iconBackgroundColor '#0F172A' --iconBackgroundColorDark '#0F172A' || true
 
+            # Fallback direct injection
             for density in "mdpi:48" "hdpi:72" "xhdpi:96" "xxhdpi:144" "xxxhdpi:192"; do
               name="${density%%:*}"
               size="${density##*:}"
               mkdir -p "android/app/src/main/res/mipmap-${name}"
-              convert "$ICON_PATH" -resize "${size}x${size}" "android/app/src/main/res/mipmap-${name}/ic_launcher.png" || true
-              convert "$ICON_PATH" -resize "${size}x${size}" "android/app/src/main/res/mipmap-${name}/ic_launcher_round.png" || true
-              convert "$ICON_PATH" -resize "${size}x${size}" "android/app/src/main/res/mipmap-${name}/ic_launcher_foreground.png" || true
+              convert "$ICON_FILE" -resize "${size}x${size}" "android/app/src/main/res/mipmap-${name}/ic_launcher.png" || true
+              convert "$ICON_FILE" -resize "${size}x${size}" "android/app/src/main/res/mipmap-${name}/ic_launcher_round.png" || true
+              convert "$ICON_FILE" -resize "${size}x${size}" "android/app/src/main/res/mipmap-${name}/ic_launcher_foreground.png" || true
             done
-            echo "SPH 3D Icons successfully applied to all layers!"
+            echo "Official Icons Generated Successfully!"
           fi
 
       - name: Fix Duplicate Kotlin Libraries
@@ -77,13 +82,13 @@ jobs:
           }
           EOF
 
-      - name: Build Android APK
+      - name: Build Official Android APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
 
-      - name: Upload APK Artifact
+      - name: Upload Verified Safe APK
         uses: actions/upload-artifact@v4
         with:
           name: SPH-Silent-Preparation-Hub-APK
