@@ -1,9 +1,26 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAnalytics, isSupported, logEvent, Analytics, setUserProperties } from 'firebase/analytics';
 
-// Official SPH Google Firebase Configuration
+// Global safety handler: prevent uncaught promise rejections from Firebase Installations
+if (typeof window !== 'undefined') {
+  window.addEventListener('unhandledrejection', (event) => {
+    const errorStr = String(event.reason?.message || event.reason || '');
+    if (
+      errorStr.includes('installations') ||
+      errorStr.includes('API key not valid') ||
+      errorStr.includes('installations/request-failed')
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  });
+}
+
+// Configurable Firebase credentials
+const envApiKey = (typeof import.meta !== 'undefined' && (import.meta as unknown as { env?: Record<string, string> }).env?.VITE_FIREBASE_API_KEY)?.trim();
+
 export const firebaseConfig = {
-  apiKey: "AIzaSyB96mREAcLMLSzAIbaTydru3GtKAGPMylc",
+  apiKey: envApiKey || "",
   authDomain: "sph-hub.firebaseapp.com",
   projectId: "sph-hub",
   storageBucket: "sph-hub.firebasestorage.app",
@@ -12,8 +29,28 @@ export const firebaseConfig = {
   measurementId: "G-V8HYRNHVM4"
 };
 
-// Initialize Firebase App Singleton
-export const app: FirebaseApp = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+// Verify if a real, valid Firebase API key is configured
+export const isFirebaseConfigured: boolean = Boolean(
+  firebaseConfig.apiKey &&
+  firebaseConfig.apiKey !== 'AIzaSyB96mREAcLMLSzAIbaTydru3GtKAGPMylc' &&
+  !firebaseConfig.apiKey.includes('PLACEHOLDER') &&
+  firebaseConfig.apiKey.startsWith('AIza') &&
+  firebaseConfig.apiKey.length > 20
+);
+
+// Initialize Firebase App Singleton safely only when configured
+export const app: FirebaseApp | null = (() => {
+  try {
+    if (getApps().length > 0) return getApp();
+    if (isFirebaseConfigured && firebaseConfig.apiKey) {
+      return initializeApp(firebaseConfig);
+    }
+    return null;
+  } catch (err) {
+    console.warn('[SPH Firebase] Initialization skipped:', err);
+    return null;
+  }
+})();
 
 let analyticsInstance: Analytics | null = null;
 let analyticsInitPromise: Promise<Analytics | null> | null = null;
@@ -22,13 +59,16 @@ let analyticsInitPromise: Promise<Analytics | null> | null = null;
  * Safely initialize Firebase Analytics with environment capability verification
  */
 export async function getFirebaseAnalytics(): Promise<Analytics | null> {
+  if (!isFirebaseConfigured || !app) {
+    return null;
+  }
   if (analyticsInstance) return analyticsInstance;
   if (analyticsInitPromise) return analyticsInitPromise;
 
   analyticsInitPromise = (async () => {
     try {
       const supported = await isSupported();
-      if (supported && typeof window !== 'undefined') {
+      if (supported && typeof window !== 'undefined' && app) {
         analyticsInstance = getAnalytics(app);
         return analyticsInstance;
       }
