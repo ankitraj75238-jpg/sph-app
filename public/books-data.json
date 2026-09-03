@@ -1,10 +1,15 @@
 {
   "announcement": {
     "show": true,
-    "title": "🔥 आज का नया टेस्ट लाइव हो गया है!",
-    "message": "15 Years Complete Vocab (Synonyms, Antonyms, OWS, Spelling) के सभी सेट्स ऐप में अपलोड हो चुके हैं। सभी छात्र अभी टेस्ट दें और अपना स्कोर चेक करें!",
-    "button_text": "Join Official Telegram ➔",
+    "title": "SSC 2025 All Exam Practice Decks Now Live!",
+    "message": "Dear Aspirants, complete 15 Years (2010–2025) SSC Vocab & Grammar Master Decks are now active in the Books & Practice tab.\n\nDaily sets and high-yield mocks are available with interactive practice modes. Start your revision today!",
+    "button_text": "Join Telegram Community",
     "button_url": "https://t.me/pareekshakendraankit"
+  },
+  "app_control": {
+    "min_required_version": 1.0,
+    "latest_version": 1.0,
+    "force_update": false
   },
   "books": [
     {

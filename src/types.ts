@@ -70,3 +70,12 @@ export interface StudyModule {
   oneLiners?: OneLinerItem[];
 }
 
+export interface AnnouncementConfig {
+  show?: boolean;
+  title: string;
+  message: string;
+  button_text?: string;
+  button_url?: string;
+  id?: string;
+}
+

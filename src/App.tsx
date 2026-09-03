@@ -7,7 +7,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
-import { TabType, StudyModule } from './types';
+import { TabType, StudyModule, AnnouncementConfig } from './types';
 import { TopBar } from './components/TopBar';
 import { BottomNavBar } from './components/BottomNavBar';
 import { AndroidFrame } from './components/AndroidFrame';
@@ -16,9 +16,11 @@ import { BooksPracticeSection } from './components/BooksPracticeSection';
 import { InteractiveModuleViewer } from './components/InteractiveModuleViewer';
 import { SplashScreen } from './components/SplashScreen';
 import { ForceUpdateModal } from './components/ForceUpdateModal';
+import { AnnouncementModal } from './components/AnnouncementModal';
 import { ExitToast } from './components/ExitToast';
 import { recordAppOpen, recordTabVisit, recordModuleRead } from './utils/telemetry';
 import { checkAppVersionLock, CURRENT_APP_VERSION, VersionCheckResult } from './utils/versionLock';
+import { checkAppAnnouncement } from './utils/announcement';
 
 export default function App() {
   const [showSplash, setShowSplash] = useState<boolean>(true);
@@ -32,11 +34,13 @@ export default function App() {
   const [dynamicModulesCount, setDynamicModulesCount] = useState<number>(1);
   const [versionLock, setVersionLock] = useState<VersionCheckResult | null>(null);
   const [showExitToast, setShowExitToast] = useState<boolean>(false);
+  const [announcement, setAnnouncement] = useState<AnnouncementConfig | null>(null);
 
   // Synchronized state refs to prevent stale closure in async native Capacitor & hardware listeners
   const activeModuleRef = useRef<StudyModule | null>(activeModule);
   const currentTabRef = useRef<TabType>(currentTab);
   const tabHistoryRef = useRef<TabType[]>(tabHistory);
+  const announcementRef = useRef<AnnouncementConfig | null>(announcement);
   const lastBackPressRef = useRef<number>(0);
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -52,7 +56,24 @@ export default function App() {
     tabHistoryRef.current = tabHistory;
   }, [tabHistory]);
 
-  // Initialize private anonymous telemetry & check remote version lock on mount
+  useEffect(() => {
+    announcementRef.current = announcement;
+  }, [announcement]);
+
+  // Session-aware announcement dismissal
+  const handleDismissAnnouncement = useCallback(() => {
+    if (announcementRef.current) {
+      try {
+        const dismissedKey = `sph_announcement_dismissed_${announcementRef.current.id || announcementRef.current.title}`;
+        sessionStorage.setItem(dismissedKey, 'true');
+      } catch {
+        // Safe fallback for environments with restricted storage
+      }
+    }
+    setAnnouncement(null);
+  }, []);
+
+  // Initialize private anonymous telemetry, version lock check & in-app announcement on mount
   useEffect(() => {
     recordAppOpen();
     
@@ -60,6 +81,23 @@ export default function App() {
     checkAppVersionLock().then((result) => {
       if (result.isUpdateRequired) {
         setVersionLock(result);
+      }
+    }).catch(() => {
+      // Ignore network errors gracefully
+    });
+
+    // In-App Announcement check from books-data.json
+    checkAppAnnouncement().then((ann) => {
+      if (ann && ann.show) {
+        try {
+          const dismissedKey = `sph_announcement_dismissed_${ann.id || ann.title}`;
+          if (sessionStorage.getItem(dismissedKey) === 'true') {
+            return;
+          }
+        } catch {
+          // Safe fallback
+        }
+        setAnnouncement(ann);
       }
     }).catch(() => {
       // Ignore network errors gracefully
@@ -107,6 +145,12 @@ export default function App() {
    *              "ऐप से बाहर निकलने के लिए दोबारा बैक दबाएं". Double-tap within 2s triggers exitApp().
    */
   const handleDeepBackNavigation = useCallback(() => {
+    // Priority Condition (In-App Announcement): Smoothly close announcement modal if open
+    if (announcementRef.current) {
+      handleDismissAnnouncement();
+      return;
+    }
+
     // Condition 1 (Active Modal): Close HTML reader / test modal
     if (activeModuleRef.current) {
       setActiveModule(null);
@@ -224,6 +268,20 @@ export default function App() {
       <AnimatePresence>
         {showExitToast && (
           <ExitToast message="ऐप से बाहर निकलने के लिए दोबारा बैक दबाएं" />
+        )}
+      </AnimatePresence>
+
+      {/* Dynamic In-App Announcement Pop-up Modal */}
+      <AnimatePresence>
+        {!showSplash && announcement && (
+          <AnnouncementModal
+            announcement={announcement}
+            onClose={handleDismissAnnouncement}
+            onNavigateTab={(tab) => {
+              handleTabChange(tab);
+              handleDismissAnnouncement();
+            }}
+          />
         )}
       </AnimatePresence>
 
