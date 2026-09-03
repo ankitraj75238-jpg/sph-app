@@ -1,893 +1,1774 @@
-<!DOCTYPE html>
-<html lang="hi" oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SSC 15-Year Synonyms (2010-2025) | Presented by ANKIT</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-body: #f8fafc;
-            --bg-card: #ffffff;
-            --bg-card-sub: #f1f5f9;
-            --border-light: #e2e8f0;
-            --border-hover: #cbd5e1;
-            
-            --primary-blue: #2563eb;
-            --primary-blue-light: #eff6ff;
-            --emerald: #10b981;
-            --emerald-light: #ecfdf5;
-            --gold-main: #d97706;
-            --gold-light: #fef3c7;
-            --rose: #ef4444;
-            --rose-light: #fef2f2;
-            
-            --text-dark: #0f172a;
-            --text-body: #334155;
-            --text-muted: #64748b;
-            --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-user-select: none !important;
-            -moz-user-select: none !important;
-            -ms-user-select: none !important;
-            user-select: none !important;
-            -webkit-touch-callout: none !important;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-dark);
-            min-height: 100vh;
-            min-height: 100dvh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            min-height: 100vh;
-            min-height: 100dvh;
-            background: #ffffff;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.06);
-            border-left: 1px solid var(--border-light);
-            border-right: 1px solid var(--border-light);
-        }
-
-        .screen {
-            display: none;
-            flex-direction: column;
-            flex: 1;
-            width: 100%;
-            animation: appFade 0.2s ease-out;
-        }
-
-        .screen.active {
-            display: flex;
-        }
-
-        @keyframes appFade {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* TOPBAR (SILENT PREPARATION HUB MATCHING) */
-        .app-topbar {
-            padding: 14px 18px;
-            background: #ffffff;
-            border-bottom: 1px solid var(--border-light);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-
-        .btn-app-back {
-            background: var(--bg-card-sub);
-            border: 1px solid var(--border-light);
-            color: var(--text-dark);
-            padding: 7px 14px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .btn-doubt-pill {
-            background: var(--primary-blue-light);
-            border: 1px solid #bfdbfe;
-            color: var(--primary-blue);
-            padding: 7px 14px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 800;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .scrollable-body {
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 20px 18px 80px 18px;
-        }
-
-        /* HERO HEADER */
-        .hub-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #ecfdf5;
-            border: 1px solid #a7f3d0;
-            color: #059669;
-            padding: 5px 12px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .main-app-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 26px;
-            font-weight: 900;
-            line-height: 1.2;
-            color: var(--text-dark);
-        }
-
-        .main-app-sub {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--primary-blue);
-            margin-top: 4px;
-            margin-bottom: 18px;
-        }
-
-        /* 👑 3D ROYAL BRAND POSTER DESIGN */
-        .ankit-brand-poster {
-            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 45%, #ffffff 100%);
-            border: 2px solid #f59e0b;
-            border-radius: 20px;
-            padding: 18px 16px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(217, 119, 6, 0.15), 0 2px 6px rgba(0,0,0,0.05);
-            margin-bottom: 18px;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
-        }
-
-        .ankit-brand-poster:active {
-            transform: scale(0.97);
-            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.2);
-        }
-
-        .ankit-brand-poster::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.6) 50%, transparent 60%);
-            animation: posterShine 3.5s infinite linear;
-            pointer-events: none;
-        }
-
-        @keyframes posterShine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .poster-watermark {
-            position: absolute;
-            font-family: 'Outfit', sans-serif;
-            font-size: 80px;
-            font-weight: 900;
-            color: rgba(217, 119, 6, 0.04);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            letter-spacing: 6px;
-            pointer-events: none;
-            user-select: none;
-        }
-
-        .poster-top-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-bottom: 4px;
-        }
-
-        .poster-org-badge {
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            color: #b45309;
-            text-transform: uppercase;
-        }
-
-        .poster-verified-icon {
-            background: #2563eb;
-            color: #fff;
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 9px;
-            font-weight: 900;
-        }
-
-        .poster-main-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 32px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: #78350f;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin: 2px 0;
-            text-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
-        }
-
-        .poster-role-tag {
-            font-size: 12px;
-            color: #92400e;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .poster-footer-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #ffffff;
-            border: 1.5px solid #fbbf24;
-            color: #b45309;
-            padding: 6px 14px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 800;
-            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.1);
-        }
-
-        /* STATS */
-        .stats-grid-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 18px;
-        }
-
-        .stat-card-clean {
-            background: var(--bg-card-sub);
-            border: 1px solid var(--border-light);
-            border-radius: 12px;
-            padding: 10px 6px;
-            text-align: center;
-        }
-
-        .stat-num-val {
-            font-family: 'Outfit', sans-serif;
-            font-size: 18px;
-            font-weight: 900;
-            color: var(--primary-blue);
-        }
-
-        .stat-num-lbl {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        /* FREE NOTICE */
-        .free-license-box {
-            background: var(--rose-light);
-            border: 1.5px dashed #fca5a5;
-            border-radius: 14px;
-            padding: 12px 14px;
-            margin-bottom: 18px;
-            font-size: 11.5px;
-            line-height: 1.5;
-            color: #991b1b;
-        }
-
-        /* ACTION BUTTONS */
-        .btn-start-interactive {
-            width: 100%;
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: #ffffff;
-            border: none;
-            border-radius: 14px;
-            padding: 15px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 16px;
-            font-weight: 900;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .btn-wa-action {
-            width: 100%;
-            background: #10b981;
-            color: #ffffff;
-            border: none;
-            border-radius: 14px;
-            padding: 13px;
-            font-size: 13.5px;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 14px;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
-        }
-
-        .site-links-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .site-chip {
-            background: var(--bg-card-sub);
-            border: 1px solid var(--border-light);
-            border-radius: 10px;
-            padding: 10px;
-            color: var(--primary-blue);
-            text-decoration: none;
-            font-size: 11.5px;
-            font-weight: 800;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-
-        /* 📅 YEAR DIRECTORY LIST */
-        .years-list-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .year-card-item {
-            background: #ffffff;
-            border: 1px solid var(--border-light);
-            border-radius: 14px;
-            padding: 14px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            box-shadow: var(--shadow-card);
-            transition: all 0.15s ease;
-        }
-
-        .year-card-item:active {
-            transform: scale(0.98);
-            border-color: var(--primary-blue);
-            background: var(--primary-blue-light);
-        }
-
-        .year-title-main {
-            font-family: 'Outfit', sans-serif;
-            font-size: 15.5px;
-            font-weight: 800;
-            color: var(--text-dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .year-sub-info {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
-        .year-badge-pill {
-            background: var(--primary-blue-light);
-            border: 1px solid #bfdbfe;
-            color: var(--primary-blue);
-            border-radius: 8px;
-            padding: 4px 9px;
-            font-size: 11.5px;
-            font-weight: 800;
-        }
-
-        /* QUIZ SCREEN */
-        .q-meta-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .q-counter-pill {
-            background: #f1f5f9;
-            color: var(--text-dark);
-            border: 1px solid var(--border-light);
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 11.5px;
-            font-weight: 800;
-        }
-
-        .synonym-word-box {
-            background: #ffffff;
-            border: 1.5px solid var(--border-light);
-            border-radius: 16px;
-            padding: 18px 16px;
-            font-size: 16px;
-            font-weight: 800;
-            line-height: 1.5;
-            color: var(--text-dark);
-            margin-bottom: 16px;
-            box-shadow: var(--shadow-card);
-        }
-
-        .options-vertical-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .opt-choice-btn {
-            background: #ffffff;
-            border: 1.5px solid var(--border-light);
-            border-radius: 12px;
-            padding: 13px 15px;
-            color: var(--text-dark);
-            font-size: 14px;
-            font-weight: 700;
-            text-align: left;
-            cursor: pointer;
-            line-height: 1.4;
-            display: flex;
-            gap: 10px;
-            transition: all 0.15s;
-        }
-
-        .opt-choice-btn.correct {
-            background: var(--emerald-light) !important;
-            border-color: var(--emerald) !important;
-            color: #065f46 !important;
-        }
-
-        .opt-choice-btn.wrong {
-            background: var(--rose-light) !important;
-            border-color: var(--rose) !important;
-            color: #991b1b !important;
-        }
-
-        /* DETAILED SOLUTION BOX */
-        .vocab-solution-box {
-            display: none;
-            background: #f8fafc;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 16px;
-            animation: appFade 0.2s ease-out;
-        }
-
-        .sol-tag-header {
-            font-size: 11.5px;
-            font-weight: 800;
-            color: var(--primary-blue);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .sol-explanation-text {
-            font-size: 13px;
-            line-height: 1.6;
-            color: var(--text-body);
-        }
-
-        /* PALETTE NAV */
-        .navigator-grid {
-            display: grid;
-            grid-template-columns: repeat(10, 1fr);
-            gap: 4px;
-            background: #f1f5f9;
-            border-radius: 12px;
-            padding: 8px;
-            margin-bottom: 16px;
-            max-height: 110px;
-            overflow-y: auto;
-        }
-
-        .nav-btn-box {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 800;
-            border-radius: 6px;
-            background: #ffffff;
-            color: var(--text-muted);
-            border: 1px solid var(--border-light);
-            cursor: pointer;
-        }
-
-        .nav-btn-box.active {
-            border: 2px solid var(--primary-blue);
-            color: var(--primary-blue);
-        }
-
-        .nav-btn-box.solved-correct {
-            background: var(--emerald);
-            color: #ffffff;
-            border-color: var(--emerald);
-        }
-
-        .nav-btn-box.solved-wrong {
-            background: var(--rose);
-            color: #ffffff;
-            border-color: var(--rose);
-        }
-
-        .quiz-control-row {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-ctrl {
-            flex: 1;
-            background: var(--bg-card-sub);
-            border: 1px solid var(--border-light);
-            color: var(--text-dark);
-            padding: 13px;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 13.5px;
-            cursor: pointer;
-        }
-
-        /* MODAL */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(15, 23, 42, 0.6);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            padding: 20px;
-        }
-
-        .modal-white-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 22px;
-            max-width: 380px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-
-        /* SECURITY LOCK */
-        #tamper-screen {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #ffffff;
-            color: var(--rose);
-            z-index: 99999;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 30px;
-            text-align: center;
-        }
-    </style>
-</head>
-<body oncopy="return false" oncut="return false" onpaste="return false">
-
-<div id="tamper-screen">
-    <h1 style="font-size: 24px; margin-bottom: 8px;">⚠️ SECURITY LOCK TRIGGERED</h1>
-    <p style="color: #475569; font-size: 13px;">App verification failed. Modification of owner details (ANKIT) is restricted.</p>
-</div>
-
-<div class="app-container" id="app">
-
-    <!-- 1. HOME SCREEN (PURE WHITE CLEAN UI) -->
-    <div id="screen-home" class="screen active">
-        <div class="scrollable-body">
-            <div style="text-align: center; padding-top: 6px;">
-                <div class="hub-tag">🏛️ Silent Preparation Hub</div>
-                <h1 class="main-app-title">SSC SYNONYMS ARCHIVE</h1>
-                <div class="main-app-sub">🎯 15-Year Complete PYQs (2010 – 2025)</div>
-            </div>
-
-            <!-- 👑 ANKIT ROYAL BRAND POSTER (CLICKABLE & SECURE) -->
-            <div class="ankit-brand-poster" id="ankit-master-poster" onclick="window.open('https://t.me/ankit_123422', '_blank')">
-                <div class="poster-watermark">ANKIT</div>
-                <div class="poster-top-row">
-                    <span class="poster-org-badge">OFFICIAL VERIFIED CREATOR</span>
-                    <span class="poster-verified-icon">✔</span>
-                </div>
-                
-                <div class="poster-main-title">
-                    <span>👑</span>
-                    <span>ANKIT</span>
-                    <span>👑</span>
-                </div>
-
-                <div class="poster-role-tag">Silent Prep Lead & Technical Director</div>
-
-                <div class="poster-footer-btn">
-                    <span>💬 Tap to Connect on Telegram</span>
-                    <span style="font-size: 13px;">➔</span>
-                </div>
-            </div>
-
-            <!-- STATS MATRIX -->
-            <div class="stats-grid-row">
-                <div class="stat-card-clean">
-                    <div class="stat-num-val">15</div>
-                    <div class="stat-num-lbl">Years (2010-25)</div>
-                </div>
-                <div class="stat-card-clean">
-                    <div class="stat-num-val">811</div>
-                    <div class="stat-num-lbl">Official Qs</div>
-                </div>
-                <div class="stat-card-clean">
-                    <div class="stat-num-val">Hindi</div>
-                    <div class="stat-num-lbl">Meanings & Sol</div>
-                </div>
-            </div>
-
-            <!-- 100% FREE NOTICE -->
-            <div class="free-license-box">
-                <strong>⚠️ 100% FREE INITIATIVE • DO NOT SELL</strong><br>
-                यह सिनोनिम्स आर्काइव 15 वर्षों के ऑफिशियल प्रश्नों का संकलन है। कृपया इसे बेचें नहीं, अपने जरूरतमंद दोस्तों में दिल खोलकर शेयर करें! ❤️
-            </div>
-
-            <!-- ACTION BUTTONS -->
-            <button class="btn-start-interactive" onclick="showScreen('screen-years')">
-                🚀 START VOCAB PRACTICE (2010–2025) ➔
-            </button>
-
-            <button class="btn-wa-action" onclick="openWaModal()">
-                <span>📲</span> Join Official WhatsApp Channel
-            </button>
-
-            <div class="site-links-row">
-                <a href="https://ankitprep.silentpreparationhub.workers.dev/" target="_blank" class="site-chip">🌐 Silent Prep Hub</a>
-                <a href="https://pareekshakendra.pareekshakendraankit.workers.dev/" target="_blank" class="site-chip">🏛️ Pareeksha Kendra</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- 2. YEAR SELECTION SCREEN (2025 DOWN TO 2010) -->
-    <div id="screen-years" class="screen">
-        <div class="app-topbar">
-            <button class="btn-app-back" onclick="showScreen('screen-home')">← Home</button>
-            <div style="font-weight: 800; font-size: 14px; color: var(--text-dark);">Year-wise Synonyms</div>
-            <a href="https://t.me/ankit_123422" target="_blank" class="btn-doubt-pill">💬 Doubt</a>
-        </div>
-        <div class="scrollable-body">
-            <div class="years-list-grid" id="years-list-container">
-                <!-- Auto-populated (2025 to 2010) -->
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. INTERACTIVE QUIZ SCREEN -->
-    <div id="screen-quiz" class="screen">
-        <div class="app-topbar">
-            <button class="btn-app-back" onclick="showScreen('screen-years')">✕ Exit</button>
-            <div id="quiz-header-year" style="font-weight: 800; font-size: 13.5px; color: var(--primary-blue);">Year 2025</div>
-            <a href="https://t.me/ankit_123422" target="_blank" class="btn-doubt-pill">💬 Ask Ankit</a>
-        </div>
-
-        <div class="scrollable-body">
-            <div class="q-meta-row">
-                <div class="q-counter-pill" id="q-counter-display">Question 1 / 49</div>
-                <div style="font-size: 11.5px; font-weight: 800; color: var(--emerald);" id="q-exam-label">SSC Official PYQ</div>
-            </div>
-
-            <!-- QUESTION TEXT -->
-            <div class="synonym-word-box" id="quiz-question-text">
-                Loading Question...
-            </div>
-
-            <!-- OPTIONS -->
-            <div class="options-vertical-list" id="quiz-options-list"></div>
-
-            <!-- DETAILED HINDI SOLUTION BOX -->
-            <div class="vocab-solution-box" id="quiz-solution-box">
-                <div class="sol-tag-header">💡 Detailed Hindi Meanings & Explanation</div>
-                <div class="sol-explanation-text" id="quiz-solution-text"></div>
-            </div>
-
-            <!-- JUMP PALETTE -->
-            <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase;">Direct Question Jump:</div>
-            <div class="navigator-grid" id="quiz-navigator-palette"></div>
-
-            <!-- CONTROLS -->
-            <div class="quiz-control-row">
-                <button class="btn-ctrl" onclick="prevQuestion()">← Previous</button>
-                <button class="btn-ctrl" style="background: var(--primary-blue); color: #ffffff;" onclick="nextQuestion()">Next Question →</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. RESULT SCORECARD SCREEN -->
-    <div id="screen-score" class="screen">
-        <div class="app-topbar">
-            <button class="btn-app-back" onclick="showScreen('screen-years')">← Years List</button>
-            <div style="font-weight: 800; font-size: 13.5px; color: var(--text-dark);">Scorecard</div>
-            <a href="https://t.me/ankit_123422" target="_blank" class="btn-doubt-pill">💬 Share</a>
-        </div>
-        <div class="scrollable-body">
-            <div class="ankit-brand-poster" style="margin-top: 10px; cursor: default;">
-                <div class="hub-tag">Year Completed 🎉</div>
-                <div style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--primary-blue); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 14px auto; background: var(--primary-blue-light);">
-                    <div id="res-score-number" style="font-size: 28px; font-weight: 900; color: var(--primary-blue);">0</div>
-                    <div style="font-size: 10px; color: var(--text-muted); font-weight: 800;">SCORE</div>
-                </div>
-                <h3 id="res-remarks" style="font-size: 18px; color: var(--text-dark); margin-bottom: 4px;">Outstanding! 👑</h3>
-                <p style="font-size: 12px; color: var(--text-muted);" id="res-stats-detail">Correct: 0 | Wrong: 0</p>
-            </div>
-
-            <button class="btn-start-interactive" onclick="restartYearSet()">
-                🔄 Reattempt Year Set
-            </button>
-            <button class="btn-wa-action" onclick="openWaModal()">
-                📲 Share Score on WhatsApp
-            </button>
-        </div>
-    </div>
-
-</div>
-
-<!-- WHATSAPP POPUP MODAL -->
-<div class="modal-overlay" id="wa-modal">
-    <div class="modal-white-card">
-        <div style="font-size: 38px; margin-bottom: 8px;">📲</div>
-        <h2 style="font-size: 18px; color: var(--text-dark); margin-bottom: 6px;">Join Official WhatsApp Channel</h2>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">
-            Get Daily English Vocab PYQs, Grammar Rules, PDFs & Live Tests directly on WhatsApp.
-        </p>
-        <a href="https://whatsapp.com/channel/0029Vb8YQJZElah28mUs922k" target="_blank" class="btn-wa-action" style="margin-bottom: 8px;">
-            Join WhatsApp Channel ➔
-        </a>
-        <button onclick="closeWaModal()" style="background: transparent; border: none; color: var(--text-muted); font-size: 12px; cursor: pointer; padding: 6px;">
-            Dismiss / बंद करें
-        </button>
-    </div>
-</div>
-
-<script>
-// =============================================================
-// 🛡️ UNBREAKABLE ANKIT BRAND SECURITY MONITOR
-// =============================================================
-(function protectAnkitBrand() {
-    // 1. Framebuster
-    if (window.top !== window.self) {
-        window.top.location = window.self.location;
-    }
-
-    // 2. Keyboard shortcut blocker (F12, Ctrl+U, Ctrl+S, Ctrl+C, etc.)
-    document.addEventListener('keydown', function (e) {
-        if (
-            e.keyCode === 123 || 
-            (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
-            (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67 || e.keyCode === 88 || e.keyCode === 65))
-        ) {
-            e.preventDefault();
-            return false;
-        }
-    });
-
-    // 3. Prevent Dragging
-    document.addEventListener('dragstart', function(e) { e.preventDefault(); });
-
-    // 4. Anti-Tamper Check
-    function verifyBrand() {
-        const poster = document.getElementById('ankit-master-poster');
-        const isValid = poster && 
-                        poster.innerText.includes('ANKIT') && 
-                        poster.getAttribute('onclick') && 
-                        poster.getAttribute('onclick').includes('ankit_123422');
-
-        if (!isValid) {
-            document.getElementById('tamper-screen').style.display = 'flex';
-            document.getElementById('app').style.display = 'none';
-            throw new Error("Security Violation: Brand tampering detected!");
-        }
-    }
-
-    verifyBrand();
-    setInterval(verifyBrand, 400);
-
-    const observer = new MutationObserver(verifyBrand);
-    observer.observe(document.body, { childList: true, subtree: true, characterData: true });
-})();
-
-// =============================================================
-// 📚 15-YEAR DIRECTORY LIST (2025 TO 2010 IN DESCENDING ORDER)
-// =============================================================
-const YEARS_DIRECTORY = [
-    { year: 2025, count: 49, exam: "SSC CGL Pre + Mains" },
-    { year: 2024, count: 92, exam: "SSC CGL Pre + Mains" },
-    { year: 2023, count: 93, exam: "SSC CGL Pre + Mains" },
-    { year: 2022, count: 84, exam: "SSC CGL Pre + Mains" },
-    { year: 2021, count: 46, exam: "SSC CGL Pre + Mains" },
-    { year: 2020, count: 48, exam: "SSC CGL Pre + Mains" },
-    { year: 2019, count: 45, exam: "SSC CGL Pre + Mains" },
-    { year: 2018, count: 52, exam: "SSC CGL Pre + Mains" },
-    { year: 2017, count: 104, exam: "SSC CGL Pre + Mains" },
-    { year: 2016, count: 42, exam: "SSC CGL Pre + Mains" },
-    { year: 2015, count: 15, exam: "SSC CGL Pre + Mains" },
-    { year: 2014, count: 18, exam: "SSC CGL Pre + Mains" },
-    { year: 2013, count: 33, exam: "SSC CGL Pre + Mains" },
-    { year: 2012, count: 35, exam: "SSC CGL Pre + Mains" },
-    { year: 2011, count: 30, exam: "SSC CGL Pre + Mains" },
-    { year: 2010, count: 25, exam: "SSC CGL Pre + Mains" }
-];
-
-// =============================================================
-// 📦 MASTER SYNONYMS DATA STORAGE (PASTE ALL PARTS HERE)
-// =============================================================
-const ALL_SYNONYMS_DATA = [
-
+<!DOCTYPE html>
+
+<html lang="hi" oncontextmenu="return false;" onselectstart="return false;" ondragstart="return false;">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>SSC 15-Year Synonyms (2010-2025) | Presented by ANKIT</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root {
+
+            --bg-body: #f8fafc;
+
+            --bg-card: #ffffff;
+
+            --bg-card-sub: #f1f5f9;
+
+            --border-light: #e2e8f0;
+
+            --border-hover: #cbd5e1;
+
+            
+
+            --primary-blue: #2563eb;
+
+            --primary-blue-light: #eff6ff;
+
+            --emerald: #10b981;
+
+            --emerald-light: #ecfdf5;
+
+            --gold-main: #d97706;
+
+            --gold-light: #fef3c7;
+
+            --rose: #ef4444;
+
+            --rose-light: #fef2f2;
+
+            
+
+            --text-dark: #0f172a;
+
+            --text-body: #334155;
+
+            --text-muted: #64748b;
+
+            --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+
+        }
+
+
+
+        * {
+
+            box-sizing: border-box;
+
+            margin: 0;
+
+            padding: 0;
+
+            -webkit-user-select: none !important;
+
+            -moz-user-select: none !important;
+
+            -ms-user-select: none !important;
+
+            user-select: none !important;
+
+            -webkit-touch-callout: none !important;
+
+            -webkit-tap-highlight-color: transparent;
+
+        }
+
+
+
+        body {
+
+            font-family: 'Plus Jakarta Sans', sans-serif;
+
+            background-color: var(--bg-body);
+
+            color: var(--text-dark);
+
+            min-height: 100vh;
+
+            min-height: 100dvh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: flex-start;
+
+        }
+
+
+
+        .app-container {
+
+            width: 100%;
+
+            max-width: 480px;
+
+            min-height: 100vh;
+
+            min-height: 100dvh;
+
+            background: #ffffff;
+
+            display: flex;
+
+            flex-direction: column;
+
+            position: relative;
+
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.06);
+
+            border-left: 1px solid var(--border-light);
+
+            border-right: 1px solid var(--border-light);
+
+        }
+
+
+
+        .screen {
+
+            display: none;
+
+            flex-direction: column;
+
+            flex: 1;
+
+            width: 100%;
+
+            animation: appFade 0.2s ease-out;
+
+        }
+
+
+
+        .screen.active {
+
+            display: flex;
+
+        }
+
+
+
+        @keyframes appFade {
+
+            from { opacity: 0; transform: translateY(4px); }
+
+            to { opacity: 1; transform: translateY(0); }
+
+        }
+
+
+
+        /* TOPBAR (SILENT PREPARATION HUB MATCHING) */
+
+        .app-topbar {
+
+            padding: 14px 18px;
+
+            background: #ffffff;
+
+            border-bottom: 1px solid var(--border-light);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 50;
+
+        }
+
+
+
+        .btn-app-back {
+
+            background: var(--bg-card-sub);
+
+            border: 1px solid var(--border-light);
+
+            color: var(--text-dark);
+
+            padding: 7px 14px;
+
+            border-radius: 10px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+        }
+
+
+
+        .btn-doubt-pill {
+
+            background: var(--primary-blue-light);
+
+            border: 1px solid #bfdbfe;
+
+            color: var(--primary-blue);
+
+            padding: 7px 14px;
+
+            border-radius: 10px;
+
+            font-size: 12px;
+
+            font-weight: 800;
+
+            text-decoration: none;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+        }
+
+
+
+        .scrollable-body {
+
+            flex: 1;
+
+            overflow-y: auto;
+
+            -webkit-overflow-scrolling: touch;
+
+            padding: 20px 18px 80px 18px;
+
+        }
+
+
+
+        /* HERO HEADER */
+
+        .hub-tag {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            background: #ecfdf5;
+
+            border: 1px solid #a7f3d0;
+
+            color: #059669;
+
+            padding: 5px 12px;
+
+            border-radius: 999px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            letter-spacing: 0.5px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 10px;
+
+        }
+
+
+
+        .main-app-title {
+
+            font-family: 'Outfit', sans-serif;
+
+            font-size: 26px;
+
+            font-weight: 900;
+
+            line-height: 1.2;
+
+            color: var(--text-dark);
+
+        }
+
+
+
+        .main-app-sub {
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            color: var(--primary-blue);
+
+            margin-top: 4px;
+
+            margin-bottom: 18px;
+
+        }
+
+
+
+        /* 👑 3D ROYAL BRAND POSTER DESIGN */
+
+        .ankit-brand-poster {
+
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 45%, #ffffff 100%);
+
+            border: 2px solid #f59e0b;
+
+            border-radius: 20px;
+
+            padding: 18px 16px;
+
+            text-align: center;
+
+            box-shadow: 0 10px 30px rgba(217, 119, 6, 0.15), 0 2px 6px rgba(0,0,0,0.05);
+
+            margin-bottom: 18px;
+
+            position: relative;
+
+            overflow: hidden;
+
+            cursor: pointer;
+
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+
+        }
+
+
+
+        .ankit-brand-poster:active {
+
+            transform: scale(0.97);
+
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.2);
+
+        }
+
+
+
+        .ankit-brand-poster::before {
+
+            content: '';
+
+            position: absolute;
+
+            top: -50%;
+
+            left: -50%;
+
+            width: 200%;
+
+            height: 200%;
+
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.6) 50%, transparent 60%);
+
+            animation: posterShine 3.5s infinite linear;
+
+            pointer-events: none;
+
+        }
+
+
+
+        @keyframes posterShine {
+
+            0% { transform: translateX(-100%); }
+
+            100% { transform: translateX(100%); }
+
+        }
+
+
+
+        .poster-watermark {
+
+            position: absolute;
+
+            font-family: 'Outfit', sans-serif;
+
+            font-size: 80px;
+
+            font-weight: 900;
+
+            color: rgba(217, 119, 6, 0.04);
+
+            top: 50%;
+
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            letter-spacing: 6px;
+
+            pointer-events: none;
+
+            user-select: none;
+
+        }
+
+
+
+        .poster-top-row {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 6px;
+
+            margin-bottom: 4px;
+
+        }
+
+
+
+        .poster-org-badge {
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: 1.5px;
+
+            color: #b45309;
+
+            text-transform: uppercase;
+
+        }
+
+
+
+        .poster-verified-icon {
+
+            background: #2563eb;
+
+            color: #fff;
+
+            width: 15px;
+
+            height: 15px;
+
+            border-radius: 50%;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 9px;
+
+            font-weight: 900;
+
+        }
+
+
+
+        .poster-main-title {
+
+            font-family: 'Outfit', sans-serif;
+
+            font-size: 32px;
+
+            font-weight: 900;
+
+            letter-spacing: 2px;
+
+            color: #78350f;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            margin: 2px 0;
+
+            text-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
+
+        }
+
+
+
+        .poster-role-tag {
+
+            font-size: 12px;
+
+            color: #92400e;
+
+            font-weight: 700;
+
+            margin-bottom: 12px;
+
+        }
+
+
+
+        .poster-footer-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            background: #ffffff;
+
+            border: 1.5px solid #fbbf24;
+
+            color: #b45309;
+
+            padding: 6px 14px;
+
+            border-radius: 999px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.1);
+
+        }
+
+
+
+        /* STATS */
+
+        .stats-grid-row {
+
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 8px;
+
+            margin-bottom: 18px;
+
+        }
+
+
+
+        .stat-card-clean {
+
+            background: var(--bg-card-sub);
+
+            border: 1px solid var(--border-light);
+
+            border-radius: 12px;
+
+            padding: 10px 6px;
+
+            text-align: center;
+
+        }
+
+
+
+        .stat-num-val {
+
+            font-family: 'Outfit', sans-serif;
+
+            font-size: 18px;
+
+            font-weight: 900;
+
+            color: var(--primary-blue);
+
+        }
+
+
+
+        .stat-num-lbl {
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            color: var(--text-muted);
+
+            margin-top: 2px;
+
+        }
+
+
+
+        /* FREE NOTICE */
+
+        .free-license-box {
+
+            background: var(--rose-light);
+
+            border: 1.5px dashed #fca5a5;
+
+            border-radius: 14px;
+
+            padding: 12px 14px;
+
+            margin-bottom: 18px;
+
+            font-size: 11.5px;
+
+            line-height: 1.5;
+
+            color: #991b1b;
+
+        }
+
+
+
+        /* ACTION BUTTONS */
+
+        .btn-start-interactive {
+
+            width: 100%;
+
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+
+            color: #ffffff;
+
+            border: none;
+
+            border-radius: 14px;
+
+            padding: 15px;
+
+            font-family: 'Outfit', sans-serif;
+
+            font-size: 16px;
+
+            font-weight: 900;
+
+            letter-spacing: 0.5px;
+
+            cursor: pointer;
+
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            margin-bottom: 10px;
+
+        }
+
+
+
+        .btn-wa-action {
+
+            width: 100%;
+
+            background: #10b981;
+
+            color: #ffffff;
+
+            border: none;
+
+            border-radius: 14px;
+
+            padding: 13px;
+
+            font-size: 13.5px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            margin-bottom: 14px;
+
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+
+        }
+
+
+
+        .site-links-row {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 8px;
+
+        }
+
+
+
+        .site-chip {
+
+            background: var(--bg-card-sub);
+
+            border: 1px solid var(--border-light);
+
+            border-radius: 10px;
+
+            padding: 10px;
+
+            color: var(--primary-blue);
+
+            text-decoration: none;
+
+            font-size: 11.5px;
+
+            font-weight: 800;
+
+            text-align: center;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 5px;
+
+        }
+
+
+
+        /* 📅 YEAR DIRECTORY LIST */
+
+        .years-list-grid {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+        }
+
+
+
+        .year-card-item {
+
+            background: #ffffff;
+
+            border: 1px solid var(--border-light);
+
+            border-radius: 14px;
+
+            padding: 14px 16px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            cursor: pointer;
+
+            box-shadow: var(--shadow-card);
+
+            transition: all 0.15s ease;
+
+        }
+
+
+
+        .year-card-item:active {
+
+            transform: scale(0.98);
+
+            border-color: var(--primary-blue);
+
+            background: var(--primary-blue-light);
+
+        }
+
+
+
+        .year-title-main {
+
+            font-family: 'Outfit', sans-serif;
+
+            font-size: 15.5px;
+
+            font-weight: 800;
+
+            color: var(--text-dark);
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+        }
+
+
+
+        .year-sub-info {
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            color: var(--text-muted);
+
+            margin-top: 2px;
+
+        }
+
+
+
+        .year-badge-pill {
+
+            background: var(--primary-blue-light);
+
+            border: 1px solid #bfdbfe;
+
+            color: var(--primary-blue);
+
+            border-radius: 8px;
+
+            padding: 4px 9px;
+
+            font-size: 11.5px;
+
+            font-weight: 800;
+
+        }
+
+
+
+        /* QUIZ SCREEN */
+
+        .q-meta-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 12px;
+
+        }
+
+
+
+        .q-counter-pill {
+
+            background: #f1f5f9;
+
+            color: var(--text-dark);
+
+            border: 1px solid var(--border-light);
+
+            padding: 4px 10px;
+
+            border-radius: 8px;
+
+            font-size: 11.5px;
+
+            font-weight: 800;
+
+        }
+
+
+
+        .synonym-word-box {
+
+            background: #ffffff;
+
+            border: 1.5px solid var(--border-light);
+
+            border-radius: 16px;
+
+            padding: 18px 16px;
+
+            font-size: 16px;
+
+            font-weight: 800;
+
+            line-height: 1.5;
+
+            color: var(--text-dark);
+
+            margin-bottom: 16px;
+
+            box-shadow: var(--shadow-card);
+
+        }
+
+
+
+        .options-vertical-list {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+            margin-bottom: 16px;
+
+        }
+
+
+
+        .opt-choice-btn {
+
+            background: #ffffff;
+
+            border: 1.5px solid var(--border-light);
+
+            border-radius: 12px;
+
+            padding: 13px 15px;
+
+            color: var(--text-dark);
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            text-align: left;
+
+            cursor: pointer;
+
+            line-height: 1.4;
+
+            display: flex;
+
+            gap: 10px;
+
+            transition: all 0.15s;
+
+        }
+
+
+
+        .opt-choice-btn.correct {
+
+            background: var(--emerald-light) !important;
+
+            border-color: var(--emerald) !important;
+
+            color: #065f46 !important;
+
+        }
+
+
+
+        .opt-choice-btn.wrong {
+
+            background: var(--rose-light) !important;
+
+            border-color: var(--rose) !important;
+
+            color: #991b1b !important;
+
+        }
+
+
+
+        /* DETAILED SOLUTION BOX */
+
+        .vocab-solution-box {
+
+            display: none;
+
+            background: #f8fafc;
+
+            border: 1.5px solid #cbd5e1;
+
+            border-radius: 14px;
+
+            padding: 14px;
+
+            margin-bottom: 16px;
+
+            animation: appFade 0.2s ease-out;
+
+        }
+
+
+
+        .sol-tag-header {
+
+            font-size: 11.5px;
+
+            font-weight: 800;
+
+            color: var(--primary-blue);
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            margin-bottom: 6px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+        }
+
+
+
+        .sol-explanation-text {
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            color: var(--text-body);
+
+        }
+
+
+
+        /* PALETTE NAV */
+
+        .navigator-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(10, 1fr);
+
+            gap: 4px;
+
+            background: #f1f5f9;
+
+            border-radius: 12px;
+
+            padding: 8px;
+
+            margin-bottom: 16px;
+
+            max-height: 110px;
+
+            overflow-y: auto;
+
+        }
+
+
+
+        .nav-btn-box {
+
+            aspect-ratio: 1;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            border-radius: 6px;
+
+            background: #ffffff;
+
+            color: var(--text-muted);
+
+            border: 1px solid var(--border-light);
+
+            cursor: pointer;
+
+        }
+
+
+
+        .nav-btn-box.active {
+
+            border: 2px solid var(--primary-blue);
+
+            color: var(--primary-blue);
+
+        }
+
+
+
+        .nav-btn-box.solved-correct {
+
+            background: var(--emerald);
+
+            color: #ffffff;
+
+            border-color: var(--emerald);
+
+        }
+
+
+
+        .nav-btn-box.solved-wrong {
+
+            background: var(--rose);
+
+            color: #ffffff;
+
+            border-color: var(--rose);
+
+        }
+
+
+
+        .quiz-control-row {
+
+            display: flex;
+
+            gap: 8px;
+
+        }
+
+
+
+        .btn-ctrl {
+
+            flex: 1;
+
+            background: var(--bg-card-sub);
+
+            border: 1px solid var(--border-light);
+
+            color: var(--text-dark);
+
+            padding: 13px;
+
+            border-radius: 12px;
+
+            font-weight: 800;
+
+            font-size: 13.5px;
+
+            cursor: pointer;
+
+        }
+
+
+
+        /* MODAL */
+
+        .modal-overlay {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100vw;
+
+            height: 100vh;
+
+            background: rgba(15, 23, 42, 0.6);
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            z-index: 100;
+
+            padding: 20px;
+
+        }
+
+
+
+        .modal-white-card {
+
+            background: #ffffff;
+
+            border-radius: 20px;
+
+            padding: 22px;
+
+            max-width: 380px;
+
+            width: 100%;
+
+            text-align: center;
+
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+
+        }
+
+
+
+        /* SECURITY LOCK */
+
+        #tamper-screen {
+
+            display: none;
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            background: #ffffff;
+
+            color: var(--rose);
+
+            z-index: 99999;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 30px;
+
+            text-align: center;
+
+        }
+
+    </style>
+
+</head>
+
+<body oncopy="return false" oncut="return false" onpaste="return false">
+
+
+
+<div id="tamper-screen">
+
+    <h1 style="font-size: 24px; margin-bottom: 8px;">⚠️ SECURITY LOCK TRIGGERED</h1>
+
+    <p style="color: #475569; font-size: 13px;">App verification failed. Modification of owner details (ANKIT) is restricted.</p>
+
+</div>
+
+
+
+<div class="app-container" id="app">
+
+
+
+    <!-- 1. HOME SCREEN (PURE WHITE CLEAN UI) -->
+
+    <div id="screen-home" class="screen active">
+
+        <div class="scrollable-body">
+
+            <div style="text-align: center; padding-top: 6px;">
+
+                <div class="hub-tag">🏛️ Silent Preparation Hub</div>
+
+                <h1 class="main-app-title">SSC SYNONYMS ARCHIVE</h1>
+
+                <div class="main-app-sub">🎯 15-Year Complete PYQs (2010 – 2025)</div>
+
+            </div>
+
+
+
+            <!-- 👑 ANKIT ROYAL BRAND POSTER (CLICKABLE & SECURE) -->
+
+            <div class="ankit-brand-poster" id="ankit-master-poster" onclick="window.open('https://t.me/ankit_123422', '_blank')">
+
+                <div class="poster-watermark">ANKIT</div>
+
+                <div class="poster-top-row">
+
+                    <span class="poster-org-badge">OFFICIAL VERIFIED CREATOR</span>
+
+                    <span class="poster-verified-icon">✔</span>
+
+                </div>
+
+                
+
+                <div class="poster-main-title">
+
+                    <span>👑</span>
+
+                    <span>ANKIT</span>
+
+                    <span>👑</span>
+
+                </div>
+
+
+
+                <div class="poster-role-tag">Silent Prep Lead & Technical Director</div>
+
+
+
+                <div class="poster-footer-btn">
+
+                    <span>💬 Tap to Connect on Telegram</span>
+
+                    <span style="font-size: 13px;">➔</span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- STATS MATRIX -->
+
+            <div class="stats-grid-row">
+
+                <div class="stat-card-clean">
+
+                    <div class="stat-num-val">15</div>
+
+                    <div class="stat-num-lbl">Years (2010-25)</div>
+
+                </div>
+
+                <div class="stat-card-clean">
+
+                    <div class="stat-num-val">811</div>
+
+                    <div class="stat-num-lbl">Official Qs</div>
+
+                </div>
+
+                <div class="stat-card-clean">
+
+                    <div class="stat-num-val">Hindi</div>
+
+                    <div class="stat-num-lbl">Meanings & Sol</div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- 100% FREE NOTICE -->
+
+            <div class="free-license-box">
+
+                <strong>⚠️ 100% FREE INITIATIVE • DO NOT SELL</strong><br>
+
+                यह सिनोनिम्स आर्काइव 15 वर्षों के ऑफिशियल प्रश्नों का संकलन है। कृपया इसे बेचें नहीं, अपने जरूरतमंद दोस्तों में दिल खोलकर शेयर करें! ❤️
+
+            </div>
+
+
+
+            <!-- ACTION BUTTONS -->
+
+            <button class="btn-start-interactive" onclick="showScreen('screen-years')">
+
+                🚀 START VOCAB PRACTICE (2010–2025) ➔
+
+            </button>
+
+
+
+            <button class="btn-wa-action" onclick="openWaModal()">
+
+                <span>📲</span> Join Official WhatsApp Channel
+
+            </button>
+
+
+
+            <div class="site-links-row">
+
+                <a href="https://ankitprep.silentpreparationhub.workers.dev/" target="_blank" class="site-chip">🌐 Silent Prep Hub</a>
+
+                <a href="https://pareekshakendra.pareekshakendraankit.workers.dev/" target="_blank" class="site-chip">🏛️ Pareeksha Kendra</a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- 2. YEAR SELECTION SCREEN (2025 DOWN TO 2010) -->
+
+    <div id="screen-years" class="screen">
+
+        <div class="app-topbar">
+
+            <button class="btn-app-back" onclick="showScreen('screen-home')">← Home</button>
+
+            <div style="font-weight: 800; font-size: 14px; color: var(--text-dark);">Year-wise Synonyms</div>
+
+            <a href="https://t.me/ankit_123422" target="_blank" class="btn-doubt-pill">💬 Doubt</a>
+
+        </div>
+
+        <div class="scrollable-body">
+
+            <div class="years-list-grid" id="years-list-container">
+
+                <!-- Auto-populated (2025 to 2010) -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- 3. INTERACTIVE QUIZ SCREEN -->
+
+    <div id="screen-quiz" class="screen">
+
+        <div class="app-topbar">
+
+            <button class="btn-app-back" onclick="showScreen('screen-years')">✕ Exit</button>
+
+            <div id="quiz-header-year" style="font-weight: 800; font-size: 13.5px; color: var(--primary-blue);">Year 2025</div>
+
+            <a href="https://t.me/ankit_123422" target="_blank" class="btn-doubt-pill">💬 Ask Ankit</a>
+
+        </div>
+
+
+
+        <div class="scrollable-body">
+
+            <div class="q-meta-row">
+
+                <div class="q-counter-pill" id="q-counter-display">Question 1 / 49</div>
+
+                <div style="font-size: 11.5px; font-weight: 800; color: var(--emerald);" id="q-exam-label">SSC Official PYQ</div>
+
+            </div>
+
+
+
+            <!-- QUESTION TEXT -->
+
+            <div class="synonym-word-box" id="quiz-question-text">
+
+                Loading Question...
+
+            </div>
+
+
+
+            <!-- OPTIONS -->
+
+            <div class="options-vertical-list" id="quiz-options-list"></div>
+
+
+
+            <!-- DETAILED HINDI SOLUTION BOX -->
+
+            <div class="vocab-solution-box" id="quiz-solution-box">
+
+                <div class="sol-tag-header">💡 Detailed Hindi Meanings & Explanation</div>
+
+                <div class="sol-explanation-text" id="quiz-solution-text"></div>
+
+            </div>
+
+
+
+            <!-- JUMP PALETTE -->
+
+            <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase;">Direct Question Jump:</div>
+
+            <div class="navigator-grid" id="quiz-navigator-palette"></div>
+
+
+
+            <!-- CONTROLS -->
+
+            <div class="quiz-control-row">
+
+                <button class="btn-ctrl" onclick="prevQuestion()">← Previous</button>
+
+                <button class="btn-ctrl" style="background: var(--primary-blue); color: #ffffff;" onclick="nextQuestion()">Next Question →</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- 4. RESULT SCORECARD SCREEN -->
+
+    <div id="screen-score" class="screen">
+
+        <div class="app-topbar">
+
+            <button class="btn-app-back" onclick="showScreen('screen-years')">← Years List</button>
+
+            <div style="font-weight: 800; font-size: 13.5px; color: var(--text-dark);">Scorecard</div>
+
+            <a href="https://t.me/ankit_123422" target="_blank" class="btn-doubt-pill">💬 Share</a>
+
+        </div>
+
+        <div class="scrollable-body">
+
+            <div class="ankit-brand-poster" style="margin-top: 10px; cursor: default;">
+
+                <div class="hub-tag">Year Completed 🎉</div>
+
+                <div style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--primary-blue); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 14px auto; background: var(--primary-blue-light);">
+
+                    <div id="res-score-number" style="font-size: 28px; font-weight: 900; color: var(--primary-blue);">0</div>
+
+                    <div style="font-size: 10px; color: var(--text-muted); font-weight: 800;">SCORE</div>
+
+                </div>
+
+                <h3 id="res-remarks" style="font-size: 18px; color: var(--text-dark); margin-bottom: 4px;">Outstanding! 👑</h3>
+
+                <p style="font-size: 12px; color: var(--text-muted);" id="res-stats-detail">Correct: 0 | Wrong: 0</p>
+
+            </div>
+
+
+
+            <button class="btn-start-interactive" onclick="restartYearSet()">
+
+                🔄 Reattempt Year Set
+
+            </button>
+
+            <button class="btn-wa-action" onclick="openWaModal()">
+
+                📲 Share Score on WhatsApp
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+</div>
+
+
+
+<!-- WHATSAPP POPUP MODAL -->
+
+<div class="modal-overlay" id="wa-modal">
+
+    <div class="modal-white-card">
+
+        <div style="font-size: 38px; margin-bottom: 8px;">📲</div>
+
+        <h2 style="font-size: 18px; color: var(--text-dark); margin-bottom: 6px;">Join Official WhatsApp Channel</h2>
+
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">
+
+            Get Daily English Vocab PYQs, Grammar Rules, PDFs & Live Tests directly on WhatsApp.
+
+        </p>
+
+        <a href="https://whatsapp.com/channel/0029Vb8YQJZElah28mUs922k" target="_blank" class="btn-wa-action" style="margin-bottom: 8px;">
+
+            Join WhatsApp Channel ➔
+
+        </a>
+
+        <button onclick="closeWaModal()" style="background: transparent; border: none; color: var(--text-muted); font-size: 12px; cursor: pointer; padding: 6px;">
+
+            Dismiss / बंद करें
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+// =============================================================
+
+// 🛡️ UNBREAKABLE ANKIT BRAND SECURITY MONITOR
+
+// =============================================================
+
+(function protectAnkitBrand() {
+
+
+    // 2. Keyboard shortcut blocker (F12, Ctrl+U, Ctrl+S, Ctrl+C, etc.)
+
+    document.addEventListener('keydown', function (e) {
+
+        if (
+
+            e.keyCode === 123 || 
+
+            (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
+
+            (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67 || e.keyCode === 88 || e.keyCode === 65))
+
+        ) {
+
+            e.preventDefault();
+
+            return false;
+
+        }
+
+    });
+
+
+
+    // 3. Prevent Dragging
+
+    document.addEventListener('dragstart', function(e) { e.preventDefault(); });
+
+
+
+    // 4. Anti-Tamper Check
+
+    function verifyBrand() {
+
+        const poster = document.getElementById('ankit-master-poster');
+
+        const isValid = poster && 
+
+                        poster.innerText.includes('ANKIT') && 
+
+                        poster.getAttribute('onclick') && 
+
+                        poster.getAttribute('onclick').includes('ankit_123422');
+
+
+
+        if (!isValid) {
+
+            document.getElementById('tamper-screen').style.display = 'flex';
+
+            document.getElementById('app').style.display = 'none';
+
+            throw new Error("Security Violation: Brand tampering detected!");
+
+        }
+
+    }
+
+
+
+    verifyBrand();
+
+    setInterval(verifyBrand, 400);
+
+
+
+    const observer = new MutationObserver(verifyBrand);
+
+    observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+
+})();
+
+
+
+// =============================================================
+
+// 📚 15-YEAR DIRECTORY LIST (2025 TO 2010 IN DESCENDING ORDER)
+
+// =============================================================
+
+const YEARS_DIRECTORY = [
+
+    { year: 2025, count: 49, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2024, count: 92, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2023, count: 93, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2022, count: 84, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2021, count: 46, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2020, count: 48, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2019, count: 45, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2018, count: 52, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2017, count: 104, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2016, count: 42, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2015, count: 15, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2014, count: 18, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2013, count: 33, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2012, count: 35, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2011, count: 30, exam: "SSC CGL Pre + Mains" },
+
+    { year: 2010, count: 25, exam: "SSC CGL Pre + Mains" }
+
+];
+
+
+
+// =============================================================
+
+// 📦 MASTER SYNONYMS DATA STORAGE (PASTE ALL PARTS HERE)
+
+// =============================================================
+
+const ALL_SYNONYMS_DATA = [
+
+
+
 /* ============================================================= */
 /* 📦 PART 1: YEARS 2025 & 2024 [TOTAL: 141 QUESTIONS]            */
 /* ============================================================= */
@@ -1727,163 +2608,322 @@ const ALL_SYNONYMS_DATA = [
 {"year": 2010, "question": "Q23. DEBACLE", "options": ["(A) Decline", "(B) Downfall", "(C) Discomfiture", "(D) Degeneration"], "answerIndex": 1, "explanation": "<b>उत्तर: (B) Downfall</b><br>Debacle - पतन/विफलता, Downfall - पराजय"},
 {"year": 2010, "question": "Q24. LICENTIOUS", "options": ["(A) Immoral", "(B) Intellectual", "(C) Moral", "(D) Without licence"], "answerIndex": 0, "explanation": "<b>उत्तर: (A) Immoral</b><br>Licentious - अनैतिक/स्वैच्छाचारी, Immoral - दुराचारी"},
 {"year": 2010, "question": "Q25. CODDLE", "options": ["(A) Huddle", "(B) Satisfy", "(C) Protect", "(D) Cheat"], "answerIndex": 2, "explanation": "<b>उत्तर: (C) Protect</b><br>Coddle - लाड़-प्यार करना/सुरक्षित रखना, Protect - सुरक्षा देना"}
-
-];
-
-// =============================================================
-// ⚙️ APP CONTROLLER & LOGIC
-// =============================================================
-let currentYear = 2025;
-let currentQuestions = [];
-let currentIndex = 0;
-let userAnswers = {};
-
-function showScreen(screenId) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(screenId).classList.add('active');
-    window.scrollTo(0, 0);
-}
-
-function openWaModal() { document.getElementById('wa-modal').style.display = 'flex'; }
-function closeWaModal() { document.getElementById('wa-modal').style.display = 'none'; }
-
-// RENDER YEARS LIST
-function renderYearsList() {
-    const container = document.getElementById('years-list-container');
-    container.innerHTML = '';
-
-    YEARS_DIRECTORY.forEach(item => {
-        const count = ALL_SYNONYMS_DATA.filter(q => q.year === item.year).length;
-        const card = document.createElement('div');
-        card.className = 'year-card-item';
-        card.onclick = () => startYearQuiz(item.year);
-        card.innerHTML = `
-            <div>
-                <div class="year-title-main">📘 Year ${item.year} Synonyms</div>
-                <div class="year-sub-info">${item.exam} • Total Official PYQs</div>
-            </div>
-            <div class="year-badge-pill">${count > 0 ? count + ' Qs' : item.count + ' Qs'}</div>
-        `;
-        container.appendChild(card);
-    });
-}
-
-// START YEAR QUIZ
-function startYearQuiz(yr) {
-    currentYear = yr;
-    const yearInfo = YEARS_DIRECTORY.find(y => y.year === yr);
-    currentQuestions = ALL_SYNONYMS_DATA.filter(q => q.year === yr);
-
-    if (currentQuestions.length === 0) {
-        alert(`⚠️ Year ${yr} के सवाल अभी लोड किए जा रहे हैं! कृपया इस वर्ष का कोड पेस्ट करें।`);
-        return;
-    }
-
-    currentIndex = 0;
-    userAnswers = {};
-    document.getElementById('quiz-header-year').innerText = `Year ${yr} Synonyms`;
-    document.getElementById('q-exam-label').innerText = `${yearInfo.exam}`;
-    showScreen('screen-quiz');
-    loadQuestion(0);
-}
-
-// LOAD QUESTION
-function loadQuestion(idx) {
-    currentIndex = idx;
-    const q = currentQuestions[idx];
-    document.getElementById('q-counter-display').innerText = `Question ${idx + 1} / ${currentQuestions.length}`;
-    document.getElementById('quiz-question-text').innerText = q.question;
-
-    const optList = document.getElementById('quiz-options-list');
-    optList.innerHTML = '';
-    const solBox = document.getElementById('quiz-solution-box');
-
-    q.options.forEach((optText, optIdx) => {
-        const btn = document.createElement('button');
-        btn.className = 'opt-choice-btn';
-        btn.innerHTML = `<span style="color: var(--primary-blue); font-weight: 800;">(${String.fromCharCode(65 + optIdx)})</span> <span>${optText.replace(/^\([A-D]\)\s*/i, '')}</span>`;
-
-        if (userAnswers[idx] !== undefined) {
-            btn.disabled = true;
-            if (optIdx === q.answerIndex) btn.classList.add('correct');
-            if (userAnswers[idx] === optIdx && userAnswers[idx] !== q.answerIndex) btn.classList.add('wrong');
-        } else {
-            btn.onclick = () => selectOption(optIdx);
-        }
-        optList.appendChild(btn);
-    });
-
-    if (userAnswers[idx] !== undefined) {
-        document.getElementById('quiz-solution-text').innerHTML = q.explanation || "व्याख्या उपलब्ध नहीं है।";
-        solBox.style.display = 'block';
-    } else {
-        solBox.style.display = 'none';
-    }
-
-    renderPalette();
-}
-
-function selectOption(optIdx) {
-    if (userAnswers[currentIndex] !== undefined) return;
-    userAnswers[currentIndex] = optIdx;
-    loadQuestion(currentIndex);
-}
-
-function renderPalette() {
-    const pal = document.getElementById('quiz-navigator-palette');
-    pal.innerHTML = '';
-    currentQuestions.forEach((q, i) => {
-        const cell = document.createElement('div');
-        cell.className = 'nav-btn-box';
-        cell.innerText = i + 1;
-        if (i === currentIndex) cell.classList.add('active');
-        if (userAnswers[i] !== undefined) {
-            if (userAnswers[i] === q.answerIndex) cell.classList.add('solved-correct');
-            else cell.classList.add('solved-wrong');
-        }
-        cell.onclick = () => loadQuestion(i);
-        pal.appendChild(cell);
-    });
-}
-
-function prevQuestion() {
-    if (currentIndex > 0) loadQuestion(currentIndex - 1);
-}
-
-function nextQuestion() {
-    if (currentIndex < currentQuestions.length - 1) {
-        loadQuestion(currentIndex + 1);
-    } else {
-        showResults();
-    }
-}
-
-function showResults() {
-    let correct = 0, wrong = 0;
-    currentQuestions.forEach((q, i) => {
-        if (userAnswers[i] === q.answerIndex) correct++;
-        else if (userAnswers[i] !== undefined) wrong++;
-    });
-
-    document.getElementById('res-score-number').innerText = `${correct}/${currentQuestions.length}`;
-    document.getElementById('res-stats-detail').innerText = `✅ सही उत्तर: ${correct} | ❌ गलत उत्तर: ${wrong} | ⏳ छोड़े गए: ${currentQuestions.length - (correct + wrong)}`;
-    
-    const pct = (correct / currentQuestions.length) * 100;
-    let rem = "अभ्यास जारी रखें! 💪";
-    if (pct >= 80) rem = "शानदार और जबरदस्त प्रदर्शन! 👑";
-    else if (pct >= 50) rem = "अच्छा प्रयास, और बेहतर कर सकते हैं! 🌟";
-
-    document.getElementById('res-remarks').innerText = rem;
-    showScreen('screen-score');
-}
-
-function restartYearSet() {
-    startYearQuiz(currentYear);
-}
-
-window.onload = () => {
-    renderYearsList();
-};
-</script>
-</body>
+
+
+];
+
+
+
+// =============================================================
+
+// ⚙️ APP CONTROLLER & LOGIC
+
+// =============================================================
+
+let currentYear = 2025;
+
+let currentQuestions = [];
+
+let currentIndex = 0;
+
+let userAnswers = {};
+
+
+
+function showScreen(screenId) {
+
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+    document.getElementById(screenId).classList.add('active');
+
+    window.scrollTo(0, 0);
+
+}
+
+
+
+function openWaModal() { document.getElementById('wa-modal').style.display = 'flex'; }
+
+function closeWaModal() { document.getElementById('wa-modal').style.display = 'none'; }
+
+
+
+// RENDER YEARS LIST
+
+function renderYearsList() {
+
+    const container = document.getElementById('years-list-container');
+
+    container.innerHTML = '';
+
+
+
+    YEARS_DIRECTORY.forEach(item => {
+
+        const count = ALL_SYNONYMS_DATA.filter(q => q.year === item.year).length;
+
+        const card = document.createElement('div');
+
+        card.className = 'year-card-item';
+
+        card.onclick = () => startYearQuiz(item.year);
+
+        card.innerHTML = `
+
+            <div>
+
+                <div class="year-title-main">📘 Year ${item.year} Synonyms</div>
+
+                <div class="year-sub-info">${item.exam} • Total Official PYQs</div>
+
+            </div>
+
+            <div class="year-badge-pill">${count > 0 ? count + ' Qs' : item.count + ' Qs'}</div>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+
+// START YEAR QUIZ
+
+function startYearQuiz(yr) {
+
+    currentYear = yr;
+
+    const yearInfo = YEARS_DIRECTORY.find(y => y.year === yr);
+
+    currentQuestions = ALL_SYNONYMS_DATA.filter(q => q.year === yr);
+
+
+
+    if (currentQuestions.length === 0) {
+
+        alert(`⚠️ Year ${yr} के सवाल अभी लोड किए जा रहे हैं! कृपया इस वर्ष का कोड पेस्ट करें।`);
+
+        return;
+
+    }
+
+
+
+    currentIndex = 0;
+
+    userAnswers = {};
+
+    document.getElementById('quiz-header-year').innerText = `Year ${yr} Synonyms`;
+
+    document.getElementById('q-exam-label').innerText = `${yearInfo.exam}`;
+
+    showScreen('screen-quiz');
+
+    loadQuestion(0);
+
+}
+
+
+
+// LOAD QUESTION
+
+function loadQuestion(idx) {
+
+    currentIndex = idx;
+
+    const q = currentQuestions[idx];
+
+    document.getElementById('q-counter-display').innerText = `Question ${idx + 1} / ${currentQuestions.length}`;
+
+    document.getElementById('quiz-question-text').innerText = q.question;
+
+
+
+    const optList = document.getElementById('quiz-options-list');
+
+    optList.innerHTML = '';
+
+    const solBox = document.getElementById('quiz-solution-box');
+
+
+
+    q.options.forEach((optText, optIdx) => {
+
+        const btn = document.createElement('button');
+
+        btn.className = 'opt-choice-btn';
+
+        btn.innerHTML = `<span style="color: var(--primary-blue); font-weight: 800;">(${String.fromCharCode(65 + optIdx)})</span> <span>${optText.replace(/^\([A-D]\)\s*/i, '')}</span>`;
+
+
+
+        if (userAnswers[idx] !== undefined) {
+
+            btn.disabled = true;
+
+            if (optIdx === q.answerIndex) btn.classList.add('correct');
+
+            if (userAnswers[idx] === optIdx && userAnswers[idx] !== q.answerIndex) btn.classList.add('wrong');
+
+        } else {
+
+            btn.onclick = () => selectOption(optIdx);
+
+        }
+
+        optList.appendChild(btn);
+
+    });
+
+
+
+    if (userAnswers[idx] !== undefined) {
+
+        document.getElementById('quiz-solution-text').innerHTML = q.explanation || "व्याख्या उपलब्ध नहीं है।";
+
+        solBox.style.display = 'block';
+
+    } else {
+
+        solBox.style.display = 'none';
+
+    }
+
+
+
+    renderPalette();
+
+}
+
+
+
+function selectOption(optIdx) {
+
+    if (userAnswers[currentIndex] !== undefined) return;
+
+    userAnswers[currentIndex] = optIdx;
+
+    loadQuestion(currentIndex);
+
+}
+
+
+
+function renderPalette() {
+
+    const pal = document.getElementById('quiz-navigator-palette');
+
+    pal.innerHTML = '';
+
+    currentQuestions.forEach((q, i) => {
+
+        const cell = document.createElement('div');
+
+        cell.className = 'nav-btn-box';
+
+        cell.innerText = i + 1;
+
+        if (i === currentIndex) cell.classList.add('active');
+
+        if (userAnswers[i] !== undefined) {
+
+            if (userAnswers[i] === q.answerIndex) cell.classList.add('solved-correct');
+
+            else cell.classList.add('solved-wrong');
+
+        }
+
+        cell.onclick = () => loadQuestion(i);
+
+        pal.appendChild(cell);
+
+    });
+
+}
+
+
+
+function prevQuestion() {
+
+    if (currentIndex > 0) loadQuestion(currentIndex - 1);
+
+}
+
+
+
+function nextQuestion() {
+
+    if (currentIndex < currentQuestions.length - 1) {
+
+        loadQuestion(currentIndex + 1);
+
+    } else {
+
+        showResults();
+
+    }
+
+}
+
+
+
+function showResults() {
+
+    let correct = 0, wrong = 0;
+
+    currentQuestions.forEach((q, i) => {
+
+        if (userAnswers[i] === q.answerIndex) correct++;
+
+        else if (userAnswers[i] !== undefined) wrong++;
+
+    });
+
+
+
+    document.getElementById('res-score-number').innerText = `${correct}/${currentQuestions.length}`;
+
+    document.getElementById('res-stats-detail').innerText = `✅ सही उत्तर: ${correct} | ❌ गलत उत्तर: ${wrong} | ⏳ छोड़े गए: ${currentQuestions.length - (correct + wrong)}`;
+
+    
+
+    const pct = (correct / currentQuestions.length) * 100;
+
+    let rem = "अभ्यास जारी रखें! 💪";
+
+    if (pct >= 80) rem = "शानदार और जबरदस्त प्रदर्शन! 👑";
+
+    else if (pct >= 50) rem = "अच्छा प्रयास, और बेहतर कर सकते हैं! 🌟";
+
+
+
+    document.getElementById('res-remarks').innerText = rem;
+
+    showScreen('screen-score');
+
+}
+
+
+
+function restartYearSet() {
+
+    startYearQuiz(currentYear);
+
+}
+
+
+
+window.onload = () => {
+
+    renderYearsList();
+
+};
+
+</script>
+
+</body>
+
 </html>
