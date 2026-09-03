@@ -1,58 +1,67 @@
-[
-  {
-    "id": "1",
-    "title": "IDIOMS & PHRASES Complete Set 31 (Sanjeev Sir RWA Practice)",
-    "subject": "English Vocab",
-    "tag": "31 MASTER SETS",
-    "itemsCount": "31 Complete Sets",
-    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/idioms31.html"
+{
+  "announcement": {
+    "show": true,
+    "title": "🔥 आज का नया टेस्ट लाइव हो गया है!",
+    "message": "15 Years Complete Vocab (Synonyms, Antonyms, OWS, Spelling) के सभी सेट्स ऐप में अपलोड हो चुके हैं। सभी छात्र अभी टेस्ट दें और अपना स्कोर चेक करें!",
+    "button_text": "Join Official Telegram ➔",
+    "button_url": "https://t.me/pareekshakendraankit"
   },
-  {
-    "id": "2",
-    "title": "Error Pro Complete Grammar Book (All Chapters)",
-    "subject": "English Grammar",
-    "tag": "ERROR PRO BOOK",
-    "itemsCount": "Complete Book",
-    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/error-pro.html"
-  },
-  {
-    "id": "3",
-    "title": "SSC Synonyms 15 Years PYQ (2010–2025) All Exam Master Deck",
-    "subject": "English Vocab",
-    "tag": "🔥 15 YEARS SYNONYMS",
-    "itemsCount": "2010–2025 All SSC PYQs",
-    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-synonyms.html"
-  },
-  {
-    "id": "4",
-    "title": "SSC Antonyms 15 Years PYQ (2010–2025) All Exam Master Deck",
-    "subject": "English Vocab",
-    "tag": "🔥 15 YEARS ANTONYMS",
-    "itemsCount": "2010–2025 All SSC PYQs",
-    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-antonyms.html"
-  },
-  {
-    "id": "5",
-    "title": "SSC One Word Substitution (OWS) 15 Years PYQ Master Deck",
-    "subject": "English Vocab",
-    "tag": "🔥 15 YEARS OWS",
-    "itemsCount": "2010–2025 Complete OWS",
-    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-ows.html"
-  },
-  {
-    "id": "6",
-    "title": "SSC Spelling Correction 15 Years PYQ (2010–2025) Master Deck",
-    "subject": "English Vocab",
-    "tag": "🔥 15 YEARS SPELLING",
-    "itemsCount": "2010–2025 Complete Spelling",
-    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-spelling.html"
-  },
-  {
-    "id": "7",
-    "title": "SSC Idioms & Phrases 15 Years PYQ (2010–2025) Master Deck",
-    "subject": "English Vocab",
-    "tag": "🔥 15 YEARS IDIOMS",
-    "itemsCount": "2010–2025 Complete PYQs",
-    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-idioms-pyq.html"
-  }
-]
+  "books": [
+    {
+      "id": "1",
+      "title": "IDIOMS & PHRASES Complete Set 31 (Sanjeev Sir RWA Practice)",
+      "subject": "English Vocab",
+      "tag": "31 MASTER SETS",
+      "itemsCount": "31 Complete Sets",
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/idioms31.html"
+    },
+    {
+      "id": "2",
+      "title": "Error Pro Complete Grammar Book (All Chapters)",
+      "subject": "English Grammar",
+      "tag": "ERROR PRO BOOK",
+      "itemsCount": "Complete Book",
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/error-pro.html"
+    },
+    {
+      "id": "3",
+      "title": "SSC Synonyms 15 Years PYQ (2010–2025) All Exam Master Deck",
+      "subject": "English Vocab",
+      "tag": "🔥 15 YEARS SYNONYMS",
+      "itemsCount": "2010–2025 All SSC PYQs",
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-synonyms.html"
+    },
+    {
+      "id": "4",
+      "title": "SSC Antonyms 15 Years PYQ (2010–2025) All Exam Master Deck",
+      "subject": "English Vocab",
+      "tag": "🔥 15 YEARS ANTONYMS",
+      "itemsCount": "2010–2025 All SSC PYQs",
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-antonyms.html"
+    },
+    {
+      "id": "5",
+      "title": "SSC One Word Substitution (OWS) 15 Years PYQ Master Deck",
+      "subject": "English Vocab",
+      "tag": "🔥 15 YEARS OWS",
+      "itemsCount": "2010–2025 Complete OWS",
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-ows.html"
+    },
+    {
+      "id": "6",
+      "title": "SSC Spelling Correction 15 Years PYQ (2010–2025) Master Deck",
+      "subject": "English Vocab",
+      "tag": "🔥 15 YEARS SPELLING",
+      "itemsCount": "2010–2025 Complete Spelling",
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-spelling.html"
+    },
+    {
+      "id": "7",
+      "title": "SSC Idioms & Phrases 15 Years PYQ (2010–2025) Master Deck",
+      "subject": "English Vocab",
+      "tag": "🔥 15 YEARS IDIOMS",
+      "itemsCount": "2010–2025 Complete PYQs",
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-idioms-pyq.html"
+    }
+  ]
+}
