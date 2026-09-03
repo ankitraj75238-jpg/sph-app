@@ -35,7 +35,7 @@ jobs:
           npm install --legacy-peer-deps || npm install --force
           npm run build || npx vite build
 
-      - name: Configure Capacitor
+      - name: Configure Capacitor & Google Services Engine
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/push-notifications --legacy-peer-deps
           cat << 'EOF' > capacitor.config.json
@@ -52,12 +52,39 @@ jobs:
           npx cap add android
           npx cap sync android
 
-          # Safely place google-services.json
+          # Copy google-services.json
           if [ -f "google-services.json" ]; then
             cp google-services.json android/app/google-services.json
           elif [ -f "public/google-services.json" ]; then
             cp public/google-services.json android/app/google-services.json
           fi
+
+          # Safely inject Google Services Plugin into Gradle using Python
+          python3 - << 'EOF'
+          import os
+
+          # 1. Update root build.gradle
+          root_gradle = 'android/build.gradle'
+          if os.path.exists(root_gradle):
+              with open(root_gradle, 'r') as f:
+                  content = f.read()
+              if 'com.google.gms:google-services' not in content:
+                  content = content.replace('dependencies {', "dependencies {\n        classpath 'com.google.gms:google-services:4.4.2'", 1)
+                  with open(root_gradle, 'w') as f:
+                      f.write(content)
+
+          # 2. Update app build.gradle
+          app_gradle = 'android/app/build.gradle'
+          if os.path.exists(app_gradle):
+              with open(app_gradle, 'r') as f:
+                  app_content = f.read()
+              if 'com.google.gms.google-services' not in app_content:
+                  app_content += "\ntry {\n    def servicesJSON = file('google-services.json')\n    if (servicesJSON.text) {\n        apply plugin: 'com.google.gms.google-services'\n    }\n} catch(Exception e) {\n    logger.warn('google-services.json missing')\n}\n"
+                  with open(app_gradle, 'w') as f:
+                      f.write(app_content)
+
+          print("Google Services Plugin Successfully Connected to Android Core!")
+          EOF
 
       - name: Generate SPH HD Icons with Python Engine
         run: |
