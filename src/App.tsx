@@ -7,7 +7,6 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
-import { PushNotifications } from '@capacitor/push-notifications';
 import { TabType, StudyModule } from './types';
 import { TopBar } from './components/TopBar';
 import { BottomNavBar } from './components/BottomNavBar';
@@ -65,74 +64,6 @@ export default function App() {
     }).catch(() => {
       // Ignore network errors gracefully
     });
-  }, []);
-
-  // Safe Native Push Notifications Integration with Capacitor.isNativePlatform() guard
-  useEffect(() => {
-    let isMounted = true;
-
-    const setupPushNotifications = async () => {
-      try {
-        // Only run on native Android/iOS platforms, cleanly skipped in web preview
-        if (!Capacitor.isNativePlatform()) {
-          return;
-        }
-
-        let permStatus = await PushNotifications.checkPermissions();
-
-        if (permStatus.receive === 'prompt') {
-          permStatus = await PushNotifications.requestPermissions();
-        }
-
-        if (permStatus.receive !== 'granted') {
-          return;
-        }
-
-        await PushNotifications.register();
-
-        if (!isMounted) return;
-
-        // Listener for registration token
-        await PushNotifications.addListener('registration', (token) => {
-          console.log('[SPH Push] Token registered:', token.value);
-        });
-
-        // Listener for registration errors
-        await PushNotifications.addListener('registrationError', (error) => {
-          console.warn('[SPH Push] Registration error:', error);
-        });
-
-        // Listener for incoming push notification while app is open
-        await PushNotifications.addListener('pushNotificationReceived', (notification) => {
-          console.log('[SPH Push] Notification received:', notification);
-        });
-
-        // Listener for notification tapped by user
-        await PushNotifications.addListener('pushNotificationActionPerformed', (notificationAction) => {
-          console.log('[SPH Push] Action performed:', notificationAction);
-          const data = notificationAction.notification?.data;
-          if (data?.tab && ['ankitprep', 'pareeksha', 'books_practice'].includes(data.tab)) {
-            setCurrentTab(data.tab as TabType);
-          }
-        });
-      } catch (error) {
-        // Safe failover ensures web preview and non-native devices never crash
-        console.warn('[SPH Push] Native push setup skipped or not supported:', error);
-      }
-    };
-
-    setupPushNotifications();
-
-    return () => {
-      isMounted = false;
-      try {
-        if (Capacitor.isNativePlatform()) {
-          PushNotifications.removeAllListeners().catch(() => {});
-        }
-      } catch {
-        // Safe no-op cleanup
-      }
-    };
   }, []);
 
   // Sync browser online / offline state
