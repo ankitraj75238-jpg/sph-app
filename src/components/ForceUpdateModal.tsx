@@ -16,6 +16,7 @@ export interface AppControlConfig {
   update_title?: string;
   update_message?: string;
   telegram_url?: string;
+  telegram_link?: string;
   whatsapp_url?: string;
   apk_download_url?: string;
 }
@@ -29,7 +30,7 @@ export const ForceUpdateModal: React.FC<ForceUpdateModalProps> = ({
   currentVersion,
   appControl,
 }) => {
-  const telegramUrl = appControl.telegram_url || 'https://t.me/ankit_123422';
+  const telegramUrl = appControl.telegram_link || appControl.telegram_url || 'https://t.me/pareekshakendraankit';
   const whatsappUrl = appControl.whatsapp_url || 'https://whatsapp.com/channel/0029VbCAg0h3gvWdFXenzf37';
   const targetUrl = appControl.apk_download_url || telegramUrl;
 
