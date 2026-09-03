@@ -7,7 +7,6 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
-import { PushNotifications } from '@capacitor/push-notifications';
 import { TabType, StudyModule, AnnouncementConfig } from './types';
 import { TopBar } from './components/TopBar';
 import { BottomNavBar } from './components/BottomNavBar';
@@ -103,85 +102,6 @@ export default function App() {
     }).catch(() => {
       // Ignore network errors gracefully
     });
-  }, []);
-
-  // Native Push Notifications with High-Priority Lockscreen Channel
-  useEffect(() => {
-    let isMounted = true;
-
-    const setupPushNotifications = async () => {
-      try {
-        // Complete platform check: only run on native Android/iOS runtime
-        if (!Capacitor.isNativePlatform()) {
-          return;
-        }
-
-        // 1. Create High-Importance Android Notification Channel (Pops on screen + Lockscreen banner)
-        await PushNotifications.createChannel({
-          id: 'sph_alerts',
-          name: 'SPH Exam Alerts',
-          description: 'Important live mock tests and updates',
-          importance: 5, // MAX / HIGH IMPORTANCE (Pops on screen + Lockscreen banner)
-          visibility: 1, // PUBLIC (Visible on Lock Screen)
-          sound: 'default',
-          vibration: true,
-          lights: true,
-          lightColor: '#10B981',
-        });
-
-        // 2. Permission & Auto-Registration on cold launch
-        let permStatus = await PushNotifications.checkPermissions();
-        if (permStatus.receive === 'prompt') {
-          permStatus = await PushNotifications.requestPermissions();
-        }
-
-        if (permStatus.receive === 'granted') {
-          await PushNotifications.register();
-        }
-
-        if (!isMounted) return;
-
-        // Listener for registration token (FCM token)
-        await PushNotifications.addListener('registration', (token) => {
-          console.log('[SPH Push] FCM Registration Token:', token.value);
-        });
-
-        // Listener for registration errors
-        await PushNotifications.addListener('registrationError', (error) => {
-          console.warn('[SPH Push] Registration error:', error);
-        });
-
-        // Listener for incoming push notification while app is in foreground
-        await PushNotifications.addListener('pushNotificationReceived', (notification) => {
-          console.log('[SPH Push] Foreground notification received:', notification);
-        });
-
-        // Listener for notification tapped by user to focus app / navigate
-        await PushNotifications.addListener('pushNotificationActionPerformed', (notificationAction) => {
-          console.log('[SPH Push] Notification action tapped:', notificationAction);
-          const data = notificationAction.notification?.data;
-          if (data?.tab && ['ankitprep', 'pareeksha', 'books_practice'].includes(data.tab)) {
-            setCurrentTab(data.tab as TabType);
-          }
-        });
-      } catch (error) {
-        // Safe failover ensures web preview runs smoothly without interruption
-        console.warn('[SPH Push] Native push notification setup skipped or error:', error);
-      }
-    };
-
-    setupPushNotifications();
-
-    return () => {
-      isMounted = false;
-      try {
-        if (Capacitor.isNativePlatform()) {
-          PushNotifications.removeAllListeners().catch(() => {});
-        }
-      } catch {
-        // Safe no-op cleanup
-      }
-    };
   }, []);
 
   // Sync browser online / offline state
