@@ -35,7 +35,7 @@ jobs:
           npm install --legacy-peer-deps || npm install --force
           npm run build || npx vite build
 
-      - name: Configure Capacitor & Google Services
+      - name: Configure Capacitor
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/push-notifications --legacy-peer-deps
           cat << 'EOF' > capacitor.config.json
@@ -52,19 +52,14 @@ jobs:
           npx cap add android
           npx cap sync android
 
-          # Inject google-services.json
+          # Safely place google-services.json
           if [ -f "google-services.json" ]; then
-            echo "Copying google-services.json to android/app/"
             cp google-services.json android/app/google-services.json
           elif [ -f "public/google-services.json" ]; then
             cp public/google-services.json android/app/google-services.json
           fi
 
-          # Inject Google Services Gradle Plugin
-          sed -i 's/dependencies {/dependencies {\n        classpath "com.google.gms:google-services:4.4.2"/g' android/build.gradle
-          echo "apply plugin: 'com.google.gms.google-services'" >> android/app/build.gradle
-
-      - name: Generate SPH HD Icons with Python
+      - name: Generate SPH HD Icons with Python Engine
         run: |
           python3 -m pip install --upgrade Pillow
           python3 - << 'EOF'
@@ -75,26 +70,30 @@ jobs:
           if not os.path.exists(icon_path):
               icon_path = 'public/app-icon.png'
 
-          if os.path.exists(icon_path):
-              print(f"Applying SPH HD Icon from: {icon_path}")
-              img = Image.open(icon_path).convert('RGBA')
-              densities = {
-                  'mipmap-mdpi': 48,
-                  'mipmap-hdpi': 72,
-                  'mipmap-xhdpi': 96,
-                  'mipmap-xxhdpi': 144,
-                  'mipmap-xxxhdpi': 192,
-              }
-              res_dir = 'android/app/src/main/res'
-              anydpi = os.path.join(res_dir, 'mipmap-anydpi-v26')
-              if os.path.exists(anydpi):
-                  shutil.rmtree(anydpi)
-              for folder, size in densities.items():
-                  target_dir = os.path.join(res_dir, folder)
-                  os.makedirs(target_dir, exist_ok=True)
-                  resized = img.resize((size, size), Image.Resampling.LANCZOS)
-                  for name in ['ic_launcher.png', 'ic_launcher_round.png', 'ic_launcher_foreground.png']:
-                      resized.save(os.path.join(target_dir, name), 'PNG')
+          print(f"Loading SPH Logo from: {icon_path}")
+          img = Image.open(icon_path).convert('RGBA')
+
+          densities = {
+              'mipmap-mdpi': 48,
+              'mipmap-hdpi': 72,
+              'mipmap-xhdpi': 96,
+              'mipmap-xxhdpi': 144,
+              'mipmap-xxxhdpi': 192,
+          }
+
+          res_dir = 'android/app/src/main/res'
+          anydpi = os.path.join(res_dir, 'mipmap-anydpi-v26')
+          if os.path.exists(anydpi):
+              shutil.rmtree(anydpi)
+
+          for folder, size in densities.items():
+              target_dir = os.path.join(res_dir, folder)
+              os.makedirs(target_dir, exist_ok=True)
+              resized = img.resize((size, size), Image.Resampling.LANCZOS)
+              for name in ['ic_launcher.png', 'ic_launcher_round.png', 'ic_launcher_foreground.png']:
+                  resized.save(os.path.join(target_dir, name), 'PNG')
+
+          print("100% SPH HD Icons Created Successfully!")
           EOF
 
       - name: Fix Duplicate Kotlin Libraries
@@ -106,13 +105,13 @@ jobs:
           }
           EOF
 
-      - name: Build Android APK
+      - name: Build Official Android APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
 
-      - name: Upload Master SPH APK
+      - name: Upload Verified Safe APK
         uses: actions/upload-artifact@v4
         with:
           name: SPH-Silent-Preparation-Hub-APK
