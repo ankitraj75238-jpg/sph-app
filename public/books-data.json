@@ -1,72 +1,58 @@
-{
-  "announcement": {
-    "show": true,
-    "title": "SSC 2025 All Exam Practice Decks Now Live!",
-    "message": "Dear Aspirants, complete 15 Years (2010–2025) SSC Vocab & Grammar Master Decks are now active in the Books & Practice tab.\n\nDaily sets and high-yield mocks are available with interactive practice modes. Start your revision today!",
-    "button_text": "Join Telegram Community",
-    "button_url": "https://t.me/pareekshakendraankit"
+[
+  {
+    "id": "1",
+    "title": "IDIOMS & PHRASES Complete Set 31 (Sanjeev Sir RWA Practice)",
+    "subject": "English Vocab",
+    "tag": "31 MASTER SETS",
+    "itemsCount": "31 Complete Sets",
+    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/idioms31.html"
   },
-  "app_control": {
-    "min_required_version": 1.0,
-    "latest_version": 1.0,
-    "force_update": false
+  {
+    "id": "2",
+    "title": "Error Pro Complete Grammar Book (All Chapters)",
+    "subject": "English Grammar",
+    "tag": "ERROR PRO BOOK",
+    "itemsCount": "Complete Book",
+    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/error-pro.html"
   },
-  "books": [
-    {
-      "id": "1",
-      "title": "IDIOMS & PHRASES Complete Set 31 (Sanjeev Sir RWA Practice)",
-      "subject": "English Vocab",
-      "tag": "31 MASTER SETS",
-      "itemsCount": "31 Complete Sets",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/idioms31.html"
-    },
-    {
-      "id": "2",
-      "title": "Error Pro Complete Grammar Book (All Chapters)",
-      "subject": "English Grammar",
-      "tag": "ERROR PRO BOOK",
-      "itemsCount": "Complete Book",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/error-pro.html"
-    },
-    {
-      "id": "3",
-      "title": "SSC Synonyms 15 Years PYQ (2010–2025) All Exam Master Deck",
-      "subject": "English Vocab",
-      "tag": "🔥 15 YEARS SYNONYMS",
-      "itemsCount": "2010–2025 All SSC PYQs",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-synonyms.html"
-    },
-    {
-      "id": "4",
-      "title": "SSC Antonyms 15 Years PYQ (2010–2025) All Exam Master Deck",
-      "subject": "English Vocab",
-      "tag": "🔥 15 YEARS ANTONYMS",
-      "itemsCount": "2010–2025 All SSC PYQs",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-antonyms.html"
-    },
-    {
-      "id": "5",
-      "title": "SSC One Word Substitution (OWS) 15 Years PYQ Master Deck",
-      "subject": "English Vocab",
-      "tag": "🔥 15 YEARS OWS",
-      "itemsCount": "2010–2025 Complete OWS",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-ows.html"
-    },
-    {
-      "id": "6",
-      "title": "SSC Spelling Correction 15 Years PYQ (2010–2025) Master Deck",
-      "subject": "English Vocab",
-      "tag": "🔥 15 YEARS SPELLING",
-      "itemsCount": "2010–2025 Complete Spelling",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-spelling.html"
-    },
-    {
-      "id": "7",
-      "title": "SSC Idioms & Phrases 15 Years PYQ (2010–2025) Master Deck",
-      "subject": "English Vocab",
-      "tag": "🔥 15 YEARS IDIOMS",
-      "itemsCount": "2010–2025 Complete PYQs",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-idioms-pyq.html"
-    }
-  ]
-}
+  {
+    "id": "3",
+    "title": "SSC Synonyms 15 Years PYQ (2010–2025) All Exam Master Deck",
+    "subject": "English Vocab",
+    "tag": "🔥 15 YEARS SYNONYMS",
+    "itemsCount": "2010–2025 All SSC PYQs",
+    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-synonyms.html"
+  },
+  {
+    "id": "4",
+    "title": "SSC Antonyms 15 Years PYQ (2010–2025) All Exam Master Deck",
+    "subject": "English Vocab",
+    "tag": "🔥 15 YEARS ANTONYMS",
+    "itemsCount": "2010–2025 All SSC PYQs",
+    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-antonyms.html"
+  },
+  {
+    "id": "5",
+    "title": "SSC One Word Substitution (OWS) 15 Years PYQ Master Deck",
+    "subject": "English Vocab",
+    "tag": "🔥 15 YEARS OWS",
+    "itemsCount": "2010–2025 Complete OWS",
+    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-ows.html"
+  },
+  {
+    "id": "6",
+    "title": "SSC Spelling Correction 15 Years PYQ (2010–2025) Master Deck",
+    "subject": "English Vocab",
+    "tag": "🔥 15 YEARS SPELLING",
+    "itemsCount": "2010–2025 Complete Spelling",
+    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-spelling.html"
+  },
+  {
+    "id": "7",
+    "title": "Parmar Sir Fatman GS - Geography (23 Chapters Bilingual)",
+    "subject": "General Studies (GS)",
+    "tag": "🔥 23 CHAPTERS BILINGUAL",
+    "itemsCount": "23 Chapters (Hindi + English)",
+    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/fatman-geography.html"
+  }
+]
