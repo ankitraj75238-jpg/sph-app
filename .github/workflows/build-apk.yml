@@ -37,7 +37,7 @@ jobs:
 
       - name: Configure Capacitor & Google Services Engine
         run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
+          npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/push-notifications --legacy-peer-deps
           cat << 'EOF' > capacitor.config.json
           {
             "appId": "com.sph.silentprep",

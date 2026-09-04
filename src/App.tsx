@@ -104,6 +104,58 @@ export default function App() {
     });
   }, []);
 
+  // Safe Capacitor Native Push Notifications with High-Priority Android Channel
+  useEffect(() => {
+    let isMounted = true;
+
+    const setupPushNotifications = async () => {
+      try {
+        if (!Capacitor.isNativePlatform()) {
+          return;
+        }
+
+        // Dynamically and safely import PushNotifications on native runtime
+        const { PushNotifications } = await import('@capacitor/push-notifications');
+
+        // Create high-importance Android Notification Channel
+        await PushNotifications.createChannel({
+          id: 'sph_push_channel',
+          name: 'SPH Live Alerts',
+          importance: 5,
+          visibility: 1,
+          sound: 'default',
+          vibration: true,
+        });
+
+        // Request permissions
+        const perm = await PushNotifications.requestPermissions();
+        if (perm.receive === 'granted') {
+          await PushNotifications.register();
+        }
+
+        if (!isMounted) return;
+
+        // Add listeners for registration token and incoming notifications
+        await PushNotifications.addListener('registration', (token) => {
+          console.log('[SPH Push] Registration Token:', token.value);
+        });
+
+        await PushNotifications.addListener('pushNotificationReceived', (notification) => {
+          console.log('[SPH Push] Notification Received:', notification);
+        });
+      } catch (err) {
+        // Safe failover: ensures if Google Play Services fails or is unavailable, app NEVER crashes
+        console.warn('[SPH Push] Native push notification safely caught:', err);
+      }
+    };
+
+    setupPushNotifications();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   // Sync browser online / offline state
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
