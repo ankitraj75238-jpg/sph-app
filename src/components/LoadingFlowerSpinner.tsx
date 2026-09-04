@@ -13,61 +13,143 @@ export const LoadingFlowerSpinner: React.FC<LoadingFlowerSpinnerProps> = ({
 }) => {
   return (
     <div 
-      className={`flex flex-col items-center justify-center select-none text-center ${compact ? 'p-3' : 'p-6 min-h-[200px]'}`}
+      className={`flex flex-col items-center justify-center select-none text-center ${compact ? 'p-2' : 'p-6 min-h-[190px]'}`}
       role="status"
       aria-label="Loading"
     >
-      {/* 60fps/120fps Modern Glowing Petal / Flower Loader */}
+      {/* Exquisite Dynamic Blooming Lotus (Non-irritating, organic breathing motion) */}
       <div className="relative flex items-center justify-center will-change-transform mb-4">
-        {/* Soft Radial Ambient Glow */}
-        <div className="absolute w-24 h-24 rounded-full bg-gradient-to-tr from-blue-600/25 via-emerald-500/20 to-transparent blur-lg animate-pulse" />
+        
+        {/* Soft Multi-color Ambient Radial Aura */}
+        <div className="absolute w-28 h-28 rounded-full bg-gradient-to-tr from-blue-600/20 via-emerald-500/25 to-amber-500/15 blur-xl animate-flower-aura pointer-events-none" />
 
-        {/* 12-Petal Orbital Flower - Emerald (#10B981) and Indigo (#2563EB) */}
-        <div className="relative w-16 h-16 animate-spin-smooth">
-          {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg, i) => {
-            const isEmerald = i % 2 === 0;
-            const opacity = 0.2 + ((i + 1) / 12) * 0.8;
-            return (
-              <div
-                key={deg}
-                className="absolute top-1/2 left-1/2 w-2.5 h-6 rounded-full origin-[0%_100%]"
-                style={{
-                  transform: `rotate(${deg}deg) translate(-50%, -100%)`,
-                  background: isEmerald
-                    ? 'linear-gradient(180deg, #10B981, rgba(16, 185, 129, 0.2))'
-                    : 'linear-gradient(180deg, #2563EB, rgba(37, 99, 235, 0.2))',
-                  opacity,
-                  boxShadow: isEmerald
-                    ? '0 0 6px rgba(16, 185, 129, 0.45)'
-                    : '0 0 6px rgba(37, 99, 235, 0.45)',
-                }}
-              />
-            );
-          })}
-        </div>
+        {/* Master Breathing Flower Container */}
+        <div className={`relative ${compact ? 'w-16 h-16' : 'w-20 h-20'} animate-flower-breathe flex items-center justify-center`}>
+          <svg
+            viewBox="0 0 100 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-full h-full drop-shadow-[0_8px_20px_rgba(16,185,129,0.35)]"
+          >
+            <defs>
+              {/* Outer Petal Gradient - Royal Emerald to Deep Cyan Sapphire */}
+              <linearGradient id="sphOuterPetalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#10B981" />
+                <stop offset="50%" stopColor="#06B6D4" />
+                <stop offset="100%" stopColor="#2563EB" />
+              </linearGradient>
 
-        {/* Inner Counter Petal Ring */}
-        <div className="absolute w-9 h-9 animate-spin-reverse-smooth">
-          {[0, 60, 120, 180, 240, 300].map((deg, i) => (
-            <div
-              key={deg}
-              className="absolute top-1/2 left-1/2 w-2 h-4 rounded-full origin-[0%_100%]"
-              style={{
-                transform: `rotate(${deg}deg) translate(-50%, -100%)`,
-                background: i % 2 === 0 ? '#10B981' : '#2563EB',
-                opacity: 0.8,
-              }}
+              {/* Inner Petal Gradient - Luminous Emerald into Warm Radiant Amber */}
+              <linearGradient id="sphInnerPetalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#F59E0B" />
+                <stop offset="45%" stopColor="#10B981" />
+                <stop offset="100%" stopColor="#059669" />
+              </linearGradient>
+
+              {/* Petal Glass Spine Sheen */}
+              <linearGradient id="sphPetalSpine" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.8" />
+                <stop offset="60%" stopColor="#FFFFFF" stopOpacity="0.15" />
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Core Pearl Radial Glow */}
+              <radialGradient id="sphCorePearl" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#FFFFFF" />
+                <stop offset="40%" stopColor="#6EE7B7" />
+                <stop offset="85%" stopColor="#10B981" />
+                <stop offset="100%" stopColor="#047857" />
+              </radialGradient>
+            </defs>
+
+            {/* 1. Outer Tier: 8 Sculpted Blooming Lotus Petals with dynamic breathing wave */}
+            <g className="animate-flower-petal origin-center">
+              {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, idx) => (
+                <g key={`outer-${angle}`} transform={`rotate(${angle} 50 50)`}>
+                  {/* Petal Silhouette */}
+                  <path
+                    d="M 50 8 C 42 22 41 38 50 50 C 59 38 58 22 50 8 Z"
+                    fill="url(#sphOuterPetalGrad)"
+                    opacity={idx % 2 === 0 ? 0.95 : 0.85}
+                    stroke="#A7F3D0"
+                    strokeWidth="0.6"
+                  />
+                  {/* Subtle Translucent Petal Spine */}
+                  <path
+                    d="M 50 10 L 50 46"
+                    stroke="url(#sphPetalSpine)"
+                    strokeWidth="0.9"
+                    strokeLinecap="round"
+                  />
+                </g>
+              ))}
+            </g>
+
+            {/* 2. Inner Tier: 8 Graceful Nested Lotus Petals (Offset by 22.5 deg) */}
+            <g className="animate-flower-inner origin-center">
+              {[22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5].map((angle) => (
+                <g key={`inner-${angle}`} transform={`rotate(${angle} 50 50)`}>
+                  <path
+                    d="M 50 20 C 44 32 44 42 50 50 C 56 42 56 32 50 20 Z"
+                    fill="url(#sphInnerPetalGrad)"
+                    opacity="0.92"
+                    stroke="#FDE68A"
+                    strokeWidth="0.5"
+                  />
+                  <path
+                    d="M 50 22 L 50 44"
+                    stroke="#FFFFFF"
+                    strokeOpacity="0.6"
+                    strokeWidth="0.7"
+                    strokeLinecap="round"
+                  />
+                </g>
+              ))}
+            </g>
+
+            {/* 3. Radiant Stamen Ring: Golden Pollen Filament Beads */}
+            <g className="animate-flower-stamen origin-center">
+              {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => {
+                const rad = (angle * Math.PI) / 180;
+                const cx = 50 + 13 * Math.sin(rad);
+                const cy = 50 - 13 * Math.cos(rad);
+                return (
+                  <circle
+                    key={`pollen-${angle}`}
+                    cx={cx}
+                    cy={cy}
+                    r="1.8"
+                    fill="#FBBF24"
+                    stroke="#F59E0B"
+                    strokeWidth="0.4"
+                  />
+                );
+              })}
+            </g>
+
+            {/* 4. Center Luminescent Pearl Core with Diamond Radiance */}
+            <circle
+              cx="50"
+              cy="50"
+              r="8"
+              fill="url(#sphCorePearl)"
+              stroke="#ECFDF5"
+              strokeWidth="1.2"
+              className="drop-shadow-[0_0_8px_rgba(16,185,129,0.9)]"
             />
-          ))}
-        </div>
-
-        {/* Center Radiant Core Bead */}
-        <div className="absolute w-4 h-4 rounded-full bg-white shadow-[0_0_10px_rgba(16,185,129,0.8)] border border-emerald-400 flex items-center justify-center z-10">
-          <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-tr from-blue-600 to-emerald-500 animate-ping" />
+            {/* Core Center Gleam */}
+            <circle
+              cx="48.5"
+              cy="48.5"
+              r="2.2"
+              fill="#FFFFFF"
+              opacity="0.9"
+            />
+          </svg>
         </div>
       </div>
 
-      {/* Main Status Text */}
+      {/* Status Message */}
       <h3 className="text-sm sm:text-base font-extrabold text-slate-800 tracking-tight leading-snug">
         {message}
       </h3>
@@ -79,8 +161,8 @@ export const LoadingFlowerSpinner: React.FC<LoadingFlowerSpinnerProps> = ({
         </p>
       )}
 
-      {/* Micro Linear Indicator */}
-      <div className="w-28 h-0.5 bg-slate-200/80 rounded-full mt-3 overflow-hidden shadow-inner">
+      {/* Micro Linear Pulse Indicator */}
+      <div className="w-24 h-0.5 bg-slate-200/80 rounded-full mt-3 overflow-hidden shadow-inner">
         <div className="h-full bg-gradient-to-r from-blue-600 via-emerald-500 to-blue-600 w-full animate-progress-indeterminate rounded-full" />
       </div>
     </div>

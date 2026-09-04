@@ -10,6 +10,7 @@ interface WebViewContainerProps {
   isOnline: boolean;
   onRefreshTrigger?: () => void;
   tabKey: string;
+  isActive?: boolean;
 }
 
 export const WebViewContainer: React.FC<WebViewContainerProps> = ({
@@ -19,9 +20,11 @@ export const WebViewContainer: React.FC<WebViewContainerProps> = ({
   isOnline,
   onRefreshTrigger,
   tabKey,
+  isActive = true,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [iframeKey, setIframeKey] = useState<number>(1);
+  const hasLoadedRef = useRef<boolean>(false);
 
   // Pull to refresh gesture support
   const [pullStartY, setPullStartY] = useState<number>(0);
@@ -31,18 +34,26 @@ export const WebViewContainer: React.FC<WebViewContainerProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // Reset loading state on URL / tab change
+  // Background Preloading & Safety Timeout
   useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      // Fallback timeout to ensure loader smoothly fades if onload event is absorbed
+    // If already loaded in background, don't show loading screen
+    if (hasLoadedRef.current) {
       setIsLoading(false);
-    }, 1800);
+      return;
+    }
+
+    // Safety fallback: if iframe onload is absorbed by cross-origin security, gracefully reveal page
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      hasLoadedRef.current = true;
+    }, 1500);
+
     return () => clearTimeout(timer);
-  }, [url, iframeKey, tabKey]);
+  }, [iframeKey]);
 
   const handleManualReload = () => {
     if (navigator.vibrate) navigator.vibrate(25);
+    hasLoadedRef.current = false;
     setIsLoading(true);
     setIframeKey((prev) => prev + 1);
     if (onRefreshTrigger) onRefreshTrigger();
@@ -136,14 +147,17 @@ export const WebViewContainer: React.FC<WebViewContainerProps> = ({
           id={`webview-${tabKey}`}
           src={url}
           title={title}
+          loading="eager"
           className="w-full h-full min-h-full border-0 block bg-white relative z-10 m-0 p-0"
           style={{ width: '100%', height: '100%', border: 0 }}
           sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-presentation allow-pointer-lock allow-top-navigation-by-user-activation"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           onLoad={() => {
+            hasLoadedRef.current = true;
             setIsLoading(false);
           }}
           onError={() => {
+            hasLoadedRef.current = true;
             setIsLoading(false);
           }}
         />

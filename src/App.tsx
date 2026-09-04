@@ -7,7 +7,6 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
-import { PushNotifications } from '@capacitor/push-notifications';
 import { TabType, StudyModule, AnnouncementConfig } from './types';
 import { TopBar } from './components/TopBar';
 import { BottomNavBar } from './components/BottomNavBar';
@@ -74,7 +73,7 @@ export default function App() {
     setAnnouncement(null);
   }, []);
 
-  // Initialize private anonymous telemetry, version lock check & in-app announcement on mount
+  // Initialize private anonymous telemetry, version lock check & background network pre-warming
   useEffect(() => {
     recordAppOpen();
     
@@ -103,85 +102,19 @@ export default function App() {
     }).catch(() => {
       // Ignore network errors gracefully
     });
-  }, []);
 
-  // Native Push Notifications with High-Priority Lockscreen Channel
-  useEffect(() => {
-    let isMounted = true;
-
-    const setupPushNotifications = async () => {
+    // High-speed background pre-warming for both websites
+    const portalUrls = [
+      'https://ankitprep.silentpreparationhub.workers.dev/',
+      'https://pareekshakendra.pareekshakendraankit.workers.dev/'
+    ];
+    portalUrls.forEach((url) => {
       try {
-        // Complete platform check: only run on native Android/iOS runtime
-        if (!Capacitor.isNativePlatform()) {
-          return;
-        }
-
-        // 1. Create High-Importance Android Notification Channel (Pops on screen + Lockscreen banner)
-        await PushNotifications.createChannel({
-          id: 'sph_alerts',
-          name: 'SPH Exam Alerts',
-          description: 'Important live mock tests and updates',
-          importance: 5, // MAX / HIGH IMPORTANCE (Pops on screen + Lockscreen banner)
-          visibility: 1, // PUBLIC (Visible on Lock Screen)
-          sound: 'default',
-          vibration: true,
-          lights: true,
-          lightColor: '#10B981',
-        });
-
-        // 2. Permission & Auto-Registration on cold launch
-        let permStatus = await PushNotifications.checkPermissions();
-        if (permStatus.receive === 'prompt') {
-          permStatus = await PushNotifications.requestPermissions();
-        }
-
-        if (permStatus.receive === 'granted') {
-          await PushNotifications.register();
-        }
-
-        if (!isMounted) return;
-
-        // Listener for registration token (FCM token)
-        await PushNotifications.addListener('registration', (token) => {
-          console.log('[SPH Push] FCM Registration Token:', token.value);
-        });
-
-        // Listener for registration errors
-        await PushNotifications.addListener('registrationError', (error) => {
-          console.warn('[SPH Push] Registration error:', error);
-        });
-
-        // Listener for incoming push notification while app is in foreground
-        await PushNotifications.addListener('pushNotificationReceived', (notification) => {
-          console.log('[SPH Push] Foreground notification received:', notification);
-        });
-
-        // Listener for notification tapped by user to focus app / navigate
-        await PushNotifications.addListener('pushNotificationActionPerformed', (notificationAction) => {
-          console.log('[SPH Push] Notification action tapped:', notificationAction);
-          const data = notificationAction.notification?.data;
-          if (data?.tab && ['ankitprep', 'pareeksha', 'books_practice'].includes(data.tab)) {
-            setCurrentTab(data.tab as TabType);
-          }
-        });
-      } catch (error) {
-        // Safe failover ensures web preview runs smoothly without interruption
-        console.warn('[SPH Push] Native push notification setup skipped or error:', error);
-      }
-    };
-
-    setupPushNotifications();
-
-    return () => {
-      isMounted = false;
-      try {
-        if (Capacitor.isNativePlatform()) {
-          PushNotifications.removeAllListeners().catch(() => {});
-        }
+        fetch(url, { mode: 'no-cors', priority: 'high' } as RequestInit).catch(() => {});
       } catch {
-        // Safe no-op cleanup
+        // Safe fallback
       }
-    };
+    });
   }, []);
 
   // Sync browser online / offline state
@@ -413,8 +346,14 @@ export default function App() {
         {/* Main Viewport Content Area with Porcelain White Background */}
         <main className="flex-1 flex flex-col relative overflow-hidden bg-[#F8FAFC] m-0 p-0">
           
-          {/* Tab 1: AnkitPrep High-performance Android WebView (100% Fullscreen Viewport) */}
-          {currentTab === 'ankitprep' && (
+          {/* Tab 1: AnkitPrep High-performance Android WebView (Preloaded in Background & Persisted) */}
+          <div 
+            className={`w-full h-full flex-1 flex flex-col absolute inset-0 transition-opacity duration-150 ${
+              currentTab === 'ankitprep' 
+                ? 'opacity-100 pointer-events-auto z-10' 
+                : 'opacity-0 pointer-events-none -z-10 invisible'
+            }`}
+          >
             <WebViewContainer
               key={`ankitprep-${refreshKey}`}
               url="https://ankitprep.silentpreparationhub.workers.dev/"
@@ -423,11 +362,18 @@ export default function App() {
               isOnline={isOnline}
               onRefreshTrigger={() => setIsRefreshing(false)}
               tabKey="ankitprep"
+              isActive={currentTab === 'ankitprep'}
             />
-          )}
+          </div>
 
-          {/* Tab 2: Pareeksha Kendra High-performance Android WebView (100% Fullscreen Viewport) */}
-          {currentTab === 'pareeksha' && (
+          {/* Tab 2: Pareeksha Kendra High-performance Android WebView (Preloaded in Background & Persisted) */}
+          <div 
+            className={`w-full h-full flex-1 flex flex-col absolute inset-0 transition-opacity duration-150 ${
+              currentTab === 'pareeksha' 
+                ? 'opacity-100 pointer-events-auto z-10' 
+                : 'opacity-0 pointer-events-none -z-10 invisible'
+            }`}
+          >
             <WebViewContainer
               key={`pareeksha-${refreshKey}`}
               url="https://pareekshakendra.pareekshakendraankit.workers.dev/"
@@ -436,17 +382,24 @@ export default function App() {
               isOnline={isOnline}
               onRefreshTrigger={() => setIsRefreshing(false)}
               tabKey="pareeksha"
+              isActive={currentTab === 'pareeksha'}
             />
-          )}
+          </div>
 
           {/* Tab 3: Books & Practice (बुक्स & प्रैक्टिस) Dedicated Educational Section */}
-          {currentTab === 'books_practice' && (
+          <div 
+            className={`w-full h-full flex-1 flex flex-col absolute inset-0 overflow-y-auto transition-opacity duration-150 ${
+              currentTab === 'books_practice' 
+                ? 'opacity-100 pointer-events-auto z-10' 
+                : 'opacity-0 pointer-events-none -z-10 invisible'
+            }`}
+          >
             <BooksPracticeSection
               key={`books-${refreshKey}`}
               onSelectModule={handleSelectModule}
               onModulesCountChange={(count) => setDynamicModulesCount(count)}
             />
-          )}
+          </div>
 
           {/* Full-screen Interactive HTML Quiz & Reader Modal */}
           {activeModule && (
