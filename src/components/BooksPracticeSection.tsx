@@ -19,6 +19,7 @@ import { StudyModule } from '../types';
 import { SphLogo } from './SphLogo';
 import { OfficialCommunityCard } from './OfficialCommunityCard';
 import { LoadingFlowerSpinner } from './LoadingFlowerSpinner';
+import { NotificationDiagnosticConsole } from './NotificationDiagnosticConsole';
 
 interface BooksPracticeSectionProps {
   onSelectModule: (module: StudyModule) => void;
@@ -320,6 +321,7 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
             <LoadingFlowerSpinner 
               message="स्टडी लाइब्रेरी लोड हो रही है..." 
               subMessage="Silent Preparation Hub • Dynamic Engine"
+              darkTheme={false}
             />
           </div>
         )}
@@ -372,7 +374,7 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
                       if (navigator.vibrate) navigator.vibrate(20);
                       onSelectModule(module);
                     }}
-                    className="group bg-white border border-slate-200 hover:border-blue-500/80 rounded-3xl p-5 sm:p-6 transition-all duration-200 cursor-pointer shadow-[0_4px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_30px_-4px_rgba(37,99,235,0.08)] flex flex-col justify-between active:scale-[0.99] relative overflow-hidden"
+                    className="group bg-white border border-slate-200 hover:border-blue-500/80 rounded-3xl p-5 sm:p-6 cursor-pointer shadow-[0_4px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_30px_-4px_rgba(37,99,235,0.08)] flex flex-col justify-between relative overflow-hidden card-touch-interactive hw-accelerate"
                   >
                     <div>
                       {/* Top Row: Icon, Tag & Subject/Category */}
@@ -467,7 +469,11 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
           </div>
         )}
 
+        {/* Interactive Push Notification Diagnostic Console */}
+        <NotificationDiagnosticConsole />
+
       </div>
     </div>
   );
 };
+

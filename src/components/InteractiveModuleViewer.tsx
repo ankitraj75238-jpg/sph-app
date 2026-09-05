@@ -47,6 +47,7 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
   
   // Iframe states
   const [isIframeLoading, setIsIframeLoading] = useState<boolean>(true);
+  const [showIframeLoader, setShowIframeLoader] = useState<boolean>(true);
   const [iframeKey, setIframeKey] = useState<number>(0);
   const [isIframeError, setIsIframeError] = useState<boolean>(false);
 
@@ -96,15 +97,25 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
   // Reset loading state on URL/Key change
   useEffect(() => {
     setIsIframeLoading(true);
+    setShowIframeLoader(true);
     setIsIframeError(false);
     
-    // Safety timer to prevent perpetual loading screen
+    // Safety fallback timer for cross-origin iframes
     const timer = setTimeout(() => {
       setIsIframeLoading(false);
-    }, 2000);
+      setTimeout(() => setShowIframeLoader(false), 420);
+    }, 10000);
 
     return () => clearTimeout(timer);
   }, [itemUrl, iframeKey]);
+
+  const handleIframeComplete = () => {
+    setIsIframeLoading(false);
+    setIsIframeError(false);
+    setTimeout(() => {
+      setShowIframeLoader(false);
+    }, 420);
+  };
 
   // Filter items
   const filteredVocab = (module.vocabItems || []).filter((item) => {
@@ -214,6 +225,7 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
   const handleReloadIframe = () => {
     if (navigator.vibrate) navigator.vibrate(20);
     setIsIframeLoading(true);
+    setShowIframeLoader(true);
     setIsIframeError(false);
     setIframeKey((prev) => prev + 1);
   };
@@ -413,34 +425,39 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
 
         {/* ================= 1. FULL-SCREEN INTERACTIVE HTML / WEB READER ================= */}
         {viewMode === 'web_reader' && itemUrl && (
-          <div className="flex-1 w-full h-full relative overflow-hidden flex flex-col bg-white">
+          <div className="flex-1 w-full h-full relative overflow-hidden flex flex-col bg-[#0B1120] hw-accelerate">
             
-            {/* Smooth Glowing Floral / Orbital Loading Spinner Overlay */}
-            {isIframeLoading && !isIframeError && (
-              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#F8FAFC] p-6 text-center animate-fade-in pointer-events-none">
+            {/* Continuous Smooth Glowing Flower Loader Overlay on Solid Slate/Dark Background (Zero White Flash) */}
+            {showIframeLoader && !isIframeError && (
+              <div 
+                className={`absolute inset-0 z-20 flex flex-col items-center justify-center bg-[#0B1120] p-6 text-center transition-opacity duration-400 ease-out select-none ${
+                  !isIframeLoading ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
+                }`}
+              >
                 <LoadingFlowerSpinner 
                   message="तैयारी शुरू हो रही है..." 
                   subMessage={module.title}
+                  darkTheme={true}
                 />
               </div>
             )}
 
             {/* Offline / Error Fallback */}
             {isIframeError && (
-              <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-[#F8FAFC]">
-                <div className="w-16 h-16 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-500 mb-4 shadow-sm">
+              <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-[#0B1120] text-white">
+                <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 mb-4 shadow-sm">
                   <WifiOff className="w-8 h-8" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">
+                <h3 className="text-lg font-bold text-white mb-2">
                   Unable to Load Book Resource
                 </h3>
-                <p className="text-xs text-slate-600 max-w-sm mb-4 leading-relaxed">
+                <p className="text-xs text-slate-300 max-w-sm mb-4 leading-relaxed">
                   Please verify your network connection or try reopening the study module.
                 </p>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleReloadIframe}
-                    className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase text-xs tracking-wider rounded-xl shadow-sm flex items-center gap-1.5 transition-all"
+                    className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black uppercase text-xs tracking-wider rounded-xl shadow-sm flex items-center gap-1.5 transition-all"
                   >
                     <RefreshCw className="w-4 h-4" />
                     <span>Retry Loading</span>
@@ -449,21 +466,20 @@ export const InteractiveModuleViewer: React.FC<InteractiveModuleViewerProps> = (
               </div>
             )}
 
-            {/* Edge-to-Edge 100% Fullscreen Iframe */}
+            {/* Edge-to-Edge 100% Fullscreen Iframe with Matching Dark Background (Zero White Flash) */}
             <iframe
               key={iframeKey}
               ref={iframeRef}
               src={itemUrl}
               title={module.title}
-              onLoad={() => {
-                setIsIframeLoading(false);
-                setIsIframeError(false);
-              }}
+              loading="eager"
+              onLoad={handleIframeComplete}
               onError={() => {
                 setIsIframeLoading(false);
+                setShowIframeLoader(false);
                 setIsIframeError(true);
               }}
-              className="w-full h-full flex-1 border-0 bg-white m-0 p-0 block"
+              className="w-full h-full flex-1 border-0 bg-[#0B1120] m-0 p-0 block"
               sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-presentation allow-pointer-lock allow-top-navigation-by-user-activation"
             />
           </div>

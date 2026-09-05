@@ -343,15 +343,16 @@ export default function App() {
           />
         )}
 
-        {/* Main Viewport Content Area with Porcelain White Background */}
-        <main className="flex-1 flex flex-col relative overflow-hidden bg-[#F8FAFC] m-0 p-0">
+        {/* Main Viewport Content Area with Solid Dark/Slate Background (Zero White Flash) */}
+        <main className="flex-1 flex flex-col relative overflow-hidden bg-[#0B1120] m-0 p-0">
           
           {/* Tab 1: AnkitPrep High-performance Android WebView (Preloaded in Background & Persisted) */}
           <div 
-            className={`w-full h-full flex-1 flex flex-col absolute inset-0 transition-opacity duration-150 ${
+            id="tab-pane-ankitprep"
+            className={`w-full h-full flex-1 flex flex-col absolute inset-0 hw-accelerate ${
               currentTab === 'ankitprep' 
-                ? 'opacity-100 pointer-events-auto z-10' 
-                : 'opacity-0 pointer-events-none -z-10 invisible'
+                ? 'visible z-10 opacity-100' 
+                : 'invisible -z-10 opacity-0 pointer-events-none'
             }`}
           >
             <WebViewContainer
@@ -368,10 +369,11 @@ export default function App() {
 
           {/* Tab 2: Pareeksha Kendra High-performance Android WebView (Preloaded in Background & Persisted) */}
           <div 
-            className={`w-full h-full flex-1 flex flex-col absolute inset-0 transition-opacity duration-150 ${
+            id="tab-pane-pareeksha"
+            className={`w-full h-full flex-1 flex flex-col absolute inset-0 hw-accelerate ${
               currentTab === 'pareeksha' 
-                ? 'opacity-100 pointer-events-auto z-10' 
-                : 'opacity-0 pointer-events-none -z-10 invisible'
+                ? 'visible z-10 opacity-100' 
+                : 'invisible -z-10 opacity-0 pointer-events-none'
             }`}
           >
             <WebViewContainer
@@ -388,10 +390,11 @@ export default function App() {
 
           {/* Tab 3: Books & Practice (बुक्स & प्रैक्टिस) Dedicated Educational Section */}
           <div 
-            className={`w-full h-full flex-1 flex flex-col absolute inset-0 overflow-y-auto transition-opacity duration-150 ${
+            id="tab-pane-books-practice"
+            className={`w-full h-full flex-1 flex flex-col absolute inset-0 overflow-y-auto bg-[#F8FAFC] hw-accelerate ${
               currentTab === 'books_practice' 
-                ? 'opacity-100 pointer-events-auto z-10' 
-                : 'opacity-0 pointer-events-none -z-10 invisible'
+                ? 'visible z-10 opacity-100' 
+                : 'invisible -z-10 opacity-0 pointer-events-none'
             }`}
           >
             <BooksPracticeSection

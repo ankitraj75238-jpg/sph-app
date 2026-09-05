@@ -200,6 +200,58 @@
   animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Continuous Smooth Glowing Flower Rotations */
+@keyframes spin-continuous {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse-continuous {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.animate-spin-continuous {
+  animation: spin-continuous 8s linear infinite;
+  will-change: transform;
+}
+
+.animate-spin-reverse-continuous {
+  animation: spin-reverse-continuous 10s linear infinite;
+  will-change: transform;
+}
+
+/* 60fps / 120Hz Hardware Acceleration Engine */
+.hw-accelerate {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+.card-touch-interactive {
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card-touch-interactive:active {
+  transform: scale(0.975) translateZ(0);
+}
+
+.reader-transition {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out;
+}
+
 .shadow-soft-subtle {
   box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.05);
 }
@@ -207,3 +259,4 @@
 .shadow-card-hover {
   box-shadow: 0 10px 30px -4px rgba(37, 99, 235, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
 }
+
