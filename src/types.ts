@@ -79,5 +79,9 @@ export interface AnnouncementConfig {
   button_text?: string;
   button_url?: string;
   id?: string;
+  min_version?: string | number;
+  min_required_version?: string | number;
+  force_update?: boolean;
+  highlights?: string[];
 }
 

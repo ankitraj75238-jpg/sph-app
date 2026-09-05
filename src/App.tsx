@@ -66,6 +66,11 @@ export default function App() {
   const lastBackPressRef = useRef<number>(0);
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const booksBackHandlerRef = useRef<(() => boolean) | null>(null);
+  const versionLockRef = useRef<VersionCheckResult | null>(versionLock);
+
+  useEffect(() => {
+    versionLockRef.current = versionLock;
+  }, [versionLock]);
 
   useEffect(() => {
     activeModuleRef.current = activeModule;
@@ -257,6 +262,11 @@ export default function App() {
    *              "ऐप से बाहर निकलने के लिए दोबारा बैक दबाएं". Double-tap within 2s triggers exitApp().
    */
   const handleDeepBackNavigation = useCallback(() => {
+    // Top Priority Condition (Version Lock): Back navigation is strictly locked while force update is active
+    if (versionLockRef.current && versionLockRef.current.isUpdateRequired) {
+      return;
+    }
+
     // Priority Condition (In-App Announcement): Smoothly close announcement modal if open
     if (announcementRef.current) {
       handleDismissAnnouncement();
@@ -381,6 +391,7 @@ export default function App() {
         <ForceUpdateModal
           currentVersion={CURRENT_APP_VERSION}
           appControl={versionLock.appControl}
+          announcement={versionLock.announcement}
         />
       )}
 

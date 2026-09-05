@@ -90,6 +90,24 @@ export const MASTER_SERIES_LIST: SeriesMeta[] = [
     iconBgNight: 'bg-emerald-900/50 text-emerald-300',
   },
   {
+    id: 'aso_rambaan',
+    title: 'ASO Rambaan Static GK & GS Series',
+    pillLabel: 'ASO Rambaan',
+    emoji: '🎯',
+    curator: 'ASO Exam Mentors & SPH Board',
+    badge: 'RAMBAAN STATIC GK',
+    deckHighlight: 'High-Yield Static GK & Topic-wise Exam Master Decks',
+    description: 'Curated Static GK, Dance, Festivals, Battles & GS Rambaan notes curated for SSC CGL, CHSL, and Railways.',
+    accentBgDay: 'bg-orange-50/80',
+    accentBgNight: 'bg-orange-950/40',
+    accentBorderDay: 'border-orange-200',
+    accentBorderNight: 'border-orange-800/60',
+    accentTextDay: 'text-orange-700',
+    accentTextNight: 'text-orange-400',
+    iconBgDay: 'bg-orange-100 text-orange-700',
+    iconBgNight: 'bg-orange-900/50 text-orange-300',
+  },
+  {
     id: 'sanjeev_sir',
     title: 'Sanjeev Thakur Sir Master Series',
     pillLabel: 'Sanjeev Sir',
@@ -323,6 +341,7 @@ export const getBookSeriesId = (module: StudyModule): string => {
     const sId = module.seriesId.toLowerCase();
     if (sId.includes('15yr') || sId.includes('15_year') || sId.includes('ssc_15')) return '15yr_vocab';
     if (sId.includes('parmar')) return 'parmar_gs';
+    if (sId.includes('aso') || sId.includes('rambaan')) return 'aso_rambaan';
     if (sId.includes('sanjeev')) return 'sanjeev_sir';
     if (sId.includes('error')) return 'error_pro';
     if (sId.includes('black')) return 'black_book';
@@ -331,6 +350,7 @@ export const getBookSeriesId = (module: StudyModule): string => {
 
   const text = `${module.title} ${module.description || ''} ${module.badge || ''}`.toLowerCase();
   if (text.includes('parmar') || text.includes('fatman') || text.includes('geography')) return 'parmar_gs';
+  if (text.includes('aso rambaan') || text.includes('rambaan') || text.includes('ashutosh')) return 'aso_rambaan';
   if (text.includes('sanjeev') || text.includes('rwa') || text.includes('set 31') || text.includes('31 master')) return 'sanjeev_sir';
   if (text.includes('error pro') || text.includes('grammar book')) return 'error_pro';
   if (text.includes('black book')) return 'black_book';
@@ -526,6 +546,12 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
       };
     });
   }, [modules]);
+
+  // Filter series cards that contain decks (or all series if none matched)
+  const activeSeriesCards = useMemo(() => {
+    const populated = seriesWithBooks.filter((s) => s.deckCount > 0);
+    return populated.length > 0 ? populated : seriesWithBooks;
+  }, [seriesWithBooks]);
 
   // Active Series Meta (for Level 2)
   const activeSeries = useMemo(() => {
@@ -1032,16 +1058,16 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
             <div className="flex items-center justify-between text-xs text-slate-400 font-bold uppercase tracking-wider px-1">
               <span className="flex items-center gap-1.5">
                 <FolderOpen className="w-4 h-4 text-emerald-500" />
-                <span>6 Master Book Series Folders</span>
+                <span>{activeSeriesCards.length} Master Book Series Folders</span>
               </span>
               <span className="font-mono text-slate-400 text-[11px]">
                 {modules.length} Total Decks
               </span>
             </div>
 
-            {/* Vertical Stack: The 6 Master Series Cards */}
+            {/* Vertical Stack: The Master Series Cards */}
             <div className="space-y-3 sm:space-y-3.5">
-              {seriesWithBooks.map((series, idx) => {
+              {activeSeriesCards.map((series, idx) => {
                 return (
                   <div
                     key={series.id}

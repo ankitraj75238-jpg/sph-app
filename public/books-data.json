@@ -1,15 +1,28 @@
 {
   "announcement": {
     "show": true,
-    "title": "SSC 2025 All Exam Practice Decks Now Live!",
-    "message": "Dear Aspirants, complete 15 Years (2010–2025) SSC Vocab & Grammar Master Decks, Black Book 1800, and Parmar Sir Fatman GS are active in Books & Practice.\n\nDaily sets and high-yield mocks are available with interactive practice modes. Start your revision today!",
-    "button_text": "Join Telegram Community",
-    "button_url": "https://t.me/pareekshakendraankit"
+    "min_version": "2.0",
+    "min_required_version": "2.0",
+    "title": "🔥 SPH APP V2.0 MEGA UPDATE IS LIVE!",
+    "message": "Silent Preparation Hub V2.0 is officially live! Upgrade now on Telegram to access all 12+ master study books, 120Hz speed engine, day/night mode, and offline readers.",
+    "button_text": "📲 DOWNLOAD V2.0 UPDATE ON TELEGRAM ➔",
+    "button_url": "https://t.me/pareekshakendraankit",
+    "highlights": [
+      "✨ 12+ Complete Master Study Books & PYQ Archives",
+      "🌗 Full Day & Night (Dark / Light) Mode Engine",
+      "⚡ 120Hz Ultra-Smooth Zero-Stutter Speed & Instant Pre-load",
+      "📚 Sectional Book Series (Parmar Sir, Black Book, ASO Rambaan)"
+    ]
   },
   "app_control": {
-    "min_required_version": 1.0,
-    "latest_version": 1.0,
-    "force_update": false
+    "min_required_version": "2.0",
+    "latest_version": "2.0",
+    "force_update": false,
+    "update_title": "🔥 SPH APP V2.0 MEGA UPDATE IS LIVE!",
+    "update_message": "Silent Preparation Hub V2.0 is officially live! Upgrade now on Telegram to access all 12+ master study books, 120Hz speed engine, day/night mode, and offline readers.",
+    "telegram_url": "https://t.me/pareekshakendraankit",
+    "button_url": "https://t.me/pareekshakendraankit",
+    "button_text": "📲 DOWNLOAD V2.0 UPDATE ON TELEGRAM ➔"
   },
   "books": [
     {
