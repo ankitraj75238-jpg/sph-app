@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SPH Secret Mobile Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0b0f19; color: #f1f5f9; min-height: 100vh; padding: 16px; display: flex; justify-content: center; }
+        .admin-card { max-width: 480px; width: 100%; background: #111827; border: 1px solid #1f2937; border-radius: 20px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+        h1 { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; color: #10b981; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .sub-tag { font-size: 11px; font-weight: 700; color: #9ca3af; margin-bottom: 20px; }
+        .section-box { background: #1f2937; border: 1px solid #374151; border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+        .sec-title { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 800; color: #60a5fa; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+        label { display: block; font-size: 11.5px; font-weight: 700; color: #94a3b8; margin-bottom: 6px; }
+        input, textarea, select { width: 100%; background: #0f172a; border: 1.5px solid #334155; border-radius: 12px; padding: 12px; color: #ffffff; font-size: 13px; font-family: inherit; margin-bottom: 12px; outline: none; transition: border-color 0.2s; }
+        input:focus, textarea:focus { border-color: #10b981; }
+        .toggle-row { display: flex; align-items: center; justify-content: space-between; background: #0f172a; padding: 12px; border-radius: 12px; margin-bottom: 14px; border: 1px solid #334155; }
+        .toggle-btn { background: #374151; color: #9ca3af; border: none; padding: 8px 16px; border-radius: 999px; font-weight: 800; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+        .toggle-btn.active { background: #10b981; color: #ffffff; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+        .btn-action { width: 100%; background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; border: none; padding: 15px; border-radius: 14px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 900; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3); margin-top: 10px; }
+        .btn-copy { background: #2563eb; box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3); }
+        .json-box { background: #030712; border: 1px solid #1f2937; border-radius: 12px; padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #34d399; max-height: 140px; overflow-y: auto; margin-top: 10px; word-break: break-all; }
+        /* Lock Overlay */
+        #auth-overlay { position: fixed; inset: 0; background: #0b0f19; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    </style>
+</head>
+<body>
+
+<!-- PIN LOCK SCREEN -->
+<div id="auth-overlay">
+    <div style="max-width: 320px; width: 100%; text-align: center; background: #111827; border: 1.5px solid #374151; padding: 24px; border-radius: 20px;">
+        <div style="font-size: 40px; margin-bottom: 10px;">🔐</div>
+        <h2 style="font-family: 'Outfit', sans-serif; font-size: 18px; margin-bottom: 6px; color: #ffffff;">SPH Admin Lock</h2>
+        <p style="font-size: 12px; color: #9ca3af; margin-bottom: 16px;">Enter Security PIN to access:</p>
+        <input type="password" id="pin-input" placeholder="Enter PIN (7370)" style="text-align: center; letter-spacing: 4px; font-size: 18px;">
+        <button class="btn-action" onclick="checkPin()">Unlock Dashboard ➔</button>
+    </div>
+</div>
+
+<!-- MAIN ADMIN DASHBOARD -->
+<div class="admin-card" id="admin-main" style="display: none;">
+    <h1>⚡ SPH Admin Hub</h1>
+    <div class="sub-tag">Silent Preparation Hub • Live Mobile Manager</div>
+
+    <!-- 1. POPUP & NOTICE MANAGER -->
+    <div class="section-box">
+        <div class="sec-title">
+            <span>📢 In-App Notice & Update Alert</span>
+        </div>
+        
+        <div class="toggle-row">
+            <span style="font-size: 13px; font-weight: 700;">Show Notice in App:</span>
+            <button class="toggle-btn" id="notice-toggle" onclick="toggleNoticeState()">OFF</button>
+        </div>
+
+        <label>Notice Title:</label>
+        <input type="text" id="n-title" value="🔥 SPH LIVE MOCK TEST!">
+
+        <label>Notice Message:</label>
+        <textarea id="n-msg" rows="3">15 Years Complete Vocab & Grammar Test Live हो चुका है। सभी छात्र अभी टेस्ट दें!</textarea>
+
+        <label>Action Button Text:</label>
+        <input type="text" id="n-btn-text" value="Join Official Telegram ➔">
+
+        <label>Button Target URL (Link):</label>
+        <input type="text" id="n-btn-url" value="https://t.me/PAREEKSHA_KENDRA">
+    </div>
+
+    <!-- 2. ADD NEW BOOK / TEST -->
+    <div class="section-box">
+        <div class="sec-title">
+            <span>📚 Add New Book / Test Set</span>
+        </div>
+
+        <label>Book Series / Folder:</label>
+        <select id="b-series">
+            <option value="15-Yr Vocab Archive">15-Yr Vocab Archive</option>
+            <option value="Parmar Sir Fatman GS">Parmar Sir Fatman GS</option>
+            <option value="ASO Rambaan Series">ASO Rambaan Series</option>
+            <option value="Black Book Series">Black Book Series</option>
+            <option value="Sanjeev Sir Series">Sanjeev Sir Series</option>
+            <option value="Error Pro Series">Error Pro Series</option>
+            <option value="DSSSB Exam Special">DSSSB Exam Special</option>
+            <option value="General Studies (GS)">Other GS / GK</option>
+        </select>
+
+        <label>Book / Test Title:</label>
+        <input type="text" id="b-title" placeholder="e.g. SSC CGL Reasoning 500 PYQ">
+
+        <label>Subject / Category:</label>
+        <input type="text" id="b-subject" placeholder="e.g. Reasoning / Maths / English">
+
+        <label>HTML File Link (URL):</label>
+        <input type="text" id="b-url" placeholder="https://ankitraj75238-jpg.github.io/sph-app/public/your-file.html">
+
+        <button class="btn-action" style="background: #374151; font-size: 13px; padding: 10px;" onclick="addNewBook()">
+            ➕ Add to Books List
+        </button>
+    </div>
+
+    <!-- 3. PUBLISH TO GITHUB & APP -->
+    <div class="section-box">
+        <div class="sec-title">
+            <span>🚀 1-Click Publish to App</span>
+        </div>
+        <p style="font-size: 11.5px; color: #94a3b8; margin-bottom: 8px;">
+            नीचे <strong>"Copy JSON & Open GitHub"</strong> दबाओ ➡️ GitHub में Paste करके Commit दबा दो!
+        </p>
+
+        <div class="json-box" id="json-preview">Loading Data...</div>
+
+        <button class="btn-action btn-copy" onclick="copyAndOpenGitHub()">
+            📋 Copy JSON & Open GitHub Editor ➔
+        </button>
+    </div>
+</div>
+
+<script>
+let isNoticeOn = false;
+let currentBooks = [
+  { "id": "1", "series": "Sanjeev Sir Series", "title": "IDIOMS & PHRASES Complete Set 31 (Sanjeev Sir RWA Practice)", "subject": "English Vocab", "tag": "31 MASTER SETS", "itemsCount": "31 Complete Sets", "url": "https://ankitraj75238-jpg.github.io/sph-app/public/idioms31.html" },
+  { "id": "2", "series": "Error Pro Series", "title": "Error Pro Complete Grammar Book (All Chapters)", "subject": "English Grammar", "tag": "ERROR PRO BOOK", "itemsCount": "Complete Book", "url": "https://ankitraj75238-jpg.github.io/sph-app/public/error-pro.html" },
+  { "id": "3", "series": "15-Yr Vocab Archive", "title": "SSC Synonyms 15 Years PYQ (2010–2025) All Exam Master Deck", "subject": "English Vocab", "tag": "🔥 15 YEARS SYNONYMS", "itemsCount": "2010–2025 All SSC PYQs", "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-synonyms.html" },
+  { "id": "4", "series": "15-Yr Vocab Archive", "title": "SSC Antonyms 15 Years PYQ (2010–2025) All Exam Master Deck", "subject": "English Vocab", "tag": "🔥 15 YEARS ANTONYMS", "itemsCount": "2010–2025 All SSC PYQs", "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-antonyms.html" },
+  { "id": "5", "series": "15-Yr Vocab Archive", "title": "SSC One Word Substitution (OWS) 15 Years PYQ Master Deck", "subject": "English Vocab", "tag": "🔥 15 YEARS OWS", "itemsCount": "2010–2025 Complete OWS", "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-ows.html" },
+  { "id": "6", "series": "15-Yr Vocab Archive", "title": "SSC Spelling Correction 15 Years PYQ (2010–2025) Master Deck", "subject": "English Vocab", "tag": "🔥 15 YEARS SPELLING", "itemsCount": "2010–2025 Complete Spelling", "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-spelling.html" },
+  { "id": "7", "series": "15-Yr Vocab Archive", "title": "SSC Idioms & Phrases 15 Years PYQ (2010–2025) Master Deck", "subject": "English Vocab", "tag": "🔥 15 YEARS IDIOMS", "itemsCount": "2010–2025 Complete PYQs", "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-idioms-pyq.html" },
+  { "id": "8", "series": "Parmar Sir Fatman GS", "title": "Parmar Sir Fatman GS - Geography (23 Chapters Bilingual)", "subject": "General Studies (GS)", "tag": "🔥 23 CHAPTERS BILINGUAL", "itemsCount": "23 Chapters (Hindi + English)", "url": "https://ankitraj75238-jpg.github.io/sph-app/public/fatman-geography.html" },
+  { "id": "9", "series": "Parmar Sir Fatman GS", "title": "Parmar Sir Fatman GS - History Complete Practice (Bilingual)", "subject": "General Studies (GS)", "tag": "🔥 HISTORY COMPLETE BILINGUAL", "itemsCount": "Complete History Chapters", "url": "https://ankitraj75238-jpg.github.io/sph-app/public/fatman-history.html" },
+  { "id": "10", "series": "ASO Rambaan Series", "title": "ASO RAMBAAN Static GK Book (3000+ Chapter-wise Questions)", "subject": "General Studies (GS)", "tag": "🔥 3000+ CHAPTER WISE", "itemsCount": "3000+ Static GK Questions", "url": "https://ankitraj75238-jpg.github.io/sph-app/public/aso-rambaan-static-gk.html" },
+  { "id": "11", "series": "DSSSB Exam Special", "title": "DSSSB GS Chapter-wise PYQ Master Practice Deck", "subject": "General Studies (GS)", "tag": "🔥 DSSSB ALL EXAM PYQ", "itemsCount": "Chapter-wise Complete PYQs", "url": "https://ankitraj75238-jpg.github.io/sph-app/public/dsssb-gs-pyq.html" },
+  { "id": "12", "series": "Black Book Series", "title": "Black Book Complete Idioms & Phrases (1800+ TCS PYQ)", "subject": "English Vocab", "tag": "🔥 1800+ COMPLETE BOOK", "itemsCount": "1800+ Idioms with Meanings", "url": "https://ankitraj75238-jpg.github.io/sph-app/public/blackbook-idioms-1800.html" }
+];
+
+function checkPin() {
+    const pin = document.getElementById('pin-input').value;
+    if (pin === '7370') {
+        document.getElementById('auth-overlay').style.display = 'none';
+        document.getElementById('admin-main').style.display = 'block';
+        updateJsonOutput();
+    } else {
+        alert('❌ गलत पिन! सही पिन 7370 डालें।');
+    }
+}
+
+function toggleNoticeState() {
+    isNoticeOn = !isNoticeOn;
+    const btn = document.getElementById('notice-toggle');
+    if (isNoticeOn) {
+        btn.innerText = 'ON 🟢';
+        btn.classList.add('active');
+    } else {
+        btn.innerText = 'OFF 🔴';
+        btn.classList.remove('active');
+    }
+    updateJsonOutput();
+}
+
+function addNewBook() {
+    const title = document.getElementById('b-title').value.trim();
+    const subject = document.getElementById('b-subject').value.trim() || "General Studies";
+    const series = document.getElementById('b-series').value;
+    const url = document.getElementById('b-url').value.trim();
+
+    if (!title || !url) {
+        alert('⚠️ कृपया किताब का नाम और HTML लिंक ज़रूर भरें!');
+        return;
+    }
+
+    const newId = String(currentBooks.length + 1);
+    currentBooks.push({
+        id: newId,
+        series: series,
+        title: title,
+        subject: subject,
+        tag: "🔥 NEW ADDED",
+        itemsCount: "Full Practice Module",
+        url: url
+    });
+
+    document.getElementById('b-title').value = '';
+    document.getElementById('b-url').value = '';
+    alert('✅ नई किताब लिस्ट में जुड़ गई!');
+    updateJsonOutput();
+}
+
+function generateFullPayload() {
+    if (isNoticeOn) {
+        return {
+            announcement: {
+                show: true,
+                title: document.getElementById('n-title').value.trim(),
+                message: document.getElementById('n-msg').value.trim(),
+                button_text: document.getElementById('n-btn-text').value.trim(),
+                button_url: document.getElementById('n-btn-url').value.trim()
+            },
+            books: currentBooks
+        };
+    } else {
+        return currentBooks;
+    }
+}
+
+function updateJsonOutput() {
+    const payload = generateFullPayload();
+    document.getElementById('json-preview').innerText = JSON.stringify(payload, null, 2);
+}
+
+document.querySelectorAll('input, textarea, select').forEach(el => {
+    el.addEventListener('input', updateJsonOutput);
+});
+
+function copyAndOpenGitHub() {
+    const payload = generateFullPayload();
+    const jsonStr = JSON.stringify(payload, null, 2);
+
+    navigator.clipboard.writeText(jsonStr).then(() => {
+        alert('📋 JSON कोड कॉपी हो गया!\nअब GitHub पेज खुलेगा—वहाँ Paste करके Commit दबा देना!');
+        window.open('https://github.com/ankitraj75238-jpg/sph-app/edit/main/public/books-data.json', '_blank');
+    }).catch(() => {
+        alert('कृपया नीचे दिए गए बॉक्स से कोड कॉपी करके GitHub में सेव कर लें।');
+    });
+}
+</script>
+</body>
+</html>
