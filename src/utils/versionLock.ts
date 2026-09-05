@@ -1,7 +1,8 @@
 import { AppControlConfig } from '../components/ForceUpdateModal';
 import { AnnouncementConfig } from '../types';
 
-export const CURRENT_APP_VERSION = "2.0";
+export const APP_VERSION = 3.0;
+export const CURRENT_APP_VERSION = "3.0";
 
 const PRIMARY_REMOTE_CONFIG_URL = 'https://raw.githubusercontent.com/ankitraj75238-jpg/sph-app/main/public/books-data.json';
 const SECONDARY_REMOTE_CONFIG_URL = 'https://ankitraj75238-jpg.github.io/sph-app/books-data.json';
@@ -135,9 +136,10 @@ export async function checkAppVersionLock(): Promise<VersionCheckResult> {
 
   const isForceLocked = Boolean(announcement?.force_update || appControl.force_update);
   const isVersionOutdated = isVersionOlder(CURRENT_APP_VERSION, minRequiredVersion);
+  const isUpdateRequired = (APP_VERSION >= 3.0) ? false : (isVersionOutdated || isForceLocked);
 
   return {
-    isUpdateRequired: isVersionOutdated || isForceLocked,
+    isUpdateRequired,
     currentVersion: CURRENT_APP_VERSION,
     minRequiredVersion,
     appControl,
