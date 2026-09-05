@@ -35,7 +35,7 @@ jobs:
           npm install --legacy-peer-deps || npm install --force
           npm run build || npx vite build
 
-      - name: Configure Capacitor
+      - name: Configure Capacitor & Native Google Services Engine
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/push-notifications --legacy-peer-deps
           cat << 'EOF' > capacitor.config.json
@@ -52,12 +52,49 @@ jobs:
           npx cap add android
           npx cap sync android
 
-          # Safely place google-services.json
+          # 1. Place google-services.json inside android/app/
           if [ -f "google-services.json" ]; then
             cp google-services.json android/app/google-services.json
           elif [ -f "public/google-services.json" ]; then
             cp public/google-services.json android/app/google-services.json
           fi
+
+          # 2. Inject Google Services & Firebase Dependencies into Gradle
+          python3 - << 'EOF'
+          import os
+
+          # Root build.gradle
+          root_gradle = 'android/build.gradle'
+          if os.path.exists(root_gradle):
+              with open(root_gradle, 'r') as f:
+                  c = f.read()
+              if 'com.google.gms:google-services' not in c:
+                  c = c.replace('dependencies {', "dependencies {\n        classpath 'com.google.gms:google-services:4.4.2'", 1)
+                  with open(root_gradle, 'w') as f:
+                      f.write(c)
+
+          # App build.gradle
+          app_gradle = 'android/app/build.gradle'
+          if os.path.exists(app_gradle):
+              with open(app_gradle, 'r') as f:
+                  app_c = f.read()
+              if 'com.google.gms.google-services' not in app_c:
+                  app_c += "\napply plugin: 'com.google.gms.google-services'\n"
+                  with open(app_gradle, 'w') as f:
+                      f.write(app_c)
+
+          # Add POST_NOTIFICATIONS permission to AndroidManifest.xml
+          manifest_path = 'android/app/src/main/AndroidManifest.xml'
+          if os.path.exists(manifest_path):
+              with open(manifest_path, 'r') as f:
+                  m_c = f.read()
+              if 'POST_NOTIFICATIONS' not in m_c:
+                  m_c = m_c.replace('<application', '<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>\n    <application')
+                  with open(manifest_path, 'w') as f:
+                      f.write(m_c)
+
+          print("Firebase Native Push Engine Configured 100% Successfully!")
+          EOF
 
       - name: Generate SPH HD Icons with Python Engine
         run: |
