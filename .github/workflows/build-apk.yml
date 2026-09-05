@@ -1,8 +1,11 @@
-name: Build Silent Preparation Hub APK
+name: Build Silent Preparation Hub APK & Web App
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -30,10 +33,17 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Build Web Assets
+      - name: Build Web Assets (For App & Laptop Web)
         run: |
           npm install --legacy-peer-deps || npm install --force
           npm run build || npx vite build
+          cp -r public/* dist/ 2>/dev/null || true
+
+      - name: Deploy to GitHub Pages (For Laptop & iPhone Web App)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
 
       - name: Configure Capacitor & Native Google Services Engine
         run: |
