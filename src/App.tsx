@@ -23,6 +23,8 @@ import { recordAppOpen, recordTabVisit, recordModuleRead } from './utils/telemet
 import { checkAppVersionLock, CURRENT_APP_VERSION, VersionCheckResult } from './utils/versionLock';
 import { checkAppAnnouncement } from './utils/announcement';
 
+export const APP_VERSION = 2.0;
+
 export default function App() {
   const [showSplash, setShowSplash] = useState<boolean>(true);
   const [currentTab, setCurrentTab] = useState<TabType>('ankitprep');
@@ -41,6 +43,7 @@ export default function App() {
   const [dynamicModulesCount, setDynamicModulesCount] = useState<number>(1);
   const [versionLock, setVersionLock] = useState<VersionCheckResult | null>(null);
   const [showExitToast, setShowExitToast] = useState<boolean>(false);
+  const [showAnnouncementModal, setShowAnnouncementModal] = useState<boolean>(false);
   const [announcement, setAnnouncement] = useState<AnnouncementConfig | null>(null);
 
   // Sync dark class on documentElement and persist theme mode
@@ -99,37 +102,80 @@ export default function App() {
       }
     }
     setAnnouncement(null);
+    setShowAnnouncementModal(false);
   }, []);
 
   // Initialize private anonymous telemetry, version lock check & background network pre-warming
   useEffect(() => {
     recordAppOpen();
     
-    // Remote Version Lock check
+    // Remote Version Lock check (Strictly gates by APP_VERSION vs remote min_version)
     checkAppVersionLock().then((result) => {
-      if (result.isUpdateRequired) {
+      const requiredVersion = parseFloat(result.minRequiredVersion || "1.0");
+      const isOutdated = (APP_VERSION < requiredVersion);
+      if (result.isUpdateRequired && isOutdated) {
         setVersionLock(result);
+      } else {
+        setVersionLock(null);
       }
     }).catch(() => {
       // Ignore network errors gracefully
     });
 
-    // In-App Announcement check from books-data.json
-    checkAppAnnouncement().then((ann) => {
-      if (ann && ann.show) {
+    // Strict Version Gate & In-App Announcement check from books-data.json
+    const checkVersionGateAndAnnouncement = async () => {
+      const configUrls = [
+        'https://raw.githubusercontent.com/ankitraj75238-jpg/sph-app/main/public/books-data.json',
+        'https://ankitraj75238-jpg.github.io/sph-app/books-data.json',
+        '/books-data.json'
+      ];
+
+      let data: any = null;
+      for (const url of configUrls) {
         try {
-          const dismissedKey = `sph_announcement_dismissed_${ann.id || ann.title}`;
-          if (sessionStorage.getItem(dismissedKey) === 'true') {
-            return;
+          const res = await fetch(`${url}${url.includes('?') ? '&' : '?'}_t=${Date.now()}`, {
+            cache: 'no-store',
+            headers: { 'Accept': 'application/json, text/plain, */*' }
+          });
+          if (res.ok) {
+            data = await res.json();
+            if (data && (data.announcement || data.app_control)) break;
           }
         } catch {
-          // Safe fallback
+          // try next fallback
         }
-        setAnnouncement(ann);
       }
-    }).catch(() => {
-      // Ignore network errors gracefully
-    });
+
+      if (data && data.announcement) {
+        // Parse remote version
+        const requiredVersion = parseFloat(data.announcement?.min_version || "1.0");
+        // Condition to show update lock:
+        const isOutdated = (APP_VERSION < requiredVersion);
+        const shouldShowLock = Boolean(data.announcement?.show && isOutdated);
+
+        // If shouldShowLock is FALSE (which it will be for this V2 app since 2.0 is NOT < 2.0), DO NOT render or display the announcement modal at all
+        if (shouldShowLock) {
+          try {
+            const dismissedKey = `sph_announcement_dismissed_${data.announcement.id || data.announcement.title}`;
+            if (sessionStorage.getItem(dismissedKey) === 'true') {
+              return;
+            }
+          } catch {
+            // Safe fallback
+          }
+          setAnnouncement(data.announcement);
+          setShowAnnouncementModal(true);
+        } else {
+          setAnnouncement(null);
+          setShowAnnouncementModal(false);
+        }
+      } else {
+        setAnnouncement(null);
+        setShowAnnouncementModal(false);
+      }
+    };
+
+    checkVersionGateAndAnnouncement();
 
     // High-speed background pre-warming for both websites
     const portalUrls = [
@@ -402,9 +448,9 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Dynamic In-App Announcement Pop-up Modal */}
+      {/* Dynamic In-App Announcement Pop-up Modal - strictly gated so V2 users never see it */}
       <AnimatePresence>
-        {!showSplash && announcement && (
+        {!showSplash && showAnnouncementModal && announcement && (
           <AnnouncementModal
             announcement={announcement}
             onClose={handleDismissAnnouncement}
