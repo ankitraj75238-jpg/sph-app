@@ -7,6 +7,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Capacitor } from '@capacitor/core';
 import { App as CapacitorApp } from '@capacitor/app';
+import { PushNotifications } from '@capacitor/push-notifications';
 import { TabType, StudyModule, AnnouncementConfig } from './types';
 import { TopBar } from './components/TopBar';
 import { BottomNavBar } from './components/BottomNavBar';
@@ -132,12 +133,88 @@ export default function App() {
   }, []);
 
   // Handle Tab Switch
-  const handleTabChange = (newTab: TabType) => {
-    if (newTab === currentTab) return;
+  const handleTabChange = useCallback((newTab: TabType) => {
+    if (newTab === currentTabRef.current) return;
     recordTabVisit(newTab);
     setTabHistory((prev) => [...prev, newTab]);
     setCurrentTab(newTab);
-  };
+  }, []);
+
+  // Safe Native Push Notification Lifecycle with High-Priority Lockscreen Channel
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) {
+      return;
+    }
+
+    const listenerRemovers: Array<() => void> = [];
+
+    const initializeNativePush = async () => {
+      try {
+        // 1. Create high-importance Android Notification Channel
+        await PushNotifications.createChannel({
+          id: 'sph_alerts',
+          name: 'SPH Live Exam Alerts',
+          description: 'Real-time mock tests, books, and study updates',
+          importance: 5, // MAX PRIORITY (Pops on screen & lockscreen)
+          visibility: 1, // PUBLIC (Visible on Lock Screen)
+          sound: 'default',
+          vibration: true,
+          lights: true,
+          lightColor: '#10B981'
+        });
+
+        // 2. Request permissions
+        const perm = await PushNotifications.requestPermissions();
+        if (perm.receive === 'granted') {
+          await PushNotifications.register();
+        }
+
+        // 3. Register listeners
+        const regHandle = await PushNotifications.addListener('registration', (token) => {
+          console.log('[SPH Push] FCM Registration Token:', token.value);
+        });
+        listenerRemovers.push(() => { regHandle.remove(); });
+
+        const errHandle = await PushNotifications.addListener('registrationError', (error: any) => {
+          console.warn('[SPH Push] FCM Registration Error:', error);
+        });
+        listenerRemovers.push(() => { errHandle.remove(); });
+
+        const recvHandle = await PushNotifications.addListener('pushNotificationReceived', (notification) => {
+          console.log('[SPH Push] Push Notification Received in foreground:', notification);
+        });
+        listenerRemovers.push(() => { recvHandle.remove(); });
+
+        const actionHandle = await PushNotifications.addListener('pushNotificationActionPerformed', (notificationAction) => {
+          console.log('[SPH Push] Push Notification Action Performed:', notificationAction);
+          try {
+            const data = notificationAction?.notification?.data;
+            if (data?.tab && (data.tab === 'ankitprep' || data.tab === 'pareeksha' || data.tab === 'books_practice')) {
+              handleTabChange(data.tab as TabType);
+            }
+          } catch (actionErr) {
+            console.warn('[SPH Push] Error handling notification action:', actionErr);
+          }
+        });
+        listenerRemovers.push(() => { actionHandle.remove(); });
+      } catch (err) {
+        // Safe catch ensures the app never closes or crashes even if offline or missing services
+        console.warn('[SPH Push] Push notification lifecycle handled non-fatal exception:', err);
+      }
+    };
+
+    initializeNativePush();
+
+    return () => {
+      listenerRemovers.forEach((remover) => {
+        try {
+          remover();
+        } catch {
+          // Safe disposal
+        }
+      });
+    };
+  }, [handleTabChange]);
 
   const handleSelectModule = (module: StudyModule) => {
     recordModuleRead(module.id, module.title, {
