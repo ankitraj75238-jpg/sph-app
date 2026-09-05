@@ -1,10 +1,10 @@
 {
   "announcement": {
     "show": true,
-    "min_version": "2.0",
-    "title": "🚀 SPH V2.0 MEGA UPDATE LIVE!",
-    "message": "Silent Preparation Hub का नया V2.0 वर्जन आ चुका है! इसमें Dark/Night Mode, 12+ नई Books और 120Hz सुपरफास्ट स्पीड जोड़ी गई है। आगे की पढ़ाई जारी रखने के लिए कृपया अभी Telegram से नया V2.0 अपडेट डाउनलोड करें!",
-    "button_text": "📲 Telegram से V2.0 डाउनलोड करें ➔",
+    "min_version": "3.0",
+    "title": "🚀 SPH V3.0 MEGA UPDATE LIVE!",
+    "message": "Silent Preparation Hub का नया V3.0 वर्जन आ चुका है! इसमें Dark/Night Mode, 12+ नई Books और 120Hz सुपरफास्ट स्पीड जोड़ी गई है। आगे की पढ़ाई जारी रखने के लिए कृपया अभी Telegram से नया V3.0 अपडेट डाउनलोड करें!",
+    "button_text": "📲 Telegram से V3.0 डाउनलोड करें ➔",
     "button_url": "https://t.me/PAREEKSHA_KENDRA"
   },
   "books": [
