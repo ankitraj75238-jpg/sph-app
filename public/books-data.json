@@ -2,148 +2,119 @@
   "announcement": {
     "show": true,
     "min_version": "2.0",
-    "min_required_version": "2.0",
-    "title": "🔥 SPH APP V2.0 MEGA UPDATE IS LIVE!",
-    "message": "Silent Preparation Hub V2.0 is officially live! Upgrade now on Telegram to access all 12+ master study books, 120Hz speed engine, day/night mode, and offline readers.",
-    "button_text": "📲 DOWNLOAD V2.0 UPDATE ON TELEGRAM ➔",
-    "button_url": "https://t.me/pareekshakendraankit",
-    "highlights": [
-      "✨ 12+ Complete Master Study Books & PYQ Archives",
-      "🌗 Full Day & Night (Dark / Light) Mode Engine",
-      "⚡ 120Hz Ultra-Smooth Zero-Stutter Speed & Instant Pre-load",
-      "📚 Sectional Book Series (Parmar Sir, Black Book, ASO Rambaan)"
-    ]
-  },
-  "app_control": {
-    "min_required_version": "2.0",
-    "latest_version": "2.0",
-    "force_update": false,
-    "update_title": "🔥 SPH APP V2.0 MEGA UPDATE IS LIVE!",
-    "update_message": "Silent Preparation Hub V2.0 is officially live! Upgrade now on Telegram to access all 12+ master study books, 120Hz speed engine, day/night mode, and offline readers.",
-    "telegram_url": "https://t.me/pareekshakendraankit",
-    "button_url": "https://t.me/pareekshakendraankit",
-    "button_text": "📲 DOWNLOAD V2.0 UPDATE ON TELEGRAM ➔"
+    "title": "🚀 SPH V2.0 MEGA UPDATE LIVE!",
+    "message": "Silent Preparation Hub का नया V2.0 वर्जन आ चुका है! इसमें Dark/Night Mode, 12+ नई Books (ASO रामबाण, Fatman History, Black Book 1800) और 120Hz सुपरफास्ट स्पीड जोड़ी गई है। आगे की पढ़ाई जारी रखने के लिए कृपया अभी Telegram से नया V2.0 अपडेट डाउनलोड करें!",
+    "button_text": "📲 Telegram से V2.0 डाउनलोड करें ➔",
+    "button_url": "https://t.me/pareekshakendraankit"
   },
   "books": [
     {
       "id": "1",
+      "series": "Sanjeev Sir Series",
       "title": "IDIOMS & PHRASES Complete Set 31 (Sanjeev Sir RWA Practice)",
       "subject": "English Vocab",
       "tag": "31 MASTER SETS",
       "itemsCount": "31 Complete Sets",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/idioms31.html",
-      "seriesId": "sanjeev_sir",
-      "seriesName": "👑 Sanjeev Thakur Sir Master Series"
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/idioms31.html"
     },
     {
       "id": "2",
+      "series": "Error Pro Series",
       "title": "Error Pro Complete Grammar Book (All Chapters)",
       "subject": "English Grammar",
       "tag": "ERROR PRO BOOK",
       "itemsCount": "Complete Book",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/error-pro.html",
-      "seriesId": "error_pro",
-      "seriesName": "📖 Error Pro English Grammar Series"
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/error-pro.html"
     },
     {
       "id": "3",
+      "series": "15-Yr Vocab Archive",
       "title": "SSC Synonyms 15 Years PYQ (2010–2025) All Exam Master Deck",
       "subject": "English Vocab",
       "tag": "🔥 15 YEARS SYNONYMS",
       "itemsCount": "2010–2025 All SSC PYQs",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-synonyms.html",
-      "seriesId": "15yr_vocab",
-      "seriesName": "🏛️ 15-Year SSC Vocab Archive"
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-synonyms.html"
     },
     {
       "id": "4",
+      "series": "15-Yr Vocab Archive",
       "title": "SSC Antonyms 15 Years PYQ (2010–2025) All Exam Master Deck",
       "subject": "English Vocab",
       "tag": "🔥 15 YEARS ANTONYMS",
       "itemsCount": "2010–2025 All SSC PYQs",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-antonyms.html",
-      "seriesId": "15yr_vocab",
-      "seriesName": "🏛️ 15-Year SSC Vocab Archive"
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-antonyms.html"
     },
     {
       "id": "5",
+      "series": "15-Yr Vocab Archive",
       "title": "SSC One Word Substitution (OWS) 15 Years PYQ Master Deck",
       "subject": "English Vocab",
       "tag": "🔥 15 YEARS OWS",
       "itemsCount": "2010–2025 Complete OWS",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-ows.html",
-      "seriesId": "15yr_vocab",
-      "seriesName": "🏛️ 15-Year SSC Vocab Archive"
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-ows.html"
     },
     {
       "id": "6",
+      "series": "15-Yr Vocab Archive",
       "title": "SSC Spelling Correction 15 Years PYQ (2010–2025) Master Deck",
       "subject": "English Vocab",
       "tag": "🔥 15 YEARS SPELLING",
       "itemsCount": "2010–2025 Complete Spelling",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-spelling.html",
-      "seriesId": "15yr_vocab",
-      "seriesName": "🏛️ 15-Year SSC Vocab Archive"
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-spelling.html"
     },
     {
       "id": "7",
+      "series": "15-Yr Vocab Archive",
       "title": "SSC Idioms & Phrases 15 Years PYQ (2010–2025) Master Deck",
       "subject": "English Vocab",
       "tag": "🔥 15 YEARS IDIOMS",
       "itemsCount": "2010–2025 Complete PYQs",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-idioms-pyq.html",
-      "seriesId": "15yr_vocab",
-      "seriesName": "🏛️ 15-Year SSC Vocab Archive"
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-idioms-pyq.html"
     },
     {
       "id": "8",
+      "series": "Parmar Sir Fatman GS",
       "title": "Parmar Sir Fatman GS - Geography (23 Chapters Bilingual)",
       "subject": "General Studies (GS)",
       "tag": "🔥 23 CHAPTERS BILINGUAL",
       "itemsCount": "23 Chapters (Hindi + English)",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/fatman-geography.html",
-      "seriesId": "parmar_gs",
-      "seriesName": "🛡️ Parmar Sir Fatman GS Series"
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/fatman-geography.html"
     },
     {
       "id": "9",
-      "title": "Black Book of English Vocabulary - 1800+ Top Most Repeated Words",
-      "subject": "English Vocab",
-      "tag": "🔥 BLACK BOOK 1800",
-      "itemsCount": "1800+ Most Repeated PYQs",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-synonyms.html",
-      "seriesId": "black_book",
-      "seriesName": "🖤 Black Book Vocabulary Series"
+      "series": "Parmar Sir Fatman GS",
+      "title": "Parmar Sir Fatman GS - History Complete Practice (Bilingual)",
+      "subject": "General Studies (GS)",
+      "tag": "🔥 HISTORY COMPLETE BILINGUAL",
+      "itemsCount": "Complete History Chapters",
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/fatman-history.html"
     },
     {
       "id": "10",
-      "title": "Black Book 1800 One Word Substitution (OWS Master Deck)",
-      "subject": "English Vocab",
-      "tag": "⭐ 1800 OWS MASTER",
-      "itemsCount": "1800 High-Yield OWS",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/ssc-ows.html",
-      "seriesId": "black_book",
-      "seriesName": "🖤 Black Book Vocabulary Series"
+      "series": "ASO Rambaan Series",
+      "title": "ASO RAMBAAN Static GK Book (3000+ Chapter-wise Questions)",
+      "subject": "General Studies (GS)",
+      "tag": "🔥 3000+ CHAPTER WISE",
+      "itemsCount": "3000+ Static GK Questions",
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/aso-rambaan-static-gk.html"
     },
     {
       "id": "11",
-      "title": "Black Book Idioms & Phrases 1800+ TCS PYQ (36 Master Parts)",
-      "subject": "English Vocab",
-      "tag": "🔥 1790 QUESTIONS",
-      "itemsCount": "36 Parts • 1790 Questions",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/blackbook-idioms-1800.html",
-      "seriesId": "black_book",
-      "seriesName": "🖤 Black Book Vocabulary Series"
+      "series": "DSSSB Exam Special",
+      "title": "DSSSB GS Chapter-wise PYQ Master Practice Deck",
+      "subject": "General Studies (GS)",
+      "tag": "🔥 DSSSB ALL EXAM PYQ",
+      "itemsCount": "Chapter-wise Complete PYQs",
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/dsssb-gs-pyq.html"
     },
     {
       "id": "12",
-      "title": "DSSSB General Awareness — 176 Chapters PYQ Practice",
-      "subject": "General Studies (GS)",
-      "tag": "🔥 2930 PYQ QUESTIONS",
-      "itemsCount": "176 Chapters • 2930 Questions",
-      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/dsssb-gs-pyq.html",
-      "seriesId": "dsssb",
-      "seriesName": "🏛️ DSSSB Exam Special PYQ Series"
+      "series": "Black Book Series",
+      "title": "Black Book Complete Idioms & Phrases (1800+ TCS PYQ)",
+      "subject": "English Vocab",
+      "tag": "🔥 1800+ COMPLETE BOOK",
+      "itemsCount": "1800+ Idioms with Meanings",
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/blackbook-idioms-1800.html"
     }
   ]
 }
