@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Update to SPH V2.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0f172a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+        .lock-card {
+            background: rgba(30, 41, 59, 0.95);
+            border: 2px solid #f59e0b;
+            border-radius: 24px;
+            padding: 28px 20px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(245, 158, 11, 0.2);
+            animation: popIn 0.3s ease-out;
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .icon-badge {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px auto;
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        .tag {
+            display: inline-block;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #f87171;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+        p {
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+        }
+        .features-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 14px;
+            text-align: left;
+            margin-bottom: 24px;
+            font-size: 12.5px;
+            color: #e2e8f0;
+            line-height: 1.8;
+        }
+        .features-box span { color: #10b981; font-weight: 800; }
+        .btn-update {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 16px;
+            border-radius: 16px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+            transition: transform 0.15s;
+        }
+        .btn-update:active { transform: scale(0.97); }
+    </style>
+</head>
+<body>
+
+<div class="lock-card">
+    <div class="icon-badge">🚀</div>
+    <div class="tag">⚠️ Version 1.0 Expired</div>
+    <h1>SPH V2.0 MEGA UPDATE LIVE!</h1>
+    <p>आपका पुराना ऐप वर्जन (V1.0) बंद हो चुका है। नई बुक्स और टेस्ट्स के लिए अभी नया <strong>V2.0 अपडेट</strong> डाउनलोड करें।</p>
+
+    <div class="features-box">
+        <div><span>✔</span> 12+ Master Books (Fatman GS, ASO Rambaan)</div>
+        <div><span>✔</span> Day & Night (Dark / Light) Theme Mode</div>
+        <div><span>✔</span> 120Hz Ultra-Fast Zero Lag Speed</div>
+        <div><span>✔</span> Live Chapter-wise CBT Mocks</div>
+    </div>
+
+    <a href="https://t.me/pareekshakendraankit" target="_blank" class="btn-update">
+        📲 DOWNLOAD V2.0 ON TELEGRAM ➔
+    </a>
+</div>
+
+</body>
+</html>
