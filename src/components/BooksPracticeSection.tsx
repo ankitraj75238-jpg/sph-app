@@ -77,9 +77,9 @@ export const MASTER_SERIES_LIST: SeriesMeta[] = [
     pillLabel: 'Fatman GS',
     emoji: '🛡️',
     curator: 'Curated by Parmar Sir',
-    badge: '48 CHAPTERS (GEO + HIST)',
-    deckHighlight: 'Geography (23 Ch) + Complete History (25 Ch) Bilingual',
-    description: 'High-yield General Studies Geography and History curriculum with comprehensive Hindi-English bilingual notes for SSC CGL Tier 1 & 2.',
+    badge: '23 CHAPTERS BILINGUAL',
+    deckHighlight: 'Geography 23 Chapters Bilingual (Hindi + English)',
+    description: 'High-yield General Studies Geography curriculum with comprehensive Hindi-English bilingual notes for SSC CGL Tier 1 & 2.',
     accentBgDay: 'bg-emerald-50/80',
     accentBgNight: 'bg-emerald-950/40',
     accentBorderDay: 'border-emerald-200',
@@ -333,32 +333,6 @@ const BASELINE_FALLBACK_MODULES: StudyModule[] = [
     seriesName: '🏛️ DSSSB Exam Special PYQ Series',
     description: '2,930 previous year questions across 176 chapters of History, Geography, Polity, Science and Economy.',
   },
-  // Series 7: ASO Rambaan Static GK Series
-  {
-    id: '13',
-    title: 'ASO Rambaan Static GK — Chapterwise MCQ Practice Book',
-    category: 'General Studies (Static GK)',
-    badge: '23 CHAPTERS STATIC GK',
-    itemsCount: '23 Chapters • 3000+ MCQs',
-    url: '/aso-rambaan-static-gk.html',
-    iconName: 'Globe',
-    seriesId: 'aso_rambaan',
-    seriesName: '🎯 ASO Rambaan Static GK & GS Series',
-    description: '23 Static GK Chapters Bilingual MCQ Practice with Study & Exam Mode, Detailed Explanations and Weak-Area Analysis.',
-  },
-  // Series 2: Parmar Sir Fatman GS Series (Book 2: Complete History)
-  {
-    id: '14',
-    title: 'Parmar Sir Fatman GS - Complete History (25 Chapters Bilingual)',
-    category: 'General Studies (History)',
-    badge: '25 CHAPTERS HISTORY',
-    itemsCount: '25 Chapters (Ancient, Medieval, Modern)',
-    url: '/fatman-history.html',
-    iconName: 'Globe',
-    seriesId: 'parmar_gs',
-    seriesName: '🛡️ Parmar Sir Fatman GS Series',
-    description: 'Ancient, Medieval & Modern History across 25 comprehensive bilingual chapters curated by Parmar Sir, Ankit, Khurana, Niraj & Shiuli.',
-  },
 ];
 
 // Helper to determine which series a module belongs to
@@ -506,11 +480,8 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
         const normalizedModules: StudyModule[] = rawList.map((item: any, idx: number) => {
           let resolvedUrl = item.url || item.link || item.pdfUrl || item.readerUrl;
           
-          if (resolvedUrl) {
-            const htmlMatch = resolvedUrl.match(/\/([^/?#]+\.html)(?:[?#]|$)/i);
-            if (htmlMatch && htmlMatch[1]) {
-              resolvedUrl = `/${htmlMatch[1]}`;
-            }
+          if (resolvedUrl && resolvedUrl.includes('idioms31.html') && !resolvedUrl.startsWith('http')) {
+            resolvedUrl = '/idioms31.html';
           }
 
           let itemsCountVal: string | undefined = undefined;

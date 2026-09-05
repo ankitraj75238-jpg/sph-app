@@ -23,8 +23,6 @@ import { recordAppOpen, recordTabVisit, recordModuleRead } from './utils/telemet
 import { checkAppVersionLock, CURRENT_APP_VERSION, VersionCheckResult } from './utils/versionLock';
 import { checkAppAnnouncement } from './utils/announcement';
 
-export const APP_VERSION = 3.0;
-
 export default function App() {
   const [showSplash, setShowSplash] = useState<boolean>(true);
   const [currentTab, setCurrentTab] = useState<TabType>('ankitprep');
@@ -43,7 +41,6 @@ export default function App() {
   const [dynamicModulesCount, setDynamicModulesCount] = useState<number>(1);
   const [versionLock, setVersionLock] = useState<VersionCheckResult | null>(null);
   const [showExitToast, setShowExitToast] = useState<boolean>(false);
-  const [showAnnouncementModal, setShowAnnouncementModal] = useState<boolean>(false);
   const [announcement, setAnnouncement] = useState<AnnouncementConfig | null>(null);
 
   // Sync dark class on documentElement and persist theme mode
@@ -102,84 +99,37 @@ export default function App() {
       }
     }
     setAnnouncement(null);
-    setShowAnnouncementModal(false);
   }, []);
 
   // Initialize private anonymous telemetry, version lock check & background network pre-warming
   useEffect(() => {
     recordAppOpen();
     
-    // If APP_VERSION >= 3.0, hide the update popup completely and show the normal study dashboard
-    if (APP_VERSION >= 3.0) {
-      setVersionLock(null);
-      setShowAnnouncementModal(false);
-      setAnnouncement(null);
-    } else {
-      // Remote Version Lock check for legacy versions (< 3.0)
-      checkAppVersionLock().then((result) => {
-        const requiredVersion = parseFloat(result.minRequiredVersion || "1.0");
-        const isOutdated = (APP_VERSION < requiredVersion);
-        if (result.isUpdateRequired && isOutdated) {
-          setVersionLock(result);
-        } else {
-          setVersionLock(null);
-        }
-      }).catch(() => {
-        // Ignore network errors gracefully
-      });
+    // Remote Version Lock check
+    checkAppVersionLock().then((result) => {
+      if (result.isUpdateRequired) {
+        setVersionLock(result);
+      }
+    }).catch(() => {
+      // Ignore network errors gracefully
+    });
 
-      // Strict Version Gate & In-App Announcement check from books-data.json for legacy versions (< 3.0)
-      const checkVersionGateAndAnnouncement = async () => {
-        const configUrls = [
-          'https://raw.githubusercontent.com/ankitraj75238-jpg/sph-app/main/public/books-data.json',
-          'https://ankitraj75238-jpg.github.io/sph-app/books-data.json',
-          '/books-data.json'
-        ];
-
-        let data: any = null;
-        for (const url of configUrls) {
-          try {
-            const res = await fetch(`${url}${url.includes('?') ? '&' : '?'}_t=${Date.now()}`, {
-              cache: 'no-store',
-              headers: { 'Accept': 'application/json, text/plain, */*' }
-            });
-            if (res.ok) {
-              data = await res.json();
-              if (data && (data.announcement || data.app_control)) break;
-            }
-          } catch {
-            // try next fallback
+    // In-App Announcement check from books-data.json
+    checkAppAnnouncement().then((ann) => {
+      if (ann && ann.show) {
+        try {
+          const dismissedKey = `sph_announcement_dismissed_${ann.id || ann.title}`;
+          if (sessionStorage.getItem(dismissedKey) === 'true') {
+            return;
           }
+        } catch {
+          // Safe fallback
         }
-
-        if (data && data.announcement) {
-          const requiredVersion = parseFloat(data.announcement?.min_version || "1.0");
-          const isOutdated = (APP_VERSION < requiredVersion);
-          const shouldShowLock = Boolean(data.announcement?.show && isOutdated);
-
-          if (shouldShowLock) {
-            try {
-              const dismissedKey = `sph_announcement_dismissed_${data.announcement.id || data.announcement.title}`;
-              if (sessionStorage.getItem(dismissedKey) === 'true') {
-                return;
-              }
-            } catch {
-              // Safe fallback
-            }
-            setAnnouncement(data.announcement);
-            setShowAnnouncementModal(true);
-          } else {
-            setAnnouncement(null);
-            setShowAnnouncementModal(false);
-          }
-        } else {
-          setAnnouncement(null);
-          setShowAnnouncementModal(false);
-        }
-      };
-
-      checkVersionGateAndAnnouncement();
-    }
+        setAnnouncement(ann);
+      }
+    }).catch(() => {
+      // Ignore network errors gracefully
+    });
 
     // High-speed background pre-warming for both websites
     const portalUrls = [
@@ -436,8 +386,8 @@ export default function App() {
 
   return (
     <>
-      {/* Remote Version Lock Modal (Non-dismissible) - completely hidden if APP_VERSION >= 3.0 */}
-      {APP_VERSION < 3.0 && versionLock && versionLock.isUpdateRequired && (
+      {/* Remote Version Lock Modal (Non-dismissible) */}
+      {versionLock && versionLock.isUpdateRequired && (
         <ForceUpdateModal
           currentVersion={CURRENT_APP_VERSION}
           appControl={versionLock.appControl}
@@ -452,9 +402,9 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Dynamic In-App Announcement Pop-up Modal - completely hidden if APP_VERSION >= 3.0 */}
+      {/* Dynamic In-App Announcement Pop-up Modal */}
       <AnimatePresence>
-        {!showSplash && APP_VERSION < 3.0 && showAnnouncementModal && announcement && (
+        {!showSplash && announcement && (
           <AnnouncementModal
             announcement={announcement}
             onClose={handleDismissAnnouncement}
