@@ -45,7 +45,11 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <header 
-      className="glass-light-header text-slate-900 z-40 sticky top-0 transition-all select-none border-b border-slate-200/90 shadow-xs"
+      className={`z-40 sticky top-0 theme-crossfade select-none shadow-xs ${
+        isDarkMode 
+          ? 'glass-obsidian-header text-slate-100 border-b border-slate-700/80 shadow-md' 
+          : 'glass-light-header text-slate-900 border-b border-slate-200/90 shadow-xs'
+      }`}
       style={{
         paddingTop: 'max(env(safe-area-inset-top, 0px), 40px)',
       }}
@@ -59,11 +63,15 @@ export const TopBar: React.FC<TopBarProps> = ({
             <button
               id="topbar-back-btn"
               onClick={onBack}
-              className="p-2 -ml-1 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-2xl transition-colors active:scale-95 flex items-center justify-center shrink-0 border border-slate-200 shadow-2xs"
+              className={`p-2 -ml-1 rounded-2xl transition-all active:scale-95 flex items-center justify-center shrink-0 border shadow-2xs ${
+                isDarkMode 
+                  ? 'text-slate-200 hover:text-emerald-400 hover:bg-slate-800 border-slate-700' 
+                  : 'text-slate-700 hover:text-blue-600 hover:bg-slate-100 border-slate-200'
+              }`}
               aria-label="Go Back"
               title="Go Back"
             >
-              <ArrowLeft className="w-5 h-5 text-blue-600 stroke-[2.5]" />
+              <ArrowLeft className={`w-5 h-5 stroke-[2.5] ${isDarkMode ? 'text-emerald-400' : 'text-blue-600'}`} />
             </button>
           )}
 
@@ -72,10 +80,14 @@ export const TopBar: React.FC<TopBarProps> = ({
 
           {/* Brand Name & Required Subtitle */}
           <div className="flex flex-col min-w-0">
-            <h1 className="text-sm sm:text-base md:text-lg font-black text-slate-900 tracking-tight uppercase truncate leading-tight">
+            <h1 className={`text-sm sm:text-base md:text-lg font-black tracking-tight uppercase truncate leading-tight ${
+              isDarkMode ? 'text-white' : 'text-slate-900'
+            }`}>
               Silent Preparation Hub
             </h1>
-            <span className="text-[10px] sm:text-[11px] font-bold text-emerald-600 tracking-wide uppercase truncate leading-tight mt-0.5">
+            <span className={`text-[10px] sm:text-[11px] font-bold tracking-wide uppercase truncate leading-tight mt-0.5 ${
+              isDarkMode ? 'text-emerald-400' : 'text-emerald-600'
+            }`}>
               {activeModuleTitle ? `Reading: ${activeModuleTitle}` : 'SSC • Railway • Police • Defence'}
             </span>
           </div>
@@ -83,17 +95,21 @@ export const TopBar: React.FC<TopBarProps> = ({
 
         {/* Right Side Actions: Theme Toggle, Refresh, Share */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* Subtle Dark / Light Mode Toggle */}
+          {/* Universal Sun / Moon (☀️/🌙) Theme Mode Switcher */}
           {onToggleDarkMode && (
             <button
               id="theme-mode-toggle-btn"
               onClick={onToggleDarkMode}
-              className="p-2 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-2xl border border-slate-200 transition-all active:scale-95 shadow-2xs"
+              className={`p-2 rounded-2xl border transition-all active:scale-95 shadow-2xs flex items-center justify-center ${
+                isDarkMode 
+                  ? 'bg-slate-800 text-amber-400 border-slate-700 hover:bg-slate-700 hover:border-slate-600' 
+                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100 hover:border-blue-300'
+              }`}
               aria-label="Toggle Theme Mode"
-              title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              title={isDarkMode ? 'Switch to Day Mode (☀️)' : 'Switch to Night Mode (🌙)'}
             >
               {isDarkMode ? (
-                <Sun className="w-4 h-4 text-amber-500 fill-amber-500" />
+                <Sun className="w-4 h-4 text-amber-400 fill-amber-400 animate-pulse-subtle" />
               ) : (
                 <Moon className="w-4 h-4 text-slate-700" />
               )}
@@ -105,30 +121,36 @@ export const TopBar: React.FC<TopBarProps> = ({
             id="topbar-refresh-btn"
             onClick={onRefresh}
             disabled={isRefreshing}
-            className={`p-2 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-2xl border border-slate-200 transition-all active:scale-95 shadow-2xs ${
-              isRefreshing ? 'opacity-70 cursor-not-allowed' : ''
-            }`}
+            className={`p-2 rounded-2xl border transition-all active:scale-95 shadow-2xs flex items-center justify-center ${
+              isDarkMode 
+                ? 'bg-slate-800 text-emerald-400 border-slate-700 hover:bg-slate-700' 
+                : 'bg-white text-blue-600 border-slate-200 hover:bg-slate-100'
+            } ${isRefreshing ? 'opacity-70 cursor-not-allowed' : ''}`}
             aria-label="Refresh Current Page"
             title="Refresh current page"
           >
-            <RotateCw className={`w-4 h-4 text-blue-600 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <RotateCw className={`w-4 h-4 ${isDarkMode ? 'text-emerald-400' : 'text-blue-600'} ${isRefreshing ? 'animate-spin' : ''}`} />
           </button>
 
           {/* Share Button */}
           <button
             id="share-app-btn"
             onClick={handleShare}
-            className="p-2 text-slate-700 hover:text-blue-600 hover:bg-slate-100 rounded-2xl border border-slate-200 transition-all active:scale-95 shadow-2xs hidden sm:flex items-center justify-center"
+            className={`p-2 rounded-2xl border transition-all active:scale-95 shadow-2xs hidden sm:flex items-center justify-center ${
+              isDarkMode 
+                ? 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700' 
+                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+            }`}
             aria-label="Share App"
             title="Share Silent Preparation Hub"
           >
-            <Share2 className="w-4 h-4 text-slate-700" />
+            <Share2 className="w-4 h-4" />
           </button>
         </div>
       </div>
 
       {/* Accent Glowing Border Line */}
-      <div className="h-[2px] w-full bg-slate-100 overflow-hidden">
+      <div className={`h-[2px] w-full overflow-hidden ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}>
         <div className={`h-full ${isRefreshing ? 'w-full animate-progress-indeterminate' : 'w-full'} bg-gradient-to-r from-blue-600 via-emerald-500 to-blue-600 transition-all duration-300`} />
       </div>
     </header>

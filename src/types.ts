@@ -59,6 +59,8 @@ export interface StudyModule {
   isFeatured?: boolean;
   coverGradient?: string;
   iconName?: string;
+  seriesId?: string;
+  seriesName?: string;
   subSetsCount?: number;
   url?: string;
   link?: string;

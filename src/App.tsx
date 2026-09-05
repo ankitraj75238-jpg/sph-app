@@ -29,13 +29,34 @@ export default function App() {
   const [tabHistory, setTabHistory] = useState<TabType[]>(['ankitprep']);
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine ?? true);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('sph_theme_mode') === 'dark';
+    } catch {
+      return false;
+    }
+  });
   const [activeModule, setActiveModule] = useState<StudyModule | null>(null);
   const [refreshKey, setRefreshKey] = useState<number>(0);
   const [dynamicModulesCount, setDynamicModulesCount] = useState<number>(1);
   const [versionLock, setVersionLock] = useState<VersionCheckResult | null>(null);
   const [showExitToast, setShowExitToast] = useState<boolean>(false);
   const [announcement, setAnnouncement] = useState<AnnouncementConfig | null>(null);
+
+  // Sync dark class on documentElement and persist theme mode
+  useEffect(() => {
+    try {
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('sph_theme_mode', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('sph_theme_mode', 'light');
+      }
+    } catch {
+      // Safe fallback
+    }
+  }, [isDarkMode]);
 
   // Synchronized state refs to prevent stale closure in async native Capacitor & hardware listeners
   const activeModuleRef = useRef<StudyModule | null>(activeModule);
@@ -44,6 +65,7 @@ export default function App() {
   const announcementRef = useRef<AnnouncementConfig | null>(announcement);
   const lastBackPressRef = useRef<number>(0);
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const booksBackHandlerRef = useRef<(() => boolean) | null>(null);
 
   useEffect(() => {
     activeModuleRef.current = activeModule;
@@ -245,6 +267,14 @@ export default function App() {
     if (activeModuleRef.current) {
       setActiveModule(null);
       return;
+    }
+
+    // Condition 1.5: If in Books & Practice tab and inside a Sub-Series Level 2 view or Direct List mode, navigate back to Level 1
+    if (currentTabRef.current === 'books_practice' && booksBackHandlerRef.current) {
+      const handled = booksBackHandlerRef.current();
+      if (handled) {
+        return;
+      }
     }
 
     // Condition 2: If on active WebView, attempt iframe history back
@@ -468,7 +498,9 @@ export default function App() {
           {/* Tab 3: Books & Practice (बुक्स & प्रैक्टिस) Dedicated Educational Section */}
           <div 
             id="tab-pane-books-practice"
-            className={`w-full h-full flex-1 flex flex-col absolute inset-0 overflow-y-auto bg-[#F8FAFC] hw-accelerate ${
+            className={`w-full h-full flex-1 flex flex-col absolute inset-0 overflow-y-auto hw-accelerate theme-crossfade ${
+              isDarkMode ? 'bg-[#0F172A]' : 'bg-[#F8FAFC]'
+            } ${
               currentTab === 'books_practice' 
                 ? 'visible z-10 opacity-100' 
                 : 'invisible -z-10 opacity-0 pointer-events-none'
@@ -478,6 +510,8 @@ export default function App() {
               key={`books-${refreshKey}`}
               onSelectModule={handleSelectModule}
               onModulesCountChange={(count) => setDynamicModulesCount(count)}
+              onRegisterBackHandler={(handler) => { booksBackHandlerRef.current = handler; }}
+              isDarkMode={isDarkMode}
             />
           </div>
 
