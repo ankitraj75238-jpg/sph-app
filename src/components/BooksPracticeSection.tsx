@@ -19,7 +19,6 @@ import { StudyModule } from '../types';
 import { SphLogo } from './SphLogo';
 import { OfficialCommunityCard } from './OfficialCommunityCard';
 import { LoadingFlowerSpinner } from './LoadingFlowerSpinner';
-import { NotificationDiagnosticConsole } from './NotificationDiagnosticConsole';
 
 interface BooksPracticeSectionProps {
   onSelectModule: (module: StudyModule) => void;
@@ -143,7 +142,7 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
             isPopular: Boolean(item.isPopular),
             isFeatured: Boolean(item.isFeatured),
             coverGradient: item.coverGradient || item.gradient || undefined,
-            iconName: item.iconName || item.icon || (item.subject?.includes('English') ? 'SpellCheck' : 'BookOpen'),
+            iconName: item.iconName || item.icon || (item.subject?.includes('English') ? 'SpellCheck' : (item.subject?.includes('GS') || item.subject?.includes('Geography') || item.subject?.includes('General Studies') ? 'Globe' : 'BookOpen')),
             url: resolvedUrl || '/idioms31.html',
             link: resolvedUrl || '/idioms31.html',
             pdfUrl: item.pdfUrl,
@@ -468,9 +467,6 @@ export const BooksPracticeSection: React.FC<BooksPracticeSectionProps> = ({
             </div>
           </div>
         )}
-
-        {/* Interactive Push Notification Diagnostic Console */}
-        <NotificationDiagnosticConsole />
 
       </div>
     </div>
