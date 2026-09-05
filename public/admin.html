@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SPH Secret Mobile Admin Panel</title>
+    <title>SPH Master Mobile Admin Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0b0f19; color: #f1f5f9; min-height: 100vh; padding: 16px; display: flex; justify-content: center; }
-        .admin-card { max-width: 480px; width: 100%; background: #111827; border: 1px solid #1f2937; border-radius: 20px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
-        h1 { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; color: #10b981; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-        .sub-tag { font-size: 11px; font-weight: 700; color: #9ca3af; margin-bottom: 20px; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0b0f19; color: #f1f5f9; min-height: 100vh; padding: 14px; display: flex; justify-content: center; }
+        .admin-card { max-width: 500px; width: 100%; background: #111827; border: 1px solid #1f2937; border-radius: 20px; padding: 18px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+        h1 { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; color: #10b981; display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
+        .sub-tag { font-size: 11px; font-weight: 700; color: #9ca3af; margin-bottom: 18px; }
         .section-box { background: #1f2937; border: 1px solid #374151; border-radius: 16px; padding: 16px; margin-bottom: 16px; }
         .sec-title { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 800; color: #60a5fa; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
         label { display: block; font-size: 11.5px; font-weight: 700; color: #94a3b8; margin-bottom: 6px; }
-        input, textarea, select { width: 100%; background: #0f172a; border: 1.5px solid #334155; border-radius: 12px; padding: 12px; color: #ffffff; font-size: 13px; font-family: inherit; margin-bottom: 12px; outline: none; transition: border-color 0.2s; }
-        input:focus, textarea:focus { border-color: #10b981; }
-        .toggle-row { display: flex; align-items: center; justify-content: space-between; background: #0f172a; padding: 12px; border-radius: 12px; margin-bottom: 14px; border: 1px solid #334155; }
-        .toggle-btn { background: #374151; color: #9ca3af; border: none; padding: 8px 16px; border-radius: 999px; font-weight: 800; font-size: 12px; cursor: pointer; transition: all 0.2s; }
-        .toggle-btn.active { background: #10b981; color: #ffffff; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
-        .btn-action { width: 100%; background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; border: none; padding: 15px; border-radius: 14px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 900; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3); margin-top: 10px; }
+        input, textarea, select { width: 100%; background: #0f172a; border: 1.5px solid #334155; border-radius: 12px; padding: 11px; color: #ffffff; font-size: 13px; font-family: inherit; margin-bottom: 12px; outline: none; transition: border-color 0.2s; }
+        input:focus, textarea:focus, select:focus { border-color: #10b981; }
+        .mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 14px; }
+        .mode-btn { background: #0f172a; border: 1.5px solid #334155; color: #94a3b8; padding: 10px 4px; border-radius: 10px; font-size: 11px; font-weight: 800; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .mode-btn.active-off { background: #059669; border-color: #10b981; color: #ffffff; }
+        .mode-btn.active-perm { background: #dc2626; border-color: #ef4444; color: #ffffff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+        .mode-btn.active-temp { background: #d97706; border-color: #f59e0b; color: #ffffff; }
+        .btn-action { width: 100%; background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; border: none; padding: 14px; border-radius: 14px; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 900; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3); margin-top: 10px; }
         .btn-copy { background: #2563eb; box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3); }
         .json-box { background: #030712; border: 1px solid #1f2937; border-radius: 12px; padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #34d399; max-height: 140px; overflow-y: auto; margin-top: 10px; word-break: break-all; }
-        /* Lock Overlay */
         #auth-overlay { position: fixed; inset: 0; background: #0b0f19; z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
@@ -32,46 +33,57 @@
 <div id="auth-overlay">
     <div style="max-width: 320px; width: 100%; text-align: center; background: #111827; border: 1.5px solid #374151; padding: 24px; border-radius: 20px;">
         <div style="font-size: 40px; margin-bottom: 10px;">🔐</div>
-        <h2 style="font-family: 'Outfit', sans-serif; font-size: 18px; margin-bottom: 6px; color: #ffffff;">SPH Admin Lock</h2>
-        <p style="font-size: 12px; color: #9ca3af; margin-bottom: 16px;">Enter Security PIN to access:</p>
-        <input type="password" id="pin-input" placeholder="Enter PIN (7370)" style="text-align: center; letter-spacing: 4px; font-size: 18px;">
-        <button class="btn-action" onclick="checkPin()">Unlock Dashboard ➔</button>
+        <h2 style="font-family: 'Outfit', sans-serif; font-size: 18px; margin-bottom: 6px; color: #ffffff;">SPH Admin Master</h2>
+        <p style="font-size: 12px; color: #9ca3af; margin-bottom: 16px;">Enter Security PIN to unlock:</p>
+        <input type="password" id="pin-input" placeholder="PIN (7370)" style="text-align: center; letter-spacing: 4px; font-size: 18px;">
+        <button class="btn-action" onclick="checkPin()">Unlock Controller ➔</button>
     </div>
 </div>
 
-<!-- MAIN ADMIN DASHBOARD -->
+<!-- MAIN ADMIN CONTROLLER -->
 <div class="admin-card" id="admin-main" style="display: none;">
-    <h1>⚡ SPH Admin Hub</h1>
-    <div class="sub-tag">Silent Preparation Hub • Live Mobile Manager</div>
+    <h1>⚡ SPH Master Admin</h1>
+    <div class="sub-tag">Silent Preparation Hub • Version Lock & Library Manager</div>
 
-    <!-- 1. POPUP & NOTICE MANAGER -->
-    <div class="section-box">
+    <!-- 1. VERSION CONTROLLER & KILLSWITCH -->
+    <div class="section-box" style="border-color: #f59e0b;">
         <div class="sec-title">
-            <span>📢 In-App Notice & Update Alert</span>
-        </div>
-        
-        <div class="toggle-row">
-            <span style="font-size: 13px; font-weight: 700;">Show Notice in App:</span>
-            <button class="toggle-btn" id="notice-toggle" onclick="toggleNoticeState()">OFF</button>
+            <span style="color: #fbbf24;">🛑 App Version Control & Lock</span>
+            <span id="current-mode-tag" style="font-size: 10px; background: #065f46; color: #a7f3d0; padding: 2px 8px; border-radius: 999px;">NORMAL OFF</span>
         </div>
 
-        <label>Notice Title:</label>
-        <input type="text" id="n-title" value="🔥 SPH LIVE MOCK TEST!">
+        <label>Lock / Update Mode:</label>
+        <div class="mode-grid">
+            <div class="mode-btn active-off" id="btn-mode-off" onclick="setLockMode('off')">🟢 NORMAL OFF</div>
+            <div class="mode-btn" id="btn-mode-perm" onclick="setLockMode('permanent')">🔴 PERMANENT LOCK</div>
+            <div class="mode-btn" id="btn-mode-temp" onclick="setLockMode('temporary')">🟡 TEMPORARY NOTICE</div>
+        </div>
 
-        <label>Notice Message:</label>
-        <textarea id="n-msg" rows="3">15 Years Complete Vocab & Grammar Test Live हो चुका है। सभी छात्र अभी टेस्ट दें!</textarea>
+        <label>Target Minimum Version to Require:</label>
+        <select id="v-required">
+            <option value="300">Version 3.0 (Build 300) [Current]</option>
+            <option value="400">Version 4.0 (Build 400) [Future V4]</option>
+            <option value="500">Version 5.0 (Build 500) [Future V5]</option>
+            <option value="200">Version 2.0 (Build 200)</option>
+        </select>
 
-        <label>Action Button Text:</label>
-        <input type="text" id="n-btn-text" value="Join Official Telegram ➔">
+        <label>Update / Lock Heading:</label>
+        <input type="text" id="v-title" value="🚀 SPH MEGA UPDATE LIVE!">
 
-        <label>Button Target URL (Link):</label>
-        <input type="text" id="n-btn-url" value="https://t.me/PAREEKSHA_KENDRA">
+        <label>Lock Message to Students:</label>
+        <textarea id="v-msg" rows="3">Silent Preparation Hub का नया वर्जन आ चुका है! सुचारू रूप से पढ़ाई जारी रखने के लिए कृपया अभी नया अपडेट डाउनलोड करें।</textarea>
+
+        <label>Button Text on Lock Screen:</label>
+        <input type="text" id="v-btn-text" value="📲 Telegram से नया APK डाउनलोड करें ➔">
+
+        <label>Target Telegram Link:</label>
+        <input type="text" id="v-btn-url" value="https://t.me/PAREEKSHA_KENDRA">
     </div>
 
-    <!-- 2. ADD NEW BOOK / TEST -->
+    <!-- 2. ADD NEW STUDY BOOK / TEST -->
     <div class="section-box">
         <div class="sec-title">
-            <span>📚 Add New Book / Test Set</span>
+            <span>📚 Add New Study Book / Test</span>
         </div>
 
         <label>Book Series / Folder:</label>
@@ -96,7 +108,7 @@
         <input type="text" id="b-url" placeholder="https://ankitraj75238-jpg.github.io/sph-app/public/your-file.html">
 
         <button class="btn-action" style="background: #374151; font-size: 13px; padding: 10px;" onclick="addNewBook()">
-            ➕ Add to Books List
+            ➕ Add to Books Library
         </button>
     </div>
 
@@ -118,7 +130,7 @@
 </div>
 
 <script>
-let isNoticeOn = false;
+let currentLockMode = 'off'; // 'off' | 'permanent' | 'temporary'
 let currentBooks = [
   { "id": "1", "series": "Sanjeev Sir Series", "title": "IDIOMS & PHRASES Complete Set 31 (Sanjeev Sir RWA Practice)", "subject": "English Vocab", "tag": "31 MASTER SETS", "itemsCount": "31 Complete Sets", "url": "https://ankitraj75238-jpg.github.io/sph-app/public/idioms31.html" },
   { "id": "2", "series": "Error Pro Series", "title": "Error Pro Complete Grammar Book (All Chapters)", "subject": "English Grammar", "tag": "ERROR PRO BOOK", "itemsCount": "Complete Book", "url": "https://ankitraj75238-jpg.github.io/sph-app/public/error-pro.html" },
@@ -145,15 +157,26 @@ function checkPin() {
     }
 }
 
-function toggleNoticeState() {
-    isNoticeOn = !isNoticeOn;
-    const btn = document.getElementById('notice-toggle');
-    if (isNoticeOn) {
-        btn.innerText = 'ON 🟢';
-        btn.classList.add('active');
-    } else {
-        btn.innerText = 'OFF 🔴';
-        btn.classList.remove('active');
+function setLockMode(mode) {
+    currentLockMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(b => b.className = 'mode-btn');
+    const tag = document.getElementById('current-mode-tag');
+
+    if (mode === 'off') {
+        document.getElementById('btn-mode-off').className = 'mode-btn active-off';
+        tag.innerText = 'NORMAL OFF';
+        tag.style.background = '#065f46';
+        tag.style.color = '#a7f3d0';
+    } else if (mode === 'permanent') {
+        document.getElementById('btn-mode-perm').className = 'mode-btn active-perm';
+        tag.innerText = '🔴 FORCE LOCK ON';
+        tag.style.background = '#7f1d1d';
+        tag.style.color = '#fecaca';
+    } else if (mode === 'temporary') {
+        document.getElementById('btn-mode-temp').className = 'mode-btn active-temp';
+        tag.innerText = '🟡 NOTICE POPUP ON';
+        tag.style.background = '#78350f';
+        tag.style.color = '#fde68a';
     }
     updateJsonOutput();
 }
@@ -169,9 +192,8 @@ function addNewBook() {
         return;
     }
 
-    const newId = String(currentBooks.length + 1);
     currentBooks.push({
-        id: newId,
+        id: String(currentBooks.length + 1),
         series: series,
         title: title,
         subject: subject,
@@ -187,19 +209,28 @@ function addNewBook() {
 }
 
 function generateFullPayload() {
-    if (isNoticeOn) {
+    const reqBuild = Number(document.getElementById('v-required').value);
+    const title = document.getElementById('v-title').value.trim();
+    const msg = document.getElementById('v-msg').value.trim();
+    const btnText = document.getElementById('v-btn-text').value.trim();
+    const btnUrl = document.getElementById('v-btn-url').value.trim();
+
+    if (currentLockMode === 'off') {
+        return currentBooks;
+    } else {
         return {
+            min_build_number: reqBuild,
             announcement: {
                 show: true,
-                title: document.getElementById('n-title').value.trim(),
-                message: document.getElementById('n-msg').value.trim(),
-                button_text: document.getElementById('n-btn-text').value.trim(),
-                button_url: document.getElementById('n-btn-url').value.trim()
+                lock_type: currentLockMode,
+                min_version: String(reqBuild / 100),
+                title: title,
+                message: msg,
+                button_text: btnText,
+                button_url: btnUrl
             },
             books: currentBooks
         };
-    } else {
-        return currentBooks;
     }
 }
 
