@@ -82,6 +82,24 @@
   },
   {
     "id": "10",
+    "series": "Parmar Sir Fatman GS",
+    "title": "Parmar Sir Fatman GS - Indian Polity (Bilingual)",
+    "subject": "General Studies (GS)",
+    "tag": "🔥 POLITY BILINGUAL",
+    "itemsCount": "Complete Polity Chapters",
+    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/fatman-polity.html"
+  },
+  {
+    "id": "11",
+    "series": "Parmar Sir Fatman GS",
+    "title": "Parmar Sir Fatman GS - Indian Economy (Bilingual)",
+    "subject": "General Studies (GS)",
+    "tag": "🔥 ECONOMY BILINGUAL",
+    "itemsCount": "Complete Economy Chapters",
+    "url": "https://ankitraj75238-jpg.github.io/sph-app/public/fatman-economics.html"
+  },
+  {
+    "id": "12",
     "series": "ASO Rambaan Series",
     "title": "ASO RAMBAAN Static GK Book (3000+ Chapter-wise Questions)",
     "subject": "General Studies (GS)",
@@ -90,7 +108,7 @@
     "url": "https://ankitraj75238-jpg.github.io/sph-app/public/aso-rambaan-static-gk.html"
   },
   {
-    "id": "11",
+    "id": "13",
     "series": "DSSSB Exam Special",
     "title": "DSSSB GS Chapter-wise PYQ Master Practice Deck",
     "subject": "General Studies (GS)",
@@ -99,7 +117,7 @@
     "url": "https://ankitraj75238-jpg.github.io/sph-app/public/dsssb-gs-pyq.html"
   },
   {
-    "id": "12",
+    "id": "14",
     "series": "Black Book Series",
     "title": "Black Book Complete Idioms & Phrases (1800+ TCS PYQ)",
     "subject": "English Vocab",
