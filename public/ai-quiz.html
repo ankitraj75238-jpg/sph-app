@@ -136,48 +136,37 @@
       margin-bottom: 16px;
     }
 
-    .tg-banner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: linear-gradient(135deg, rgba(0, 136, 204, 0.1), rgba(0, 136, 204, 0.18));
-      border: 1px solid rgba(0, 136, 204, 0.3);
-      border-radius: 14px;
-      padding: 10px 14px;
+    /* Links Row (Google AI Studio + Telegram) */
+    .links-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
       margin-bottom: 14px;
-      text-decoration: none;
-      color: var(--text-main);
-      cursor: pointer;
     }
 
-    .tg-banner-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .tg-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--accent-telegram);
-      color: #fff;
+    .direct-link-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-
-    .tg-banner-title {
-      font-size: 0.82rem;
+      gap: 6px;
+      padding: 10px 8px;
+      border-radius: 12px;
+      font-size: 0.76rem;
       font-weight: 700;
-      color: var(--accent-telegram);
+      text-decoration: none;
+      text-align: center;
     }
 
-    .tg-banner-sub {
-      font-size: 0.72rem;
-      color: var(--text-muted);
+    .btn-google {
+      background: rgba(37, 99, 235, 0.1);
+      border: 1px solid rgba(37, 99, 235, 0.35);
+      color: var(--accent-blue);
+    }
+
+    .btn-telegram {
+      background: rgba(0, 136, 204, 0.1);
+      border: 1px solid rgba(0, 136, 204, 0.35);
+      color: var(--accent-telegram);
     }
 
     .upload-zone {
@@ -382,7 +371,7 @@
       width: 100%;
       max-width: 390px;
       box-shadow: var(--card-shadow);
-      max-height: 82vh;
+      max-height: 85vh;
       overflow-y: auto;
     }
 
@@ -440,16 +429,16 @@
   </header>
 
   <div id="setupView">
-    <a href="https://t.me/EXAM_AI_QUIZ/17" target="_blank" rel="noopener noreferrer" class="tg-banner">
-      <div class="tg-banner-left">
-        <div class="tg-icon">▶</div>
-        <div>
-          <div class="tg-banner-title">API Key कैसे बनाएँ? (वीडियो देखें)</div>
-          <div class="tg-banner-sub">फ्री में 2 मिनट में बनाएं • Telegram Guide</div>
-        </div>
-      </div>
-      <div style="font-size: 1.1rem; color: var(--accent-telegram);">➔</div>
-    </a>
+    
+    <!-- Quick Links Grid: Google AI Studio Direct + Telegram Guide -->
+    <div class="links-grid">
+      <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="direct-link-btn btn-google">
+        🔗 Google AI Studio (Key बनाएँ)
+      </a>
+      <a href="https://t.me/EXAM_AI_QUIZ/17" target="_blank" rel="noopener noreferrer" class="direct-link-btn btn-telegram">
+        ▶ Video देखें (Telegram)
+      </a>
+    </div>
 
     <div class="card">
       <div class="upload-zone" onclick="triggerUpload()">
@@ -534,12 +523,19 @@
     <div class="modal">
       <h3 id="modalTitle" style="font-family: 'Outfit'; font-size: 1.2rem; margin-bottom: 6px;">🔑 Gemini API Key दर्ज करें</h3>
       <p id="modalDesc" style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
-        इस AI स्कैनर को इस्तेमाल करने के लिए आपकी मुफ़्त API Key अनिवार्य है। अगर आपके पास नहीं है तो नीचे वीडियो देखकर 2 मिनट में बना लें:
+        मुफ़्त API Key बनाने के लिए नीचे लिंक पर क्लिक करें:
       </p>
 
-      <a href="https://t.me/EXAM_AI_QUIZ/17" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(0,136,204,0.12); border: 1px solid var(--accent-telegram); color: var(--accent-telegram); padding: 10px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; text-decoration: none; margin-bottom: 14px;">
-        ▶ How to Create API Key (वीडियो देखें)
-      </a>
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+        <!-- Direct Google AI Studio Link -->
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(37, 99, 235, 0.12); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 11px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; text-decoration: none;">
+          🌐 Google AI Studio से Key बनाएँ (Direct Link)
+        </a>
+        <!-- Telegram Video Guide Link -->
+        <a href="https://t.me/EXAM_AI_QUIZ/17" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(0,136,204,0.1); border: 1px solid var(--accent-telegram); color: var(--accent-telegram); padding: 9px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; text-decoration: none;">
+          ▶ वीडियो देखकर सीखें (Telegram Guide)
+        </a>
+      </div>
 
       <label>अपनी Gemini API Key डालें:</label>
       <textarea id="keysTextarea" rows="3" placeholder="AIzaSy..."></textarea>
@@ -675,7 +671,7 @@
     function saveKeys() {
       const val = document.getElementById('keysTextarea').value.trim();
       if (!val || val.length < 10) {
-        alert('कृपया एक मान्य (Valid) API Key दर्ज करें!\nअगर Key नहीं है, तो ऊपर दिए वीडियो को देखें।');
+        alert('कृपया एक मान्य (Valid) API Key दर्ज करें!\nअगर Key नहीं है, तो ऊपर दिए लिंक से 1 मिनट में बना लें।');
         return;
       }
 
