@@ -19,7 +19,7 @@
       --accent-emerald: #10b981;
       --accent-blue: #2563eb;
       --accent-telegram: #0088cc;
-      --danger: #ef4444;
+      --danger: #dc2626;
       --input-bg: #f1f5f9;
       --opt-bg: #f8fafc;
       --opt-border: #cbd5e1;
@@ -431,7 +431,6 @@
       gap: 10px;
     }
 
-    /* MOCK TEST OPTION STYLE (Selection Only) */
     .opt-btn {
       width: 100%;
       text-align: left;
@@ -459,7 +458,6 @@
       color: #ffffff;
     }
 
-    /* REVIEW MODE ONLY (Post-Submission) */
     .opt-btn.correct {
       background: rgba(16, 185, 129, 0.15) !important;
       border-color: var(--accent-emerald) !important;
@@ -536,7 +534,6 @@
       border: none;
     }
 
-    /* MOCK SCORECARD CARD */
     #scorecardView {
       display: none;
       text-align: center;
@@ -608,7 +605,6 @@
       <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="direct-link-btn btn-google">
         🔗 Google AI Studio (Key बनाएँ)
       </a>
-      <!-- Updated Telegram Channel Link -->
       <a href="https://t.me/PAREEKSHA_KENDRA" target="_blank" rel="noopener noreferrer" class="direct-link-btn btn-telegram">
         📢 Telegram Channel
       </a>
@@ -693,7 +689,7 @@
     </div>
   </div>
 
-  <!-- 2. ACTION HUB: PLAY LIVE OR DOWNLOAD PAREEKSHA KENDRA HTML -->
+  <!-- 2. ACTION HUB -->
   <div id="actionHubView">
     <div class="card">
       <div class="action-badge-box">
@@ -710,12 +706,13 @@
         <span>▶️ सीधे ऐप में मॉक टेस्ट शुरू करें (Play Live)</span>
       </button>
 
+      <!-- Universal Save & Share Button (Works inside App & Chrome!) -->
       <button class="btn-download-html" onclick="downloadPareekshaKendraHTML()">
-        <span>📥 Pareeksha Kendra HTML फ़ाइल डाउनलोड करें</span>
+        <span>📥 HTML फ़ाइल सेव / शेयर करें (Save & Share)</span>
       </button>
 
       <div style="font-size: 0.76rem; color: var(--text-muted); text-align: center; line-height: 1.5; padding: 0 10px; margin-bottom: 12px;">
-        💡 <b>ऑफलाइन सुविधा:</b> डाउनलोड की गई फ़ाइल को बिना नेट के खोलें और सीधे <b>WhatsApp / Telegram</b> पर शेयर करें!
+        💡 <b>ऑफलाइन सुविधा:</b> ऐप में यह बटन दबाते ही आपके मोबाइल का मेन्यू खुलेगा, जहाँ से आप सीधे <b>Downloads में सेव</b> कर सकते हैं या <b>WhatsApp/Telegram</b> पर शेयर कर सकते हैं!
       </div>
 
       <button onclick="backToScanner()" style="width: 100%; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 12px; font-weight: 700; cursor: pointer;">
@@ -734,8 +731,6 @@
 
       <div class="q-text" id="questionText">सवाल यहाँ दिखेगा...</div>
       <div class="options-list" id="optionsContainer"></div>
-      
-      <!-- Explanation shown ONLY in Review Mode -->
       <div class="expl-box" id="explanationBox"></div>
 
       <div class="nav-btns">
@@ -778,13 +773,12 @@
         </div>
       </div>
 
-      <!-- Button to Review Answers with Full Explanations -->
       <button class="btn-play-now" onclick="startReviewMode()" style="margin-bottom: 10px;">
         <span>🔍 सही उत्तर और व्याख्या देखें (Review Answers)</span>
       </button>
 
       <button class="btn-download-html" onclick="downloadPareekshaKendraHTML()" style="margin-bottom: 12px;">
-        <span>📥 यह टेस्ट HTML फ़ाइल में डाउनलोड करें</span>
+        <span>📥 यह टेस्ट HTML फ़ाइल में सेव / शेयर करें</span>
       </button>
 
       <button onclick="backToScanner()" style="width: 100%; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 12px; font-weight: 700; cursor: pointer;">
@@ -843,7 +837,6 @@
     let isReviewMode = false;
     let isMandatoryOpen = false;
 
-    // Real Stopwatch variables
     let stopwatchSeconds = 0;
     let stopwatchInterval = null;
 
@@ -1069,7 +1062,6 @@
       return null;
     }
 
-    // --- PURE PAREEKSHA KENDRA HTML STRING GENERATOR ---
     function generatePareekshaKendraHtmlString(questions) {
       const formattedRawData = questions.map((q) => {
         let correctIdx = q.answer;
@@ -1634,7 +1626,6 @@
       }
     }
 
-    // --- REAL-TIME LIVE STOPWATCH ENGINE ---
     function startRealStopwatch() {
       clearInterval(stopwatchInterval);
       stopwatchSeconds = 0;
@@ -1647,7 +1638,6 @@
         const secs = stopwatchSeconds % 60;
         displayEl.innerText = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
 
-        // Dynamic Real-time Status updates
         if (stopwatchSeconds < 12) {
           statusEl.innerText = "🔍 AI दस्तावेज़ / पन्नों को पढ़ रहा है...";
         } else if (stopwatchSeconds < 25) {
@@ -1771,18 +1761,49 @@
       document.getElementById('setupView').style.display = 'block';
     }
 
-    function downloadPareekshaKendraHTML() {
+    // --- UNIVERSAL SAVE & SHARE ENGINE (Works in App WebView + Chrome) ---
+    async function downloadPareekshaKendraHTML() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
+
       const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
-      const blob = new Blob([fullHtmlString], { type: 'text/html;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Pareeksha_Kendra_${Date.now()}.html`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      const fileName = `Pareeksha_Kendra_${Date.now()}.html`;
+
+      // 1. First priority: Android Web Share API (Triggers native Android Share/Save sheet inside App!)
+      try {
+        const file = new File([fullHtmlString], fileName, { type: 'text/html' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: 'Pareeksha Kendra Mock Test',
+            text: '⚡ Pareeksha Kendra AI Mock Test तैयार है! इसे खोलकर टेस्ट दें:'
+          });
+          return;
+        }
+      } catch (shareErr) {
+        console.warn("Share sheet note:", shareErr);
+        if (shareErr.name === 'AbortError') return; // User closed share sheet intentionally
+      }
+
+      // 2. Second priority: Standard Browser Blob Download (For Chrome / Desktop)
+      try {
+        const blob = new Blob([fullHtmlString], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+      } catch (blobErr) {
+        // 3. Fallback: Data URI open
+        try {
+          const dataUri = 'data:text/html;charset=utf-8,' + encodeURIComponent(fullHtmlString);
+          window.open(dataUri, '_blank');
+        } catch (e) {
+          alert('डाउनलोड नहीं हो सका। यह फाइल आपके Telegram पर पहले ही भेज दी गई है!');
+        }
+      }
     }
 
     // --- MOCK TEST ENGINE (NO INSTANT ANSWERS UNTIL SUBMITTED) ---
@@ -1822,10 +1843,8 @@
         let cls = "opt-btn";
 
         if (!isReviewMode) {
-          // In Mock Test Mode: Only show selection (NO Green/Red feedback)
           if (selected === idx) cls += " selected";
         } else {
-          // In Review Mode: Show correct answer and user's mistake
           if (idx === correctIndex) cls += " correct";
           else if (selected === idx) cls += " wrong";
         }
@@ -1836,7 +1855,6 @@
         container.appendChild(btn);
       });
 
-      // Explanation is ONLY shown in review mode
       const expl = document.getElementById('explanationBox');
       if (isReviewMode) {
         expl.innerHTML = `<b>💡 व्याख्या (Explanation):</b><br>${q.explanation || 'व्याख्या उपलब्ध नहीं है।'}`;
@@ -1845,10 +1863,8 @@
         expl.style.display = 'none';
       }
 
-      // Prev Button State
       document.getElementById('prevBtn').disabled = (currentQ === 0);
 
-      // Next / Submit Button Text
       const nextBtn = document.getElementById('nextBtn');
       if (isReviewMode) {
         nextBtn.innerText = (currentQ === quizData.length - 1) ? 'स्कोरकार्ड पर जाएँ ➔' : 'अगला सवाल ➔';
@@ -1858,7 +1874,7 @@
     }
 
     function selectMockOption(idx) {
-      if (isReviewMode) return; // Cannot change in review mode
+      if (isReviewMode) return;
       userAnswers[currentQ] = (userAnswers[currentQ] === idx) ? null : idx;
       renderQuestion();
     }
@@ -1880,14 +1896,12 @@
             submitMockTest();
           }
         } else {
-          // Go back to scorecard from review mode
           document.getElementById('quizView').style.display = 'none';
           document.getElementById('scorecardView').style.display = 'block';
         }
       }
     }
 
-    // Calculate score & show Scorecard
     function submitMockTest() {
       let correct = 0, wrong = 0, skip = 0;
       quizData.forEach((q, i) => {
@@ -1920,7 +1934,6 @@
       triggerFlowerCelebration();
     }
 
-    // Start Review Mode (Show solutions & explanations)
     function startReviewMode() {
       isReviewMode = true;
       currentQ = 0;
