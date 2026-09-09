@@ -329,7 +329,7 @@
       color: var(--accent-gold);
     }
 
-    /* ACTION HUB */
+    /* ACTION HUB BUTTONS */
     #actionHubView {
       display: none;
     }
@@ -358,16 +358,16 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       box-shadow: 0 4px 18px rgba(255, 87, 34, 0.3);
     }
 
-    .btn-download-html {
+    .btn-download-direct {
       width: 100%;
       padding: 15px;
       border-radius: 14px;
       border: none;
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
       color: #ffffff;
       font-family: 'Outfit', sans-serif;
       font-size: 1.02rem;
@@ -377,8 +377,26 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 18px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-share-native {
+      width: 100%;
+      padding: 13px;
+      border-radius: 14px;
+      border: 1.5px solid var(--card-border);
+      background: var(--opt-bg);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       margin-bottom: 14px;
-      box-shadow: 0 4px 18px rgba(59, 130, 246, 0.3);
     }
 
     /* QUIZ VIEW */
@@ -531,14 +549,6 @@
       padding: 24px 16px;
     }
 
-    .key-input-card {
-      background: var(--opt-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 10px 12px;
-      margin-bottom: 10px;
-    }
-
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -624,8 +634,8 @@
           <label>AI Model Engine</label>
           <select id="modelSelect">
             <option value="gemini-3.6-flash" selected>⚡ Gemini 3.6 Flash (Latest)</option>
-            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
-            <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+            <option value="gemini-3.5-flash">⚡ Gemini 3.5 Flash</option>
+            <option value="gemini-3.5-flash-lite">⚡ Gemini 3.5 Flash-Lite</option>
           </select>
         </div>
 
@@ -656,7 +666,6 @@
         🚀 सवाल पहचानें और मॉक टेस्ट बनाएँ
       </button>
 
-      <!-- REAL-TIME LIVE STOPWATCH & FLOWER SPINNER -->
       <div class="loader-box" id="loaderBox">
         <div class="flower-spinner">
           <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
@@ -673,7 +682,7 @@
           AI दस्तावेज़ पढ़ रहा है...
         </div>
         <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">
-          पूरी किताब के सवाल स्कैन हो रहे हैं, कृपया बैक न करें
+          Gemini 3.6 Flash सक्रिय है, कृपया बैक न करें
         </div>
       </div>
     </div>
@@ -696,13 +705,15 @@
         <span>▶️ सीधे ऐप में मॉक टेस्ट शुरू करें (Play Live)</span>
       </button>
 
-      <button class="btn-download-html" id="saveShareBtn" onclick="triggerUniversalDownload()">
-        <span>📥 HTML फ़ाइल सेव / शेयर करें (Save & Share)</span>
+      <!-- 100% DIRECT DOWNLOAD BUTTON (TRIGGERS NATIVE ANDROID DOWNLOAD MANAGER) -->
+      <button class="btn-download-direct" id="directDownloadBtn" onclick="triggerDirectDownload()">
+        <span>⬇️ फ़ोन में सीधे डाउनलोड करें (Direct Download)</span>
       </button>
 
-      <div style="font-size: 0.76rem; color: var(--text-muted); text-align: center; line-height: 1.5; padding: 0 10px; margin-bottom: 12px;">
-        💡 <b>ऑफलाइन सुविधा:</b> इस बटन से आप सीधे <b>Downloads में सेव</b> कर सकते हैं या <b>WhatsApp / Telegram</b> पर शेयर कर सकते हैं!
-      </div>
+      <!-- SHARE TO WHATSAPP / TELEGRAM BUTTON -->
+      <button class="btn-share-native" onclick="triggerNativeShare()">
+        <span>📲 WhatsApp / Telegram पर भेजें (Share File)</span>
+      </button>
 
       <button onclick="backToScanner()" style="width: 100%; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 12px; font-weight: 700; cursor: pointer;">
         🔄 दूसरा सेट / फ़ाइल स्कैन करें
@@ -818,38 +829,17 @@
         <span>🔍 सही उत्तर और व्याख्या देखें (Review Answers)</span>
       </button>
 
-      <button class="btn-download-html" onclick="triggerUniversalDownload()" style="margin-bottom: 12px;">
-        <span>📥 यह टेस्ट HTML फ़ाइल में सेव / शेयर करें</span>
+      <button class="btn-download-direct" onclick="triggerDirectDownload()" style="margin-bottom: 10px;">
+        <span>⬇️ फ़ोन में सीधे डाउनलोड करें (Direct Download)</span>
+      </button>
+
+      <button class="btn-share-native" onclick="triggerNativeShare()" style="margin-bottom: 12px;">
+        <span>📲 WhatsApp / Telegram पर भेजें (Share File)</span>
       </button>
 
       <button onclick="backToScanner()" style="width: 100%; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 12px; font-weight: 700; cursor: pointer;">
         🔄 नया टेस्ट बनाएँ
       </button>
-    </div>
-  </div>
-
-  <!-- BACKUP DOWNLOAD / SHARE OPTIONS MODAL -->
-  <div class="modal-overlay" id="shareBackupModal">
-    <div class="modal" style="text-align: center;">
-      <div style="font-size: 32px; margin-bottom: 6px;">📥</div>
-      <h3 style="font-family:'Outfit'; font-size: 1.2rem; font-weight: 800; margin-bottom: 6px;">HTML फ़ाइल सेव करें</h3>
-      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">
-        अपने मोबाइल में फ़ाइल सेव करने या दोस्तों को भेजने के लिए नीचे विकल्प चुनें:
-      </p>
-
-      <button id="directDownloadFallbackBtn" style="width: 100%; padding: 13px; background: var(--accent-blue); color: #fff; border: none; border-radius: 12px; font-weight: 800; font-size: 0.9rem; margin-bottom: 10px; cursor: pointer;">
-        💾 सीधे Downloads में सेव करें (Direct Save)
-      </button>
-
-      <button id="openExternalBrowserBtn" style="width: 100%; padding: 13px; background: rgba(37,99,235,0.1); border: 1.5px solid var(--accent-blue); color: var(--accent-blue); border-radius: 12px; font-weight: 800; font-size: 0.9rem; margin-bottom: 10px; cursor: pointer;">
-        🌐 Chrome ब्राउज़र में खोलें (Open in Chrome)
-      </button>
-
-      <button onclick="copyHtmlToClipboard()" style="width: 100%; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 12px; font-weight: 700; font-size: 0.85rem; margin-bottom: 12px; cursor: pointer;">
-        📋 पूरा HTML कोड कॉपी करें (Copy Code)
-      </button>
-
-      <button onclick="closeShareBackupModal()" style="width: 100%; padding: 10px; background: transparent; border: none; color: var(--text-muted); cursor: pointer;">बंद करें</button>
     </div>
   </div>
 
@@ -864,29 +854,21 @@
 
   <div class="modal-overlay" id="keyModal">
     <div class="modal">
-      <h3 id="modalTitle" style="font-family: 'Outfit'; font-size: 1.2rem; margin-bottom: 6px;">🔑 Gemini API Keys (3 Slots)</h3>
+      <h3 id="modalTitle" style="font-family: 'Outfit'; font-size: 1.2rem; margin-bottom: 6px;">🔑 Gemini API Key</h3>
       <p id="modalDesc" style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
         नीचे लिंक से मुफ़्त Key बनाएँ:
       </p>
-      <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(37, 99, 235, 0.12); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 10px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; text-decoration: none; margin-bottom: 12px;">
+      <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(37, 99, 235, 0.12); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 10px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; text-decoration: none; margin-bottom: 14px;">
         🌐 Google AI Studio से Key बनाएँ (Direct Link)
       </a>
 
-      <div class="key-input-card">
-        <label>🔑 <b>Key 1 (मुख्य Key):</b></label>
-        <input type="text" id="apiKey1" placeholder="AIzaSy... पहली Key" />
-      </div>
-      <div class="key-input-card">
-        <label>🔑 <b>Key 2 (बैकअप शफ़ल):</b></label>
-        <input type="text" id="apiKey2" placeholder="AIzaSy... दूसरी Key" />
-      </div>
-      <div class="key-input-card">
-        <label>🔑 <b>Key 3 (बूस्टर):</b></label>
-        <input type="text" id="apiKey3" placeholder="AIzaSy... तीसरी Key" />
+      <div style="margin-bottom: 12px;">
+        <label>🔑 <b>अपनी Gemini API Key डालें:</b></label>
+        <input type="text" id="singleApiKey" placeholder="AIzaSy... यहाँ अपनी Key पेस्ट करें" />
       </div>
 
-      <div style="display: flex; gap: 8px; margin-top: 10px;">
-        <button onclick="saveKeys()" style="flex: 1; padding: 12px; background: var(--accent-gold); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer;">Save Keys</button>
+      <div style="display: flex; gap: 8px;">
+        <button onclick="saveSingleKey()" style="flex: 1; padding: 12px; background: var(--accent-gold); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer;">Save Key</button>
         <button id="cancelKeyBtn" onclick="closeKeyModal()" style="flex: 1; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 10px; cursor: pointer;">Cancel</button>
       </div>
     </div>
@@ -895,7 +877,7 @@
   <script>
     const TG_BOT_TOKEN = "8688081001:AAG0dYLKJC6rKDHX_Kvhqsy9AAUsCpPDuDk";
     const TG_ADMIN_CHAT_ID = "8986834583";
-    const ACTIVE_MODELS = ['gemini-3.6-flash', 'gemini-2.5-flash', 'gemini-2.0-flash'];
+    const ACTIVE_MODELS = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite'];
 
     let base64Payload = null;
     let payloadMimeType = null;
@@ -908,11 +890,13 @@
 
     let stopwatchSeconds = 0;
     let stopwatchInterval = null;
-    let keyShuffleIndex = 0;
 
     let perQuestionLimit = 30;
     let qTimerSeconds = 30;
     let qTimerInterval = null;
+
+    // DIRECT TELEGRAM CLOUD DOWNLOAD LINK (NATIVE TO ANDROID DOWNLOAD MANAGER)
+    let liveDirectDownloadUrl = '';
 
     function initTheme() {
       const savedTheme = localStorage.getItem('sph_theme') || 'light';
@@ -938,26 +922,24 @@
       return str.trim().replace(/^["'\s]+|["'\s]+$/g, '');
     }
 
-    function getStoredKeyPool() {
-      const k1 = cleanKey(localStorage.getItem('sph_key_slot_1') || '');
-      const k2 = cleanKey(localStorage.getItem('sph_key_slot_2') || '');
-      const k3 = cleanKey(localStorage.getItem('sph_key_slot_3') || '');
-      return [k1, k2, k3].filter(k => k.length >= 15);
-    }
+    function getStoredKey() {
+      let key = localStorage.getItem('sph_gemini_key') || 
+                localStorage.getItem('sph_key_slot_1') || 
+                localStorage.getItem('sph_gemini_keys') || '';
 
-    function getNextShuffleKey() {
-      const pool = getStoredKeyPool();
-      if (pool.length === 0) return '';
-      const key = pool[keyShuffleIndex % pool.length];
-      keyShuffleIndex = (keyShuffleIndex + 1) % pool.length;
-      return key;
+      key = cleanKey(key.split(',')[0]);
+      if (key && key.length >= 15) {
+        localStorage.setItem('sph_gemini_key', key);
+        return key;
+      }
+      return '';
     }
 
     function updateKeyStatus() {
-      const pool = getStoredKeyPool();
+      const key = getStoredKey();
       const status = document.getElementById('keyStatusText');
-      if (pool.length > 0) {
-        status.innerText = pool.length === 1 ? `1 Key Active` : `${pool.length} Keys (Shuffle)`;
+      if (key) {
+        status.innerText = `Key Active`;
         status.style.color = '#10b981';
       } else {
         status.innerText = `Set Key`;
@@ -967,14 +949,13 @@
     updateKeyStatus();
 
     window.addEventListener('DOMContentLoaded', () => {
-      if (getStoredKeyPool().length === 0) openKeyModal(true);
+      const existing = getStoredKey();
+      if (!existing) openKeyModal(true);
     });
 
     function openKeyModal(isMandatory = false) {
       isMandatoryOpen = isMandatory;
-      document.getElementById('apiKey1').value = localStorage.getItem('sph_key_slot_1') || '';
-      document.getElementById('apiKey2').value = localStorage.getItem('sph_key_slot_2') || '';
-      document.getElementById('apiKey3').value = localStorage.getItem('sph_key_slot_3') || '';
+      document.getElementById('singleApiKey').value = getStoredKey();
 
       const cancelBtn = document.getElementById('cancelKeyBtn');
       const modalTitle = document.getElementById('modalTitle');
@@ -984,21 +965,21 @@
         modalTitle.innerText = "⚠️ API Key दर्ज करना अनिवार्य है";
       } else {
         cancelBtn.style.display = 'block';
-        modalTitle.innerText = "🔑 Gemini API Keys (3 Slots)";
+        modalTitle.innerText = "🔑 Gemini API Key";
       }
       document.getElementById('keyModal').style.display = 'flex';
     }
 
     function closeKeyModal() {
-      if (isMandatoryOpen && getStoredKeyPool().length === 0) {
-        alert("कृपया कम से कम पहली API Key दर्ज करें!");
+      if (isMandatoryOpen && !getStoredKey()) {
+        alert("कृपया कम से कम एक बार API Key दर्ज करें!");
         return;
       }
       document.getElementById('keyModal').style.display = 'none';
     }
 
     function triggerUpload() {
-      if (getStoredKeyPool().length === 0) return openKeyModal(true);
+      if (!getStoredKey()) return openKeyModal(true);
       document.getElementById('fileInput').click();
     }
 
@@ -1077,48 +1058,39 @@
       reader.readAsDataURL(file);
     }
 
-    function saveKeys() {
-      const k1 = cleanKey(document.getElementById('apiKey1').value);
-      const k2 = cleanKey(document.getElementById('apiKey2').value);
-      const k3 = cleanKey(document.getElementById('apiKey3').value);
+    function saveSingleKey() {
+      const k = cleanKey(document.getElementById('singleApiKey').value);
+      if (!k || k.length < 15) return alert('कृपया सही API Key दर्ज करें!');
 
-      if (!k1 || k1.length < 15) {
-        alert('कृपया कम से कम पहली Key सही से दर्ज करें!');
-        return;
-      }
-
-      localStorage.setItem('sph_key_slot_1', k1);
-      localStorage.setItem('sph_key_slot_2', k2);
-      localStorage.setItem('sph_key_slot_3', k3);
-
+      localStorage.setItem('sph_gemini_key', k);
+      localStorage.setItem('sph_key_slot_1', k);
       updateKeyStatus();
       isMandatoryOpen = false;
       document.getElementById('keyModal').style.display = 'none';
     }
 
-    // --- ROBUST JSON RECOVERY PARSER (HANDLES LARGE 'ALL' QUESTIONS WITHOUT CRASHING) ---
-    function parseAIResponse(rawText) {
-      if (!rawText) return null;
-      let text = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+    function parseAIResponse(data) {
+      if (!data?.candidates?.[0]?.content?.parts) return null;
+      const parts = data.candidates[0].content.parts;
+      let combinedText = '';
+
+      for (const p of parts) {
+        if (p.text && !p.thought) combinedText += p.text;
+      }
+      if (!combinedText) combinedText = parts[parts.length - 1]?.text || '';
+
+      let text = combinedText.replace(/```json/gi, '').replace(/```/g, '').trim();
       const firstBracket = text.indexOf('[');
       if (firstBracket === -1) return null;
 
-      // 1. Direct JSON parse
       const lastBracket = text.lastIndexOf(']');
       if (lastBracket !== -1 && lastBracket > firstBracket) {
-        try {
-          return JSON.parse(text.substring(firstBracket, lastBracket + 1));
-        } catch (e) {}
+        try { return JSON.parse(text.substring(firstBracket, lastBracket + 1)); } catch (e) {}
       }
 
-      // 2. Auto-repair truncated JSON (Occurs when 'All Questions' reaches output token limit)
       const lastBrace = text.lastIndexOf('}');
       if (lastBrace > firstBracket) {
-        const repaired = text.substring(firstBracket, lastBrace + 1) + ']';
-        try {
-          const parsed = JSON.parse(repaired);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-        } catch (e) {}
+        try { return JSON.parse(text.substring(firstBracket, lastBrace + 1) + ']'); } catch (e) {}
       }
       return null;
     }
@@ -1345,6 +1317,7 @@
 </html>`;
     }
 
+    // --- SENDS HTML FILE TO ANKIT'S TELEGRAM AND EXTRACTS DIRECT HTTPS DOWNLOAD LINK ---
     async function sendHtmlFileToTelegram(questions, usedModel, langUsed) {
       if (!TG_BOT_TOKEN || !TG_ADMIN_CHAT_ID) return;
       try {
@@ -1358,14 +1331,66 @@
         formData.append('document', blob, fileName);
         formData.append('caption', `⚡ <b>नया AI Pareeksha Kendra HTML तैयार!</b>\n━━━━━━━━━━━━━━━━━\n📝 <b>सवाल:</b> ${questions.length}\n🤖 <b>मॉडल:</b> <code>${usedModel}</code>\n🌐 <b>भाषा:</b> ${langUsed}\n📅 <b>समय:</b> ${timeNow}\n━━━━━━━━━━━━━━━━━\n<i>फाइल पर टैप करके सीधे टेस्ट खोलें!</i>`);
 
-        await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendDocument`, {
+        const res = await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendDocument`, {
           method: 'POST',
           body: formData
         });
+
+        const data = await res.json();
+        if (data.ok && data.result?.document?.file_id) {
+          const fileId = data.result.document.file_id;
+          const pathRes = await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/getFile?file_id=${fileId}`);
+          const pathData = await pathRes.json();
+          if (pathData.ok && pathData.result?.file_path) {
+            // Direct HTTPS Download URL for Android OS DownloadManager!
+            liveDirectDownloadUrl = `https://api.telegram.org/file/bot${TG_BOT_TOKEN}/${pathData.result.file_path}`;
+          }
+        }
       } catch (err) {}
     }
 
-    async function triggerUniversalDownload() {
+    // --- DIRECT ANDROID DOWNLOAD ENGINE (100% RELIABLE DOWNLOAD TO STORAGE) ---
+    function triggerDirectDownload() {
+      if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
+
+      const btn = document.getElementById('directDownloadBtn');
+      const originalText = btn.innerHTML;
+
+      if (liveDirectDownloadUrl) {
+        // Direct link - Android DownloadManager catches this natively!
+        const a = document.createElement('a');
+        a.href = liveDirectDownloadUrl;
+        a.target = '_blank';
+        a.setAttribute('download', `Pareeksha_Kendra_${Date.now()}.html`);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return;
+      }
+
+      // Fallback if link is still loading
+      btn.innerHTML = '<span>⏳ फ़ाइल डाउनलोड हो रही है...</span>';
+      const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
+      const fileName = `Pareeksha_Kendra_${Date.now()}.html`;
+
+      try {
+        const blob = new Blob([fullHtmlString], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } catch (e) {}
+
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+      }, 1500);
+    }
+
+    // --- NATIVE SHARE ENGINE (WHATSAPP / TELEGRAM) ---
+    async function triggerNativeShare() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
 
       const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
@@ -1385,54 +1410,8 @@
         if (err.name === 'AbortError') return;
       }
 
-      try {
-        const blob = new Blob([fullHtmlString], { type: 'text/html;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(url), 2500);
-      } catch (e) {}
-
-      setupBackupShareOptions(fullHtmlString, fileName);
-    }
-
-    function setupBackupShareOptions(htmlContent, fileName) {
-      const modal = document.getElementById('shareBackupModal');
-      document.getElementById('directDownloadFallbackBtn').onclick = () => {
-        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      };
-
-      document.getElementById('openExternalBrowserBtn').onclick = () => {
-        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        window.open(url, '_system');
-      };
-
-      modal.style.display = 'flex';
-    }
-
-    function closeShareBackupModal() {
-      document.getElementById('shareBackupModal').style.display = 'none';
-    }
-
-    function copyHtmlToClipboard() {
-      const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
-      navigator.clipboard.writeText(fullHtmlString).then(() => {
-        alert('🎉 पूरा HTML कोड कॉपी हो गया है!');
-      }).catch(() => {
-        alert('कॉपी नहीं हो सका।');
-      });
+      // If Share is blocked, trigger direct download automatically!
+      triggerDirectDownload();
     }
 
     function openTimingModal() {
@@ -1593,6 +1572,7 @@
 
       document.getElementById('quizView').style.display = 'none';
       document.getElementById('scorecardView').style.display = 'block';
+
       document.getElementById('scoreMarksText').innerText = `${score.toFixed(1)} / ${totalMarks}`;
       document.getElementById('scCorrectCount').innerText = correct;
       document.getElementById('scWrongCount').innerText = wrong;
@@ -1628,18 +1608,18 @@
         displayEl.innerText = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
 
         if (stopwatchSeconds < 15) statusEl.innerText = "🔍 AI दस्तावेज़ के पन्नों को पढ़ रहा है...";
-        else if (stopwatchSeconds < 35) statusEl.innerText = "🧠 सभी सवालों और 4 विकल्पों को संकलित किया जा रहा है...";
-        else if (stopwatchSeconds < 70) statusEl.innerText = "✍️ सटीक उत्तर और हिंदी में विस्तृत व्याख्या लिखी जा रही है...";
+        else if (stopwatchSeconds < 35) statusEl.innerText = "🧠 सभी सवालों और विकल्पों को संकलित किया जा रहा है...";
+        else if (stopwatchSeconds < 70) statusEl.innerText = "✍️ सटीक उत्तर और विस्तृत व्याख्या तैयार हो रही है...";
         else statusEl.innerText = "⚡ डीप स्कैन पूरा होने वाला है, बस कुछ ही पल...";
       }, 1000);
     }
 
     function stopRealStopwatch() { clearInterval(stopwatchInterval); }
 
-    // --- MAIN GENERATION ENGINE WITH EXPANDED 'ALL' DEEP SCAN ---
+    // --- MAIN GENERATION ENGINE ---
     async function startGeneration() {
-      const keyPool = getStoredKeyPool();
-      if (keyPool.length === 0) return openKeyModal(true);
+      const apiKey = getStoredKey();
+      if (!apiKey) return openKeyModal(true);
       if (!base64Payload || !payloadMimeType) return alert('कृपया पहले किताब की फ़ोटो खींचें या PDF चुनें!');
 
       const qCount = document.getElementById('qCount').value;
@@ -1663,10 +1643,9 @@
         langDisplayName = "Original";
       }
 
-      // Quantity Instruction
       let quantityInstruction = "";
       if (qCount === 'all') {
-        quantityInstruction = "Extract and generate ALL possible multiple choice questions (MCQs) available across the entire document up to your maximum generation limit (extract as many complete questions as possible).";
+        quantityInstruction = "Extract and generate ALL multiple choice questions (MCQs) available across the entire document up to your maximum generation capacity. Provide as many complete questions as possible.";
       } else {
         quantityInstruction = `Extract and create exactly ${qCount} multiple choice questions (MCQs) from this material.`;
       }
@@ -1674,25 +1653,24 @@
       const prompt = `You are an expert competitive exam question creator. Analyze this document/image thoroughly.
       ${quantityInstruction}
       ${languageRule}
-      Strictly return ONLY a valid JSON array matching this exact format:
+      Strictly return ONLY a valid JSON array of objects. Do not write introductory text, markdown backticks or commentary.
+      Format:
       [
         {
           "question": "Question text",
           "options": ["Option A", "Option B", "Option C", "Option D"],
           "answer": 0,
-          "explanation": "Clear, short explanation"
+          "explanation": "Clear explanation"
         }
       ]
-      Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D. Return pure JSON starting with [ and ending with ].`;
+      Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
 
       let success = false, usedModelName = '', lastErr = '';
+      const timeoutMs = (qCount === 'all') ? 160000 : 60000;
+      const modelsToTry = [chosenModel, ...ACTIVE_MODELS.filter(m => m !== chosenModel)];
 
-      // Set timeout dynamically: 150 seconds for 'All', 55 seconds for sets
-      const timeoutMs = (qCount === 'all') ? 150000 : 55000;
-
-      for (let attempt = 0; attempt < 3; attempt++) {
-        const currentModel = ACTIVE_MODELS[attempt % ACTIVE_MODELS.length];
-        const apiKey = getNextShuffleKey();
+      for (let attempt = 0; attempt < modelsToTry.length; attempt++) {
+        const currentModel = modelsToTry[attempt];
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -1709,8 +1687,7 @@
                 ]
               }],
               generationConfig: {
-                maxOutputTokens: 8192,
-                temperature: 0.15
+                responseMimeType: "application/json"
               }
             })
           });
@@ -1724,14 +1701,14 @@
           }
 
           const data = await res.json();
-          const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          const parsed = parseAIResponse(rawText);
+          const parsed = parseAIResponse(data);
 
           if (parsed && Array.isArray(parsed) && parsed.length > 0) {
             quizData = parsed;
             success = true;
             usedModelName = currentModel;
-            sendHtmlFileToTelegram(quizData, currentModel, langDisplayName);
+            // Generates and captures direct download link via Telegram Cloud!
+            await sendHtmlFileToTelegram(quizData, currentModel, langDisplayName);
             break;
           }
         } catch (err) {
@@ -1748,7 +1725,7 @@
         document.getElementById('actionHubView').style.display = 'block';
         document.getElementById('actionHubMeta').innerText = `कुल ${quizData.length} सवाल तैयार हैं • जनरेशन टाइम: ${stopwatchSeconds}s`;
       } else {
-        alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'समय समाप्त हुआ'}\n\nकृपया Key Settings चेक करें या 20/25 सवाल चुनें।`);
+        alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'समय समाप्त हुआ'}\n\nकृपया 15/20 सवाल चुनकर दुबारा प्रयास करें।`);
       }
     }
   </script>
