@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 
 interface SplashScreenProps {
@@ -8,24 +8,15 @@ interface SplashScreenProps {
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({
   onFinish,
-  durationMs = 2200,
+  durationMs = 2000,
 }) => {
-  const [progress, setProgress] = useState<number>(0);
-
+  // Ultra-Smooth: Handled directly by GPU compositor without React re-render lag
   useEffect(() => {
-    // Smooth progress bar animation over durationMs
-    const startTime = Date.now();
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const pct = Math.min(100, Math.round((elapsed / durationMs) * 100));
-      setProgress(pct);
-      if (elapsed >= durationMs) {
-        clearInterval(interval);
-        if (onFinish) onFinish();
-      }
-    }, 20);
+    const timer = setTimeout(() => {
+      if (onFinish) onFinish();
+    }, durationMs);
 
-    return () => clearInterval(interval);
+    return () => clearTimeout(timer);
   }, [durationMs, onFinish]);
 
   return (
@@ -58,7 +49,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
       >
         <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
         <span className="text-[10px] font-mono font-bold tracking-widest text-slate-300 uppercase">
-          SPH APPS • SECURE HUB v2.4
+          SPH APPS • SECURE HUB v3.0
         </span>
       </motion.div>
 
@@ -84,26 +75,22 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
               className="w-full h-full"
             >
               <defs>
-                {/* Outer Shield Gradient: Vibrant Royal Blue to Deep Emerald */}
                 <linearGradient id="splashShieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#3B82F6" />
                   <stop offset="50%" stopColor="#10B981" />
                   <stop offset="100%" stopColor="#059669" />
                 </linearGradient>
 
-                {/* Accent Gold/Amber Gradient */}
                 <linearGradient id="splashGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#FBBF24" />
                   <stop offset="100%" stopColor="#D97706" />
                 </linearGradient>
 
-                {/* Core Inner Gradient */}
                 <linearGradient id="splashCoreGrad" x1="0%" y1="0%" x2="0%" y2="100%">
                   <stop offset="0%" stopColor="#1E293B" />
                   <stop offset="100%" stopColor="#0F172A" />
                 </linearGradient>
 
-                {/* Highlight Sheen */}
                 <linearGradient id="splashSheen" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.4" />
                   <stop offset="40%" stopColor="#FFFFFF" stopOpacity="0.05" />
@@ -111,7 +98,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                 </linearGradient>
               </defs>
 
-              {/* Outer Shield Frame with 3D Bevel */}
               <path
                 d="M50 7 L85 22 C85 55 70 80 50 93 C30 80 15 55 15 22 L50 7 Z"
                 fill="url(#splashShieldGrad)"
@@ -120,7 +106,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                 strokeLinejoin="round"
               />
 
-              {/* Inner Shield Body */}
               <path
                 d="M50 13 L79 26 C79 52 66 74 50 86 C34 74 21 52 21 26 L50 13 Z"
                 fill="url(#splashCoreGrad)"
@@ -128,13 +113,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                 strokeWidth="1.2"
               />
 
-              {/* Subtle Top-Left Glass Sheen */}
               <path
                 d="M50 13 L79 26 C79 40 70 58 50 65 C34 58 25 40 21 26 L50 13 Z"
                 fill="url(#splashSheen)"
               />
 
-              {/* Academic Laurel Crest Arc */}
               <path
                 d="M32 46 C32 60 40 70 50 74 C60 70 68 60 68 46"
                 stroke="url(#splashShieldGrad)"
@@ -143,14 +126,12 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                 strokeDasharray="2 3"
               />
 
-              {/* Open Book Foundation */}
               <path
                 d="M36 64 C42 61 46 62 50 65 C54 62 58 61 64 64 L64 67 C58 64 54 65 50 68 C46 65 42 64 36 67 Z"
                 fill="url(#splashShieldGrad)"
                 opacity="0.95"
               />
 
-              {/* Central Monogram: S P H with high contrast */}
               <text
                 x="50"
                 y="47.5"
@@ -166,7 +147,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
                 SPH
               </text>
 
-              {/* Top Star Accent */}
               <polygon
                 points="50,17 52.2,21.5 56.5,21.5 53,24 54.2,28.5 50,25.5 45.8,28.5 47,24 43.5,21.5 47.8,21.5"
                 fill="url(#splashGoldGrad)"
@@ -186,7 +166,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           SILENT PREPARATION HUB
         </motion.h1>
 
-        {/* Gold-accented Subtitle: SSC • Railway • Police • Defence */}
+        {/* Gold Subtitle: SSC • Railway • Police • Defence */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -210,21 +190,27 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           </span>
         </motion.div>
 
-        {/* Micro Loading Indicator: Thin Gradient Progress Line */}
+        {/* 🚀 120Hz GPU-ACCELERATED ULTRA SMOOTH PROGRESS BAR (ZERO JERK) */}
         <motion.div
-          initial={{ opacity: 0, scaleX: 0.6 }}
+          initial={{ opacity: 0, scaleX: 0.8 }}
           animate={{ opacity: 1, scaleX: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="w-48 sm:w-56 h-1 bg-slate-800/90 rounded-full overflow-hidden mt-6 border border-slate-700/50 shadow-inner"
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="w-48 sm:w-56 h-1.5 bg-slate-800/90 rounded-full overflow-hidden mt-7 border border-slate-700/50 shadow-inner"
         >
-          <div
-            className="h-full bg-gradient-to-r from-blue-500 via-emerald-400 to-amber-400 rounded-full transition-all duration-75 ease-out shadow-[0_0_8px_rgba(16,185,129,0.7)]"
-            style={{ width: `${progress}%` }}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{
+              duration: durationMs / 1000,
+              ease: [0.16, 1, 0.3, 1], // Silky smooth glide
+            }}
+            style={{ transformOrigin: 'left' }}
+            className="h-full w-full bg-gradient-to-r from-blue-500 via-emerald-400 to-amber-400 rounded-full shadow-[0_0_12px_rgba(16,185,129,0.8)]"
           />
         </motion.div>
       </div>
 
-      {/* Bottom Luxury Tagline */}
+      {/* Bottom Slogan */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
