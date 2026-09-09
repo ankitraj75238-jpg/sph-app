@@ -632,12 +632,13 @@
         <div>
           <label>Questions Count</label>
           <select id="qCount">
-            <option value="5">5 Questions (Quick Test)</option>
-            <option value="10" selected>10 Questions (Standard)</option>
+            <option value="all" selected>🔥 पूरी किताब/सेट के सभी सवाल (All Questions)</option>
+            <option value="10">10 Questions (Standard)</option>
             <option value="15">15 Questions (Best Practice)</option>
             <option value="20">20 Questions (Mock Set)</option>
-            <option value="25">25 Questions (Full Exam Drill)</option>
+            <option value="25">25 Questions (Exam Drill)</option>
             <option value="30">30 Questions (Super Drill)</option>
+            <option value="50">50 Questions (Mega Test)</option>
           </select>
         </div>
 
@@ -655,6 +656,7 @@
         🚀 सवाल पहचानें और मॉक टेस्ट बनाएँ
       </button>
 
+      <!-- REAL-TIME LIVE STOPWATCH & FLOWER SPINNER -->
       <div class="loader-box" id="loaderBox">
         <div class="flower-spinner">
           <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
@@ -669,6 +671,9 @@
 
         <div id="loaderStatusText" style="font-size: 0.88rem; color: var(--text-main); font-weight: 700; margin-top: 4px;">
           AI दस्तावेज़ पढ़ रहा है...
+        </div>
+        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">
+          पूरी किताब के सवाल स्कैन हो रहे हैं, कृपया बैक न करें
         </div>
       </div>
     </div>
@@ -687,12 +692,10 @@
         </div>
       </div>
 
-      <!-- Button Opens Timing Selector Modal Before Playing -->
       <button class="btn-play-now" onclick="openTimingModal()">
         <span>▶️ सीधे ऐप में मॉक टेस्ट शुरू करें (Play Live)</span>
       </button>
 
-      <!-- 100% Working Universal Save & Share Button -->
       <button class="btn-download-html" id="saveShareBtn" onclick="triggerUniversalDownload()">
         <span>📥 HTML फ़ाइल सेव / शेयर करें (Save & Share)</span>
       </button>
@@ -707,7 +710,7 @@
     </div>
   </div>
 
-  <!-- TIMING CONFIG MODAL (Asks Per Question Time Before Test) -->
+  <!-- TIMING CONFIG MODAL -->
   <div class="modal-overlay" id="timingModal">
     <div class="modal" style="text-align: center;">
       <div style="font-size: 32px; margin-bottom: 6px;">⏱️</div>
@@ -764,7 +767,6 @@
     <div class="card">
       <div class="quiz-progress">
         <span id="qIndexLabel">Question 1 of 10</span>
-        <!-- Live Per-Question Countdown Badge -->
         <span class="live-q-timer" id="liveQTimerBadge">⏱️ 30s</span>
       </div>
 
@@ -826,7 +828,7 @@
     </div>
   </div>
 
-  <!-- BACKUP DOWNLOAD / SHARE OPTIONS MODAL (Guarantees Download Works on ANY Mobile WebView) -->
+  <!-- BACKUP DOWNLOAD / SHARE OPTIONS MODAL -->
   <div class="modal-overlay" id="shareBackupModal">
     <div class="modal" style="text-align: center;">
       <div style="font-size: 32px; margin-bottom: 6px;">📥</div>
@@ -908,8 +910,7 @@
     let stopwatchInterval = null;
     let keyShuffleIndex = 0;
 
-    // Per-Question Mock Timer variables
-    let perQuestionLimit = 30; // seconds
+    let perQuestionLimit = 30;
     let qTimerSeconds = 30;
     let qTimerInterval = null;
 
@@ -1095,13 +1096,29 @@
       document.getElementById('keyModal').style.display = 'none';
     }
 
+    // --- ROBUST JSON RECOVERY PARSER (HANDLES LARGE 'ALL' QUESTIONS WITHOUT CRASHING) ---
     function parseAIResponse(rawText) {
       if (!rawText) return null;
-      const firstBracket = rawText.indexOf('[');
-      const lastBracket = rawText.lastIndexOf(']');
-      if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
-        try { return JSON.parse(rawText.substring(firstBracket, lastBracket + 1)); }
-        catch (e) {}
+      let text = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+      const firstBracket = text.indexOf('[');
+      if (firstBracket === -1) return null;
+
+      // 1. Direct JSON parse
+      const lastBracket = text.lastIndexOf(']');
+      if (lastBracket !== -1 && lastBracket > firstBracket) {
+        try {
+          return JSON.parse(text.substring(firstBracket, lastBracket + 1));
+        } catch (e) {}
+      }
+
+      // 2. Auto-repair truncated JSON (Occurs when 'All Questions' reaches output token limit)
+      const lastBrace = text.lastIndexOf('}');
+      if (lastBrace > firstBracket) {
+        const repaired = text.substring(firstBracket, lastBrace + 1) + ']';
+        try {
+          const parsed = JSON.parse(repaired);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch (e) {}
       }
       return null;
     }
@@ -1348,14 +1365,12 @@
       } catch (err) {}
     }
 
-    // --- 100% WORKING UNIVERSAL DOWNLOAD & SHARE ENGINE FOR ANDROID APPS ---
     async function triggerUniversalDownload() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
 
       const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
       const fileName = `Pareeksha_Kendra_${Date.now()}.html`;
 
-      // Priority 1: Web Share API (Triggers native Android Share Menu)
       try {
         const file = new File([fullHtmlString], fileName, { type: 'text/html' });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -1367,10 +1382,9 @@
           return;
         }
       } catch (err) {
-        if (err.name === 'AbortError') return; // User simply closed share dialog
+        if (err.name === 'AbortError') return;
       }
 
-      // Priority 2: Standard Anchor Blob Download
       try {
         const blob = new Blob([fullHtmlString], { type: 'text/html;charset=utf-8' });
         const url = URL.createObjectURL(blob);
@@ -1383,13 +1397,11 @@
         setTimeout(() => URL.revokeObjectURL(url), 2500);
       } catch (e) {}
 
-      // Priority 3: Setup Backup Modal Options (Direct save / External Chrome fallback)
       setupBackupShareOptions(fullHtmlString, fileName);
     }
 
     function setupBackupShareOptions(htmlContent, fileName) {
       const modal = document.getElementById('shareBackupModal');
-      
       document.getElementById('directDownloadFallbackBtn').onclick = () => {
         const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
         const url = URL.createObjectURL(blob);
@@ -1417,13 +1429,12 @@
     function copyHtmlToClipboard() {
       const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
       navigator.clipboard.writeText(fullHtmlString).then(() => {
-        alert('🎉 पूरा HTML कोड कॉपी हो गया है! आप इसे किसी भी फ़ाइल में पेस्ट कर सकते हैं।');
+        alert('🎉 पूरा HTML कोड कॉपी हो गया है!');
       }).catch(() => {
-        alert('कॉपी नहीं हो सका, कृपया ब्राउज़र परमिशन चेक करें।');
+        alert('कॉपी नहीं हो सका।');
       });
     }
 
-    // --- TIMING CONFIG MODAL (BEFORE MOCK TEST STARTS) ---
     function openTimingModal() {
       document.getElementById('timingModal').style.display = 'flex';
     }
@@ -1439,7 +1450,6 @@
       startQuiz();
     }
 
-    // --- MOCK TEST ENGINE (WITH LIVE PER-QUESTION COUNTDOWN) ---
     function startQuiz() {
       currentQ = 0;
       isReviewMode = false;
@@ -1471,16 +1481,11 @@
         qTimerSeconds--;
         if (qTimerSeconds > 0) {
           timerBadge.innerText = `⏱️ ${qTimerSeconds}s`;
-          if (qTimerSeconds <= 5) {
-            timerBadge.style.color = "var(--danger)";
-          }
+          if (qTimerSeconds <= 5) timerBadge.style.color = "var(--danger)";
         } else {
-          // Time Expired for this question: Auto advance to next question!
           clearInterval(qTimerInterval);
           timerBadge.innerText = `⏱️ Time Up!`;
-          setTimeout(() => {
-            handleNextClick(true);
-          }, 800);
+          setTimeout(() => handleNextClick(true), 800);
         }
       }, 1000);
     }
@@ -1529,7 +1534,6 @@
       }
 
       document.getElementById('prevBtn').disabled = (currentQ === 0);
-
       const nextBtn = document.getElementById('nextBtn');
       if (isReviewMode) {
         nextBtn.innerText = (currentQ === quizData.length - 1) ? 'स्कोरकार्ड पर जाएँ ➔' : 'अगला सवाल ➔';
@@ -1537,7 +1541,6 @@
         nextBtn.innerText = (currentQ === quizData.length - 1) ? 'टेस्ट सबमिट करें ✓' : 'अगला सवाल ➔';
       }
 
-      // Start Countdown for this question
       startQuestionTimer();
     }
 
@@ -1562,9 +1565,7 @@
         renderQuestion();
       } else {
         if (!isReviewMode) {
-          if (isAuto || confirm("क्या आप अपना टेस्ट सबमिट करना चाहते हैं?")) {
-            submitMockTest();
-          }
+          if (isAuto || confirm("क्या आप अपना टेस्ट सबमिट करना चाहते हैं?")) submitMockTest();
         } else {
           document.getElementById('quizView').style.display = 'none';
           document.getElementById('scorecardView').style.display = 'block';
@@ -1592,7 +1593,6 @@
 
       document.getElementById('quizView').style.display = 'none';
       document.getElementById('scorecardView').style.display = 'block';
-
       document.getElementById('scoreMarksText').innerText = `${score.toFixed(1)} / ${totalMarks}`;
       document.getElementById('scCorrectCount').innerText = correct;
       document.getElementById('scWrongCount').innerText = wrong;
@@ -1615,7 +1615,6 @@
       document.getElementById('setupView').style.display = 'block';
     }
 
-    // --- MAIN GENERATION ENGINE ---
     function startRealStopwatch() {
       clearInterval(stopwatchInterval);
       stopwatchSeconds = 0;
@@ -1628,15 +1627,16 @@
         const secs = stopwatchSeconds % 60;
         displayEl.innerText = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
 
-        if (stopwatchSeconds < 10) statusEl.innerText = "🔍 AI दस्तावेज़ / पन्नों को पढ़ रहा है...";
-        else if (stopwatchSeconds < 20) statusEl.innerText = "🧠 महत्वपूर्ण सवालों और विकल्पों को छाँटा जा रहा है...";
-        else if (stopwatchSeconds < 35) statusEl.innerText = "✍️ सटीक उत्तर और विस्तृत व्याख्या तैयार हो रही है...";
-        else statusEl.innerText = "⚡ अंतिम चेकिंग चालू है, बस कुछ ही सेकंड...";
+        if (stopwatchSeconds < 15) statusEl.innerText = "🔍 AI दस्तावेज़ के पन्नों को पढ़ रहा है...";
+        else if (stopwatchSeconds < 35) statusEl.innerText = "🧠 सभी सवालों और 4 विकल्पों को संकलित किया जा रहा है...";
+        else if (stopwatchSeconds < 70) statusEl.innerText = "✍️ सटीक उत्तर और हिंदी में विस्तृत व्याख्या लिखी जा रही है...";
+        else statusEl.innerText = "⚡ डीप स्कैन पूरा होने वाला है, बस कुछ ही पल...";
       }, 1000);
     }
 
     function stopRealStopwatch() { clearInterval(stopwatchInterval); }
 
+    // --- MAIN GENERATION ENGINE WITH EXPANDED 'ALL' DEEP SCAN ---
     async function startGeneration() {
       const keyPool = getStoredKeyPool();
       if (keyPool.length === 0) return openKeyModal(true);
@@ -1663,7 +1663,16 @@
         langDisplayName = "Original";
       }
 
-      const prompt = `You are an expert exam question creator. Analyze this document/image thoroughly. Extract and create exactly ${qCount} multiple choice questions (MCQs) from this material.
+      // Quantity Instruction
+      let quantityInstruction = "";
+      if (qCount === 'all') {
+        quantityInstruction = "Extract and generate ALL possible multiple choice questions (MCQs) available across the entire document up to your maximum generation limit (extract as many complete questions as possible).";
+      } else {
+        quantityInstruction = `Extract and create exactly ${qCount} multiple choice questions (MCQs) from this material.`;
+      }
+
+      const prompt = `You are an expert competitive exam question creator. Analyze this document/image thoroughly.
+      ${quantityInstruction}
       ${languageRule}
       Strictly return ONLY a valid JSON array matching this exact format:
       [
@@ -1678,11 +1687,14 @@
 
       let success = false, usedModelName = '', lastErr = '';
 
+      // Set timeout dynamically: 150 seconds for 'All', 55 seconds for sets
+      const timeoutMs = (qCount === 'all') ? 150000 : 55000;
+
       for (let attempt = 0; attempt < 3; attempt++) {
         const currentModel = ACTIVE_MODELS[attempt % ACTIVE_MODELS.length];
         const apiKey = getNextShuffleKey();
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 50000);
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
         try {
           const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`, {
@@ -1695,7 +1707,11 @@
                   { text: prompt },
                   { inlineData: { mimeType: payloadMimeType, data: base64Payload } }
                 ]
-              }]
+              }],
+              generationConfig: {
+                maxOutputTokens: 8192,
+                temperature: 0.15
+              }
             })
           });
 
@@ -1732,7 +1748,7 @@
         document.getElementById('actionHubView').style.display = 'block';
         document.getElementById('actionHubMeta').innerText = `कुल ${quizData.length} सवाल तैयार हैं • जनरेशन टाइम: ${stopwatchSeconds}s`;
       } else {
-        alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'समय समाप्त हुआ'}\n\nकृपया Key Settings चेक करें या 10/15 सवाल चुनें।`);
+        alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'समय समाप्त हुआ'}\n\nकृपया Key Settings चेक करें या 20/25 सवाल चुनें।`);
       }
     }
   </script>
