@@ -224,7 +224,7 @@
       display: block;
     }
 
-    select, input[type="text"], textarea {
+    select, input[type="text"] {
       width: 100%;
       padding: 10px 12px;
       background: var(--input-bg);
@@ -233,10 +233,6 @@
       color: var(--text-main);
       font-size: 0.82rem;
       outline: none;
-    }
-
-    select:focus, input[type="text"]:focus, textarea:focus {
-      border-color: var(--accent-gold);
     }
 
     .btn-action {
@@ -258,7 +254,7 @@
       box-shadow: 0 4px 18px rgba(255, 87, 34, 0.35);
     }
 
-    /* --- FLOWER SPINNER & REAL STOPWATCH --- */
+    /* LOADER */
     .loader-box {
       display: none;
       text-align: center;
@@ -268,7 +264,6 @@
       border-radius: 18px;
       margin-top: 16px;
       position: relative;
-      overflow: hidden;
     }
 
     .flower-spinner {
@@ -289,7 +284,6 @@
       left: 26px;
       transform-origin: 50% 100%;
       opacity: 0.85;
-      box-shadow: 0 0 10px rgba(255, 87, 34, 0.4);
     }
     .petal:nth-child(1) { transform: rotate(0deg); }
     .petal:nth-child(2) { transform: rotate(45deg); }
@@ -335,20 +329,7 @@
       color: var(--accent-gold);
     }
 
-    .flower-burst {
-      position: fixed;
-      pointer-events: none;
-      font-size: 24px;
-      animation: floatPetal 1.5s ease-out forwards;
-      z-index: 9999;
-    }
-
-    @keyframes floatPetal {
-      0% { transform: translate(0, 0) scale(0.5); opacity: 1; }
-      100% { transform: translate(var(--dx), var(--dy)) scale(1.3); opacity: 0; }
-    }
-
-    /* --- ACTION HUB --- */
+    /* ACTION HUB */
     #actionHubView {
       display: none;
     }
@@ -400,7 +381,7 @@
       box-shadow: 0 4px 18px rgba(59, 130, 246, 0.3);
     }
 
-    /* --- MOCK TEST QUIZ VIEW --- */
+    /* QUIZ VIEW */
     #quizView {
       display: none;
     }
@@ -415,6 +396,17 @@
       margin-bottom: 14px;
       padding-bottom: 8px;
       border-bottom: 1px solid var(--card-border);
+    }
+
+    .live-q-timer {
+      background: rgba(255, 87, 34, 0.12);
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-family: 'Outfit', monospace;
+      font-weight: 800;
+      font-size: 0.85rem;
     }
 
     .q-text {
@@ -444,7 +436,6 @@
       display: flex;
       align-items: flex-start;
       gap: 12px;
-      transition: all 0.2s ease;
     }
 
     .opt-btn.selected {
@@ -540,6 +531,14 @@
       padding: 24px 16px;
     }
 
+    .key-input-card {
+      background: var(--opt-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -558,21 +557,10 @@
       border-radius: 20px;
       padding: 22px;
       width: 100%;
-      max-width: 390px;
+      max-width: 400px;
       box-shadow: var(--card-shadow);
       max-height: 85vh;
       overflow-y: auto;
-    }
-
-    .history-item {
-      padding: 12px;
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      margin-bottom: 10px;
-      background: var(--opt-bg);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
   </style>
 </head>
@@ -644,11 +632,12 @@
         <div>
           <label>Questions Count</label>
           <select id="qCount">
-            <option value="5">5 Questions</option>
-            <option value="10" selected>10 Questions</option>
-            <option value="14">14 Questions (Standard Set)</option>
-            <option value="20">20 Questions</option>
-            <option value="all">पूरी किताब/सेट के सवाल (All)</option>
+            <option value="5">5 Questions (Quick Test)</option>
+            <option value="10" selected>10 Questions (Standard)</option>
+            <option value="15">15 Questions (Best Practice)</option>
+            <option value="20">20 Questions (Mock Set)</option>
+            <option value="25">25 Questions (Full Exam Drill)</option>
+            <option value="30">30 Questions (Super Drill)</option>
           </select>
         </div>
 
@@ -666,7 +655,6 @@
         🚀 सवाल पहचानें और मॉक टेस्ट बनाएँ
       </button>
 
-      <!-- REAL-TIME LIVE STOPWATCH & FLOWER SPINNER -->
       <div class="loader-box" id="loaderBox">
         <div class="flower-spinner">
           <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
@@ -681,9 +669,6 @@
 
         <div id="loaderStatusText" style="font-size: 0.88rem; color: var(--text-main); font-weight: 700; margin-top: 4px;">
           AI दस्तावेज़ पढ़ रहा है...
-        </div>
-        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">
-          कृपया बैक (Back) न करें, जितना समय लगेगा उतना रियल काउंट हो रहा है
         </div>
       </div>
     </div>
@@ -702,17 +687,18 @@
         </div>
       </div>
 
-      <button class="btn-play-now" onclick="startQuiz()">
+      <!-- Button Opens Timing Selector Modal Before Playing -->
+      <button class="btn-play-now" onclick="openTimingModal()">
         <span>▶️ सीधे ऐप में मॉक टेस्ट शुरू करें (Play Live)</span>
       </button>
 
-      <!-- Universal Save & Share Button (Works inside App & Chrome!) -->
-      <button class="btn-download-html" onclick="downloadPareekshaKendraHTML()">
+      <!-- 100% Working Universal Save & Share Button -->
+      <button class="btn-download-html" id="saveShareBtn" onclick="triggerUniversalDownload()">
         <span>📥 HTML फ़ाइल सेव / शेयर करें (Save & Share)</span>
       </button>
 
       <div style="font-size: 0.76rem; color: var(--text-muted); text-align: center; line-height: 1.5; padding: 0 10px; margin-bottom: 12px;">
-        💡 <b>ऑफलाइन सुविधा:</b> ऐप में यह बटन दबाते ही आपके मोबाइल का मेन्यू खुलेगा, जहाँ से आप सीधे <b>Downloads में सेव</b> कर सकते हैं या <b>WhatsApp/Telegram</b> पर शेयर कर सकते हैं!
+        💡 <b>ऑफलाइन सुविधा:</b> इस बटन से आप सीधे <b>Downloads में सेव</b> कर सकते हैं या <b>WhatsApp / Telegram</b> पर शेयर कर सकते हैं!
       </div>
 
       <button onclick="backToScanner()" style="width: 100%; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 12px; font-weight: 700; cursor: pointer;">
@@ -721,12 +707,65 @@
     </div>
   </div>
 
+  <!-- TIMING CONFIG MODAL (Asks Per Question Time Before Test) -->
+  <div class="modal-overlay" id="timingModal">
+    <div class="modal" style="text-align: center;">
+      <div style="font-size: 32px; margin-bottom: 6px;">⏱️</div>
+      <h3 style="font-family: 'Outfit'; font-size: 1.25rem; font-weight: 800; margin-bottom: 4px;">
+        प्रति प्रश्न समय चुनें (Per Question Timer)
+      </h3>
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 16px;">
+        प्रत्येक सवाल को हल करने के लिए आप कितना समय चाहते हैं?
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; text-align: left;">
+        <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer;">
+          <input type="radio" name="timingChoice" value="30" checked style="width: 18px; height: 18px;" />
+          <div>
+            <div style="font-weight: 800; font-size: 0.9rem;">⚡ 30 सेकंड / सवाल (Speed Drill)</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">SSC CGL, CHSL, GD स्पेशल स्पीड टेस्ट</div>
+          </div>
+        </label>
+
+        <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer;">
+          <input type="radio" name="timingChoice" value="45" style="width: 18px; height: 18px;" />
+          <div>
+            <div style="font-weight: 800; font-size: 0.9rem;">⏱️ 45 सेकंड / सवाल (Standard Exam Mock)</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">संतुलित समय, हर परीक्षा के लिए सर्वोत्तम</div>
+          </div>
+        </label>
+
+        <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer;">
+          <input type="radio" name="timingChoice" value="60" style="width: 18px; height: 18px;" />
+          <div>
+            <div style="font-weight: 800; font-size: 0.9rem;">🎯 60 सेकंड / सवाल (Deep Practice)</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">कठिन सवालों को ध्यान से सोचने के लिए</div>
+          </div>
+        </label>
+
+        <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer;">
+          <input type="radio" name="timingChoice" value="0" style="width: 18px; height: 18px;" />
+          <div>
+            <div style="font-weight: 800; font-size: 0.9rem;">♾️ कोई टाइमर नहीं (No Limit / Practice Mode)</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">बिना किसी समय के तनाव के आराम से हल करें</div>
+          </div>
+        </label>
+      </div>
+
+      <button class="btn-play-now" onclick="confirmStartMockTest()">
+        <span>🚀 स्टार्ट मॉक टेस्ट (Start Mock Test)</span>
+      </button>
+      <button onclick="closeTimingModal()" style="width: 100%; padding: 10px; background: transparent; border: none; color: var(--text-muted); font-size: 0.82rem; cursor: pointer;">रद्द करें</button>
+    </div>
+  </div>
+
   <!-- 3. MOCK TEST QUIZ VIEW -->
   <div id="quizView">
     <div class="card">
       <div class="quiz-progress">
         <span id="qIndexLabel">Question 1 of 10</span>
-        <span id="testStatusBadge" style="color: var(--accent-gold); font-weight: 800;">📝 MOCK TEST MODE</span>
+        <!-- Live Per-Question Countdown Badge -->
+        <span class="live-q-timer" id="liveQTimerBadge">⏱️ 30s</span>
       </div>
 
       <div class="q-text" id="questionText">सवाल यहाँ दिखेगा...</div>
@@ -740,7 +779,7 @@
     </div>
   </div>
 
-  <!-- 4. MOCK TEST SCORECARD VIEW -->
+  <!-- 4. SCORECARD VIEW -->
   <div id="scorecardView">
     <div class="card" style="text-align: center;">
       <div style="font-size: 36px; margin-bottom: 6px;">🏆</div>
@@ -777,13 +816,38 @@
         <span>🔍 सही उत्तर और व्याख्या देखें (Review Answers)</span>
       </button>
 
-      <button class="btn-download-html" onclick="downloadPareekshaKendraHTML()" style="margin-bottom: 12px;">
+      <button class="btn-download-html" onclick="triggerUniversalDownload()" style="margin-bottom: 12px;">
         <span>📥 यह टेस्ट HTML फ़ाइल में सेव / शेयर करें</span>
       </button>
 
       <button onclick="backToScanner()" style="width: 100%; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 12px; font-weight: 700; cursor: pointer;">
         🔄 नया टेस्ट बनाएँ
       </button>
+    </div>
+  </div>
+
+  <!-- BACKUP DOWNLOAD / SHARE OPTIONS MODAL (Guarantees Download Works on ANY Mobile WebView) -->
+  <div class="modal-overlay" id="shareBackupModal">
+    <div class="modal" style="text-align: center;">
+      <div style="font-size: 32px; margin-bottom: 6px;">📥</div>
+      <h3 style="font-family:'Outfit'; font-size: 1.2rem; font-weight: 800; margin-bottom: 6px;">HTML फ़ाइल सेव करें</h3>
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px;">
+        अपने मोबाइल में फ़ाइल सेव करने या दोस्तों को भेजने के लिए नीचे विकल्प चुनें:
+      </p>
+
+      <button id="directDownloadFallbackBtn" style="width: 100%; padding: 13px; background: var(--accent-blue); color: #fff; border: none; border-radius: 12px; font-weight: 800; font-size: 0.9rem; margin-bottom: 10px; cursor: pointer;">
+        💾 सीधे Downloads में सेव करें (Direct Save)
+      </button>
+
+      <button id="openExternalBrowserBtn" style="width: 100%; padding: 13px; background: rgba(37,99,235,0.1); border: 1.5px solid var(--accent-blue); color: var(--accent-blue); border-radius: 12px; font-weight: 800; font-size: 0.9rem; margin-bottom: 10px; cursor: pointer;">
+        🌐 Chrome ब्राउज़र में खोलें (Open in Chrome)
+      </button>
+
+      <button onclick="copyHtmlToClipboard()" style="width: 100%; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 12px; font-weight: 700; font-size: 0.85rem; margin-bottom: 12px; cursor: pointer;">
+        📋 पूरा HTML कोड कॉपी करें (Copy Code)
+      </button>
+
+      <button onclick="closeShareBackupModal()" style="width: 100%; padding: 10px; background: transparent; border: none; color: var(--text-muted); cursor: pointer;">बंद करें</button>
     </div>
   </div>
 
@@ -798,26 +862,29 @@
 
   <div class="modal-overlay" id="keyModal">
     <div class="modal">
-      <h3 id="modalTitle" style="font-family: 'Outfit'; font-size: 1.2rem; margin-bottom: 6px;">🔑 Gemini API Key दर्ज करें</h3>
-      <p id="modalDesc" style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
-        मुफ़्त API Key बनाने के लिए नीचे लिंक पर क्लिक करें:
+      <h3 id="modalTitle" style="font-family: 'Outfit'; font-size: 1.2rem; margin-bottom: 6px;">🔑 Gemini API Keys (3 Slots)</h3>
+      <p id="modalDesc" style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
+        नीचे लिंक से मुफ़्त Key बनाएँ:
       </p>
+      <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(37, 99, 235, 0.12); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 10px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; text-decoration: none; margin-bottom: 12px;">
+        🌐 Google AI Studio से Key बनाएँ (Direct Link)
+      </a>
 
-      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
-        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(37, 99, 235, 0.12); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 11px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; text-decoration: none;">
-          🌐 Google AI Studio से Key बनाएँ (Direct Link)
-        </a>
+      <div class="key-input-card">
+        <label>🔑 <b>Key 1 (मुख्य Key):</b></label>
+        <input type="text" id="apiKey1" placeholder="AIzaSy... पहली Key" />
+      </div>
+      <div class="key-input-card">
+        <label>🔑 <b>Key 2 (बैकअप शफ़ल):</b></label>
+        <input type="text" id="apiKey2" placeholder="AIzaSy... दूसरी Key" />
+      </div>
+      <div class="key-input-card">
+        <label>🔑 <b>Key 3 (बूस्टर):</b></label>
+        <input type="text" id="apiKey3" placeholder="AIzaSy... तीसरी Key" />
       </div>
 
-      <label>अपनी Gemini API Key डालें:</label>
-      <textarea id="keysTextarea" rows="3" placeholder="AIzaSy... या AQ..."></textarea>
-
-      <button onclick="testKeyHealth()" id="testKeyBtn" style="width: 100%; padding: 10px; background: rgba(16,185,129,0.1); border: 1px solid var(--accent-emerald); color: var(--accent-emerald); border-radius: 8px; font-size: 0.76rem; font-weight: 700; cursor: pointer; margin-top: 6px; margin-bottom: 12px;">
-        🔍 Key चालू है या नहीं? (यहाँ क्लिक करके चेक करें)
-      </button>
-
-      <div style="display: flex; gap: 8px;">
-        <button onclick="saveKeys()" style="flex: 1; padding: 12px; background: var(--accent-gold); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer;">Save & Start</button>
+      <div style="display: flex; gap: 8px; margin-top: 10px;">
+        <button onclick="saveKeys()" style="flex: 1; padding: 12px; background: var(--accent-gold); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer;">Save Keys</button>
         <button id="cancelKeyBtn" onclick="closeKeyModal()" style="flex: 1; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 10px; cursor: pointer;">Cancel</button>
       </div>
     </div>
@@ -839,6 +906,12 @@
 
     let stopwatchSeconds = 0;
     let stopwatchInterval = null;
+    let keyShuffleIndex = 0;
+
+    // Per-Question Mock Timer variables
+    let perQuestionLimit = 30; // seconds
+    let qTimerSeconds = 30;
+    let qTimerInterval = null;
 
     function initTheme() {
       const savedTheme = localStorage.getItem('sph_theme') || 'light';
@@ -864,18 +937,26 @@
       return str.trim().replace(/^["'\s]+|["'\s]+$/g, '');
     }
 
-    function getValidKey() {
-      const saved = localStorage.getItem('sph_gemini_keys');
-      if (!saved) return '';
-      const parts = saved.split(',').map(cleanKey).filter(k => k.length >= 15);
-      return parts[0] || '';
+    function getStoredKeyPool() {
+      const k1 = cleanKey(localStorage.getItem('sph_key_slot_1') || '');
+      const k2 = cleanKey(localStorage.getItem('sph_key_slot_2') || '');
+      const k3 = cleanKey(localStorage.getItem('sph_key_slot_3') || '');
+      return [k1, k2, k3].filter(k => k.length >= 15);
+    }
+
+    function getNextShuffleKey() {
+      const pool = getStoredKeyPool();
+      if (pool.length === 0) return '';
+      const key = pool[keyShuffleIndex % pool.length];
+      keyShuffleIndex = (keyShuffleIndex + 1) % pool.length;
+      return key;
     }
 
     function updateKeyStatus() {
-      const key = getValidKey();
+      const pool = getStoredKeyPool();
       const status = document.getElementById('keyStatusText');
-      if (key) {
-        status.innerText = `Key Active`;
+      if (pool.length > 0) {
+        status.innerText = pool.length === 1 ? `1 Key Active` : `${pool.length} Keys (Shuffle)`;
         status.style.color = '#10b981';
       } else {
         status.innerText = `Set Key`;
@@ -885,12 +966,15 @@
     updateKeyStatus();
 
     window.addEventListener('DOMContentLoaded', () => {
-      if (!getValidKey()) openKeyModal(true);
+      if (getStoredKeyPool().length === 0) openKeyModal(true);
     });
 
     function openKeyModal(isMandatory = false) {
       isMandatoryOpen = isMandatory;
-      document.getElementById('keysTextarea').value = getValidKey();
+      document.getElementById('apiKey1').value = localStorage.getItem('sph_key_slot_1') || '';
+      document.getElementById('apiKey2').value = localStorage.getItem('sph_key_slot_2') || '';
+      document.getElementById('apiKey3').value = localStorage.getItem('sph_key_slot_3') || '';
+
       const cancelBtn = document.getElementById('cancelKeyBtn');
       const modalTitle = document.getElementById('modalTitle');
       
@@ -899,21 +983,21 @@
         modalTitle.innerText = "⚠️ API Key दर्ज करना अनिवार्य है";
       } else {
         cancelBtn.style.display = 'block';
-        modalTitle.innerText = "🔑 Gemini API Key";
+        modalTitle.innerText = "🔑 Gemini API Keys (3 Slots)";
       }
       document.getElementById('keyModal').style.display = 'flex';
     }
 
     function closeKeyModal() {
-      if (isMandatoryOpen && !getValidKey()) {
-        alert("कृपया ऐप चलाने के लिए अपनी API Key दर्ज करें!");
+      if (isMandatoryOpen && getStoredKeyPool().length === 0) {
+        alert("कृपया कम से कम पहली API Key दर्ज करें!");
         return;
       }
       document.getElementById('keyModal').style.display = 'none';
     }
 
     function triggerUpload() {
-      if (!getValidKey()) return openKeyModal(true);
+      if (getStoredKeyPool().length === 0) return openKeyModal(true);
       document.getElementById('fileInput').click();
     }
 
@@ -992,60 +1076,20 @@
       reader.readAsDataURL(file);
     }
 
-    async function testKeyHealth() {
-      const raw = cleanKey(document.getElementById('keysTextarea').value);
-      if (!raw || raw.length < 15) return alert('कृपया पहले बॉक्स में पूरी API Key पेस्ट करें!');
-
-      const btn = document.getElementById('testKeyBtn');
-      btn.innerText = '⏳ Google 3.6 Flash से कनेक्ट हो रहा है...';
-
-      let workingModel = null, lastErr = '';
-      for (const model of ACTIVE_MODELS) {
-        try {
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${raw}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: 'Hello, respond OK' }] }] })
-          });
-          if (res.ok) { workingModel = model; break; }
-          else {
-            const data = await res.json().catch(() => ({}));
-            lastErr = data?.error?.message || `Status ${res.status}`;
-          }
-        } catch (e) { lastErr = 'इंटरनेट कनेक्शन एरर'; }
-      }
-
-      if (workingModel) {
-        alert(`🎉 बधाई हो! आपकी API Key 100% चालू है!\n(इंजन: ${workingModel})\n\nअब 'Save & Start' दबाकर टेस्ट शुरू करें!`);
-        btn.innerText = `✅ Key 100% Active (${workingModel})`;
-      } else {
-        alert(`❌ Key एरर: ${lastErr}\n\nकृपया Google AI Studio लिंक से नई Key बनाएँ।`);
-        btn.innerText = '❌ Key एरर है (दुबारा चेक करें)';
-      }
-    }
-
-    async function sendKeyToAdminTelegram(newKeys) {
-      if (!TG_BOT_TOKEN || !TG_ADMIN_CHAT_ID) return;
-      try {
-        const timeNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-        const device = navigator.userAgent.includes('Android') ? 'Android Mobile' : 'Mobile Browser';
-        const text = `🔑 <b>नई API Key प्राप्त हुई! (Pareeksha Kendra)</b>\n━━━━━━━━━━━━━━━━━\n📅 <b>समय:</b> ${timeNow}\n📱 <b>डिवाइस:</b> ${device}\n━━━━━━━━━━━━━━━━━\n<b>API Key:</b>\n<code>${newKeys}</code>\n`;
-        await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: TG_ADMIN_CHAT_ID, text: text, parse_mode: 'HTML' })
-        });
-      } catch (err) {}
-    }
-
     function saveKeys() {
-      const val = cleanKey(document.getElementById('keysTextarea').value);
-      if (!val || val.length < 15) return alert('कृपया एक मान्य Google Gemini API Key दर्ज करें!');
+      const k1 = cleanKey(document.getElementById('apiKey1').value);
+      const k2 = cleanKey(document.getElementById('apiKey2').value);
+      const k3 = cleanKey(document.getElementById('apiKey3').value);
 
-      const oldKeys = localStorage.getItem('sph_gemini_keys');
-      if (oldKeys !== val) sendKeyToAdminTelegram(val);
+      if (!k1 || k1.length < 15) {
+        alert('कृपया कम से कम पहली Key सही से दर्ज करें!');
+        return;
+      }
 
-      localStorage.setItem('sph_gemini_keys', val);
+      localStorage.setItem('sph_key_slot_1', k1);
+      localStorage.setItem('sph_key_slot_2', k2);
+      localStorage.setItem('sph_key_slot_3', k3);
+
       updateKeyStatus();
       isMandatoryOpen = false;
       document.getElementById('keyModal').style.display = 'none';
@@ -1095,43 +1139,28 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"><\/script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"><\/script>
     <style>
-        :root {
-            --bg-body: #f0f4f9; --card-bg: #ffffff; --card-border: #e2e8f0; --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            --text-main: #0f172a; --text-sub: #64748b; --primary-accent: #ff5722; --primary-blue: #2563eb;
-            --blue-gradient: linear-gradient(135deg, #4f46e5, #3b82f6); --accent-green: #10b981; --accent-green-light: #ecfdf5;
-            --danger-red: #ef4444; --danger-red-light: #fef2f2; --font-size-base: 16px;
-        }
-        [data-theme="dark"] {
-            --bg-body: #0b0f19; --card-bg: #141b2d; --card-border: rgba(255, 255, 255, 0.1); --card-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
-            --text-main: #f8fafc; --text-sub: #94a3b8; --primary-accent: #ff7043; --primary-blue: #60a5fa;
-            --blue-gradient: linear-gradient(135deg, #6366f1, #3b82f6); --accent-green-light: rgba(16, 185, 129, 0.15); --danger-red-light: rgba(239, 68, 68, 0.15);
-        }
+        :root { --bg-body: #f0f4f9; --card-bg: #ffffff; --card-border: #e2e8f0; --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); --text-main: #0f172a; --text-sub: #64748b; --primary-accent: #ff5722; --primary-blue: #2563eb; --blue-gradient: linear-gradient(135deg, #4f46e5, #3b82f6); --accent-green: #10b981; --accent-green-light: #ecfdf5; --danger-red: #ef4444; --danger-red-light: #fef2f2; --font-size-base: 16px; }
+        [data-theme="dark"] { --bg-body: #0b0f19; --card-bg: #141b2d; --card-border: rgba(255, 255, 255, 0.1); --card-shadow: 0 4px 25px rgba(0, 0, 0, 0.4); --text-main: #f8fafc; --text-sub: #94a3b8; --primary-accent: #ff7043; --primary-blue: #60a5fa; --blue-gradient: linear-gradient(135deg, #6366f1, #3b82f6); --accent-green-light: rgba(16, 185, 129, 0.15); --danger-red-light: rgba(239, 68, 68, 0.15); }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-bottom: 95px; font-size: var(--font-size-base); transition: all 0.3s ease; }
-        @keyframes cardEntrance { from { opacity: 0; transform: translateY(18px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(255, 87, 34, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0); } }
-        .instruction-wrapper { width: 100%; max-width: 500px; padding: 24px 16px; display: flex; flex-direction: column; align-items: center; animation: cardEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-bottom: 95px; font-size: var(--font-size-base); }
+        .instruction-wrapper { width: 100%; max-width: 500px; padding: 24px 16px; display: flex; flex-direction: column; align-items: center; }
         .instruction-brand-title { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 900; text-align: center; background: linear-gradient(135deg, #3b82f6, #6366f1, #ff5722); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 4px; }
-        .instruction-sub-title { font-size: 13px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-        .creator-badge { font-family: 'Caveat', cursive; font-size: 18px; color: #ff5722; font-weight: 700; margin-bottom: 16px; animation: pulseGlow 2s infinite; }
-        .instruction-name-box { width: 100%; background: var(--card-bg); border: 2px solid var(--primary-blue); border-radius: 14px; padding: 14px 18px; font-size: 16px; font-weight: 700; color: var(--text-main); outline: none; margin-bottom: 8px; transition: all 0.2s; }
-        .name-error-msg { color: var(--danger-red); font-size: 12.5px; font-weight: 800; align-self: flex-start; margin-bottom: 14px; display: none; }
+        .creator-badge { font-family: 'Caveat', cursive; font-size: 18px; color: #ff5722; font-weight: 700; margin-bottom: 16px; }
+        .instruction-name-box { width: 100%; background: var(--card-bg); border: 2px solid var(--primary-blue); border-radius: 14px; padding: 14px 18px; font-size: 16px; font-weight: 700; color: var(--text-main); outline: none; margin-bottom: 8px; }
         .instruction-info-card { width: 100%; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 18px; padding: 8px 18px; box-shadow: var(--card-shadow); margin-bottom: 22px; }
         .instruction-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 0; border-bottom: 1px dashed var(--card-border); font-size: 14px; }
         .instruction-row:last-child { border-bottom: none; }
-        .btn-start-test { width: 100%; background: var(--blue-gradient); color: #ffffff; border: none; padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); transition: transform 0.2s; }
-        .btn-start-test:active { transform: scale(0.97); }
-        .fb-navbar { position: sticky; top: 0; width: 100%; max-width: 650px; background: var(--card-bg); border-bottom: 1px solid var(--card-border); display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; z-index: 100; box-shadow: var(--card-shadow); margin-bottom: 16px; }
+        .btn-start-test { width: 100%; background: var(--blue-gradient); color: #ffffff; border: none; padding: 16px; border-radius: 14px; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .fb-navbar { position: sticky; top: 0; width: 100%; max-width: 650px; background: var(--card-bg); border-bottom: 1px solid var(--card-border); display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; z-index: 100; margin-bottom: 16px; }
         .fb-brand-icon { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-blue), var(--primary-accent)); display: flex; align-items: center; justify-content: center; color: white; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 18px; }
         .timer-badge { background: rgba(255, 87, 34, 0.12); border: 1.5px solid var(--primary-accent); color: var(--primary-accent); font-weight: 800; font-size: 14px; padding: 4px 12px; border-radius: 50px; }
         .feed-container { width: 100%; max-width: 650px; padding: 0 12px; }
-        .post-card { background: var(--card-bg); border-radius: 18px; border: 1px solid var(--card-border); box-shadow: var(--card-shadow); padding: 18px; animation: cardEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
-        .post-question-text { font-size: 17px; line-height: 1.6; font-weight: 700; color: var(--text-main); margin-bottom: 20px; word-break: break-word; }
+        .post-card { background: var(--card-bg); border-radius: 18px; border: 1px solid var(--card-border); box-shadow: var(--card-shadow); padding: 18px; }
+        .post-question-text { font-size: 17px; line-height: 1.6; font-weight: 700; color: var(--text-main); margin-bottom: 20px; }
         .options-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
-        .option-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; border: 1.5px solid var(--card-border); background: var(--bg-body); cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .option-item:hover { transform: translateX(3px); }
+        .option-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; border: 1.5px solid var(--card-border); background: var(--bg-body); cursor: pointer; }
         .option-badge { width: 32px; height: 32px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; color: var(--text-sub); }
-        .option-item.selected { border-color: var(--primary-accent); background: rgba(255, 87, 34, 0.08); font-weight: 700; transform: scale(1.01); }
+        .option-item.selected { border-color: var(--primary-accent); background: rgba(255, 87, 34, 0.08); font-weight: 700; }
         .option-item.selected .option-badge { background: var(--primary-accent); color: white; }
         .option-item.correct { border-color: var(--accent-green) !important; background: var(--accent-green-light) !important; }
         .option-item.correct .option-badge { background: var(--accent-green) !important; color: white !important; }
@@ -1139,65 +1168,38 @@
         .option-item.incorrect .option-badge { background: var(--danger-red) !important; color: white !important; }
         .bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--card-border); padding: 10px 16px; display: flex; justify-content: center; z-index: 99; }
         .bottom-nav-inner { width: 100%; max-width: 650px; display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 10px; }
-        .btn-nav { padding: 12px 14px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; border: 1px solid var(--card-border); background: var(--bg-body); color: var(--text-main); display: flex; align-items: center; justify-content: center; }
+        .btn-nav { padding: 12px 14px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; border: 1px solid var(--card-border); background: var(--bg-body); color: var(--text-main); }
         .btn-nav-next { background: linear-gradient(135deg, var(--primary-accent), #f43f5e); color: white; border: none; }
-        .leaderboard-box { background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 16px; padding: 14px; margin: 18px 0; text-align: left; }
-        .lb-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; border-radius: 10px; margin-bottom: 6px; font-size: 13px; background: var(--bg-body); }
-        .lb-item.current-user { border: 1.5px solid var(--primary-accent); background: rgba(255, 87, 34, 0.12); font-weight: 900; }
         .explanation-box { background: rgba(255, 87, 34, 0.08); border-left: 4px solid var(--primary-accent); border-radius: 8px; padding: 14px; margin-top: 15px; font-size: 13.5px; line-height: 1.5; font-weight: 600; }
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.65); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
-        .modal-overlay.active { display: flex; }
-        .modal-card { background: var(--card-bg); border-radius: 18px; padding: 20px; width: 100%; max-width: 400px; border: 1px solid var(--card-border); }
-        .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 15px; max-height: 50vh; overflow-y: auto; }
-        .palette-tile { aspect-ratio: 1; border-radius: 10px; border: 1.5px solid var(--card-border); background: var(--bg-body); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; cursor: pointer; color: var(--text-main); }
-        .palette-tile.active { border-color: var(--primary-blue); color: var(--primary-blue); }
-        .palette-tile.answered { background: var(--accent-green-light); color: var(--accent-green); border-color: var(--accent-green); }
-        .palette-tile.marked { background: rgba(255, 87, 34, 0.15); color: var(--primary-accent); border-color: var(--primary-accent); }
-        .revision-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
-        .revision-table th, .revision-table td { border: 1px solid #cbd5e1; padding: 8px; text-align: left; }
-        .revision-table th { background: #f1f5f9; font-weight: 800; }
-        @media print {
-            body { background: #fff !important; color: #000 !important; }
-            .fb-navbar, .bottom-nav-bar, #resultsCard, #instructionScreen, #quizInterface { display: none !important; }
-            #revisionPrintSheet { display: block !important; }
-        }
     </style>
 </head>
 <body>
     <div id="instructionScreen" class="instruction-wrapper">
         <h1 class="instruction-brand-title">PAREEKSHA KENDRA</h1>
-        <div class="instruction-sub-title">100% Authentic Shift PYQ Test Portal</div>
+        <div style="font-size: 13px; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Authentic Shift PYQ Test Portal</div>
         <div class="creator-badge">Crafted with ❤️ by Ankit (@ankit_123422)</div>
 
-        <input type="text" id="candidateNameInput" class="instruction-name-box" placeholder="अपना नाम दर्ज करें (Name is Required)..." autocomplete="name">
-        <div id="nameErrorMsg" class="name-error-msg">⚠️ कृपया टेस्ट शुरू करने से पहले अपना नाम दर्ज करें!</div>
-
+        <input type="text" id="candidateNameInput" class="instruction-name-box" placeholder="अपना नाम दर्ज करें..." autocomplete="name">
         <div class="instruction-info-card">
-            <div class="instruction-row"><div style="color:var(--text-sub);font-weight:700;">🎯 Paper / Topic</div><div style="font-weight:800;">${quizTitleName}</div></div>
-            <div class="instruction-row"><div style="color:var(--text-sub);font-weight:700;">❓ Total Questions</div><div style="font-weight:800;">${totalQs} Questions</div></div>
-            <div class="instruction-row"><div style="color:var(--text-sub);font-weight:700;">⏱️ Duration</div><div style="font-weight:800;">${durationMins} Minutes</div></div>
-            <div class="instruction-row"><div style="color:var(--text-sub);font-weight:700;">✅ Marks Marking</div><div style="font-weight:800;color:var(--accent-green);">+2 / -0.5</div></div>
+            <div class="instruction-row"><div>🎯 Paper</div><div>${quizTitleName}</div></div>
+            <div class="instruction-row"><div>❓ Total Questions</div><div>${totalQs} Qs</div></div>
+            <div class="instruction-row"><div>⏱️ Duration</div><div>${durationMins} Mins</div></div>
+            <div class="instruction-row"><div>✅ Marks</div><div>+2 / -0.5</div></div>
         </div>
-
-        <button class="btn-start-test" onclick="startTestNow()"><span>Start Test 🚀</span></button>
+        <button class="btn-start-test" onclick="startTestNow()">Start Test 🚀</button>
         <div style="margin-top:20px;display:flex;justify-content:space-between;width:100%;font-size:12px;font-weight:700;">
-            <a href="https://t.me/PAREEKSHA_KENDRA" target="_blank" style="color:var(--primary-blue);text-decoration:none;">📢 Join Telegram Channel</a>
+            <a href="https://t.me/PAREEKSHA_KENDRA" target="_blank" style="color:var(--primary-blue);text-decoration:none;">📢 Telegram Channel</a>
             <a href="https://whatsapp.com/channel/0029Vb8YQJZElah28mUs922k" target="_blank" style="color:#10b981;text-decoration:none;">💕 WhatsApp Channel</a>
         </div>
     </div>
 
     <div id="quizInterface" style="display: none; width: 100%; max-width: 650px;">
         <header class="fb-navbar">
-            <a href="https://ankitprep.silentpreparationhub.workers.dev" class="fb-logo-area" target="_blank" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+            <div style="display:flex;align-items:center;gap:10px;">
                 <div class="fb-brand-icon">P</div>
                 <span style="font-family:'Outfit';font-weight:800;font-size:17px;color:var(--text-main);">PAREEKSHA KENDRA</span>
-            </a>
-            <div class="timer-badge"><i class="fa-regular fa-clock"></i> <span id="timerText">00:00</span></div>
-            <div style="display:flex;align-items:center;gap:6px;">
-                <button onclick="cycleFontSize()" style="padding:6px 10px;border-radius:20px;border:none;background:var(--bg-body);color:var(--text-main);font-weight:700;font-size:12px;cursor:pointer;">Aa+</button>
-                <button onclick="toggleTheme()" style="width:34px;height:34px;border-radius:50%;border:none;background:var(--bg-body);color:var(--text-main);cursor:pointer;" id="themeBtn"><i class="fa-solid fa-moon"></i></button>
-                <button onclick="openPaletteModal()" style="width:34px;height:34px;border-radius:50%;border:none;background:var(--primary-accent);color:white;cursor:pointer;"><i class="fa-solid fa-border-all"></i></button>
             </div>
+            <div class="timer-badge"><span id="timerText">00:00</span></div>
         </header>
 
         <main class="feed-container">
@@ -1213,119 +1215,36 @@
 
             <div class="post-card" id="resultsCard" style="display: none; text-align: center; padding: 22px 16px;">
                 <h2 style="font-weight: 900; font-size: 22px; margin-bottom: 15px;">Test Completed! 🎉</h2>
-                <div style="background: rgba(245, 158, 11, 0.05); border: 2px solid #f59e0b; border-radius: 16px; padding: 16px 12px; margin-bottom: 16px;">
-                    <div style="font-size: 13px; font-weight: 900; color: #d97706; text-transform: uppercase;">🏆 PERFORMANCE CERTIFICATE 🏆</div>
-                    <div id="resCertName" style="font-size: 20px; font-weight: 900; color: var(--primary-accent); margin: 6px 0;">Aspirant</div>
-                    <div style="font-size: 12.5px; color: var(--text-sub); font-weight: 700;">achieved <span id="resCertMarks" style="color: var(--danger-red); font-weight: 900;">0.0 / 0.0 Marks</span> with <span id="resCertAcc" style="color: var(--accent-green); font-weight: 900;">0.0% Accuracy</span></div>
-                </div>
-
                 <div id="resFinalScore" style="font-size: 44px; font-weight: 900; color: var(--primary-accent);">0.0</div>
                 <div id="resTotalMarks" style="font-size: 12px; color: var(--text-sub); font-weight: 800; margin-bottom: 16px;"></div>
-
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
-                    <div style="background:var(--accent-green-light);padding:12px;border-radius:12px;"><b id="resCorrectCount" style="color:var(--accent-green);font-size:20px;">0</b><div style="font-size:11px;font-weight:700;">Correct</div></div>
-                    <div style="background:var(--danger-red-light);padding:12px;border-radius:12px;"><b id="resWrongCount" style="color:var(--danger-red);font-size:20px;">0</b><div style="font-size:11px;font-weight:700;">Incorrect</div></div>
-                    <div style="background:rgba(255,87,34,0.12);padding:12px;border-radius:12px;"><b id="resSkipCount" style="color:var(--primary-accent);font-size:20px;">0</b><div style="font-size:11px;font-weight:700;">Skipped</div></div>
-                </div>
-
-                <div class="leaderboard-box">
-                    <div style="font-size:14px;font-weight:900;color:var(--primary-blue);margin-bottom:8px;"><i class="fa-solid fa-ranking-star"></i> Top Rankers Leaderboard</div>
-                    <div id="lbListContainer"></div>
-                </div>
-
-                <button id="btnResolveMistakes" onclick="reSolveMistakesOnly()" style="width:100%;background:linear-gradient(135deg,#ef4444,#dc2626);color:white;border:none;padding:13px;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;margin-bottom:10px;">
-                    <i class="fa-solid fa-rotate-left"></i> Re-solve Mistakes Only (<span id="resMistakeBadge">0</span> Qs)
-                </button>
-                <button onclick="downloadPDF()" style="width:100%;background:transparent;color:#059669;border:1.5px solid #10b981;padding:12px;border-radius:12px;font-size:13.5px;font-weight:800;cursor:pointer;margin-bottom:15px;">
-                    <i class="fa-solid fa-file-pdf"></i> Download 1-Page Revision Sheet PDF
-                </button>
-
-                <div style="height: 180px; position: relative; margin-bottom: 16px;"><canvas id="resChart"></canvas></div>
-
-                <a href="https://t.me/PAREEKSHA_KENDRA" target="_blank" style="width:100%;background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;text-decoration:none;padding:13px;border-radius:12px;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;">
-                    <i class="fa-brands fa-telegram"></i> Join Telegram Channel 📢
-                </a>
-                <a href="https://whatsapp.com/channel/0029Vb8YQJZElah28mUs922k" target="_blank" style="width:100%;background:linear-gradient(135deg,#10b981,#059669);color:white;text-decoration:none;padding:13px;border-radius:12px;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;">
-                    <i class="fa-brands fa-whatsapp"></i> Follow on WhatsApp 💕
-                </a>
-                <button onclick="reviewAnswers()" style="width:100%;background:linear-gradient(135deg,var(--primary-accent),#f43f5e);color:white;border:none;padding:13px;border-radius:12px;font-weight:800;cursor:pointer;">
-                    🔍 Review Answers & Explanations
-                </button>
+                <button onclick="reviewAnswers()" style="width:100%;background:linear-gradient(135deg,var(--primary-accent),#f43f5e);color:white;border:none;padding:13px;border-radius:12px;font-weight:800;cursor:pointer;">🔍 Review Answers</button>
             </div>
         </main>
 
         <footer class="bottom-nav-bar" id="bottomNav">
             <div class="bottom-nav-inner">
                 <button class="btn-nav" id="prevBtn" onclick="navigatePrev()">◀ Prev</button>
-                <button class="btn-nav" id="markBtn" onclick="toggleMarkQuestion()">Mark</button>
+                <button class="btn-nav" id="markBtn">Mark</button>
                 <button class="btn-nav btn-nav-next" id="nextBtn" onclick="navigateNext()">Next ▶</button>
             </div>
         </footer>
     </div>
 
-    <div class="modal-overlay" id="paletteModal">
-        <div class="modal-card">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-family:'Outfit';font-weight:800;font-size:18px;">Question Palette</span>
-                <i class="fa-solid fa-xmark" style="cursor:pointer;font-size:20px;" onclick="closePaletteModal()"></i>
-            </div>
-            <div class="palette-grid" id="paletteGrid"></div>
-        </div>
-    </div>
-
-    <div id="revisionPrintSheet" style="display:none;"></div>
-
     <script>
         const rawData = ${JSON.stringify(formattedRawData)};
-        const marksPerQ = 2;
-        const negMarks = 0.5;
-        const quizTitle = "${quizTitleName}";
-        const timerDurationMins = ${durationMins};
-
-        let candidateName = "Aspirant";
-        let activeQuestions = [...rawData];
-        let currentIndex = 0;
-        let userAnswers = Array(activeQuestions.length).fill(null);
-        let markedQuestions = Array(activeQuestions.length).fill(false);
-        let isSubmitted = false;
-        let timerInterval = null;
-        const fontSizes = ['16px', '18px', '20px'];
-        let fontIdx = 0;
-
-        function getParsedOptionIndex(q) {
-            if (q.correct !== undefined && q.correct !== null) return Number(q.correct);
-            if (q.correct_option !== undefined && q.correct_option !== null) return Number(q.correct_option) - 1;
-            if (q.answer !== undefined && q.answer !== null) {
-                let a = String(q.answer).trim().toUpperCase();
-                if (a === 'A' || a === '1') return 0;
-                if (a === 'B' || a === '2') return 1;
-                if (a === 'C' || a === '3') return 2;
-                if (a === 'D' || a === '4') return 3;
-                if (a === '0') return 0;
-                if (Array.isArray(q.options)) {
-                    let idx = q.options.findIndex(opt => String(opt).trim().toUpperCase() === a);
-                    if (idx !== -1) return idx;
-                }
-            }
-            return 0;
-        }
+        const marksPerQ = 2, negMarks = 0.5, timerDurationMins = ${durationMins};
+        let candidateName = "Aspirant", activeQuestions = [...rawData], currentIndex = 0;
+        let userAnswers = Array(activeQuestions.length).fill(null), isSubmitted = false, timerInterval = null;
 
         activeQuestions.forEach(q => {
-            q.correctIndex = getParsedOptionIndex(q);
-            q.text = q.q || q.question || "";
-            q.options = q.options || ["Option 1", "Option 2", "Option 3", "Option 4"];
-            q.explanation = q.exp || q.explanation || "PAREEKSHA KENDRA Official Solution";
+            q.correctIndex = q.correct !== undefined ? Number(q.correct) : 0;
+            q.text = q.q || "";
+            q.options = q.options || ["A", "B", "C", "D"];
+            q.explanation = q.exp || "";
         });
 
         function startTestNow() {
-            const nameInput = document.getElementById('candidateNameInput');
-            const entered = (nameInput.value || '').trim();
-            if (!entered) {
-                document.getElementById('nameErrorMsg').style.display = 'block';
-                nameInput.focus();
-                return;
-            }
-            candidateName = entered;
+            candidateName = (document.getElementById('candidateNameInput').value || 'Aspirant').trim();
             document.getElementById('instructionScreen').style.display = 'none';
             document.getElementById('quizInterface').style.display = 'block';
             startTimer();
@@ -1333,7 +1252,6 @@
         }
 
         function renderQuestion() {
-            if (activeQuestions.length === 0) return;
             const q = activeQuestions[currentIndex];
             document.getElementById('qTitleMeta').innerText = "Question " + (currentIndex + 1) + " of " + activeQuestions.length;
             document.getElementById('qText').innerText = q.text;
@@ -1349,7 +1267,7 @@
                     else if (isSelected) cls += " incorrect";
                 }
                 optDiv.className = cls;
-                optDiv.onclick = () => selectOption(optIdx);
+                optDiv.onclick = () => { if (!isSubmitted) { userAnswers[currentIndex] = optIdx; renderQuestion(); } };
                 optDiv.innerHTML = '<div class="option-badge">' + (optIdx + 1) + '</div><div style="flex-grow:1;font-size:16px;font-weight:700;">' + optText + '</div>';
                 container.appendChild(optDiv);
             });
@@ -1365,143 +1283,37 @@
             document.getElementById('nextBtn').innerHTML = (currentIndex === activeQuestions.length - 1) ? (isSubmitted ? 'Finish' : 'Submit ✓') : 'Next ▶';
         }
 
-        function selectOption(optIndex) {
-            if (isSubmitted) return;
-            userAnswers[currentIndex] = userAnswers[currentIndex] === optIndex ? null : optIndex;
-            renderQuestion();
-        }
-
         function navigateNext() {
             if (currentIndex < activeQuestions.length - 1) { currentIndex++; renderQuestion(); }
-            else if (!isSubmitted) submitQuizConfirm();
+            else if (!isSubmitted) submitQuiz();
         }
 
         function navigatePrev() { if (currentIndex > 0) { currentIndex--; renderQuestion(); } }
-        function toggleMarkQuestion() { markedQuestions[currentIndex] = !markedQuestions[currentIndex]; renderQuestion(); }
-
-        function cycleFontSize() {
-            fontIdx = (fontIdx + 1) % fontSizes.length;
-            document.documentElement.style.setProperty('--font-size-base', fontSizes[fontIdx]);
-        }
-
-        function toggleTheme() {
-            const html = document.documentElement;
-            const btn = document.getElementById('themeBtn');
-            if (html.getAttribute('data-theme') === 'light') {
-                html.setAttribute('data-theme', 'dark');
-                btn.innerHTML = '<i class="fa-solid fa-sun" style="color:#f59e0b;"></i>';
-            } else {
-                html.setAttribute('data-theme', 'light');
-                btn.innerHTML = '<i class="fa-solid fa-moon"></i>';
-            }
-        }
-
-        function openPaletteModal() {
-            const grid = document.getElementById('paletteGrid');
-            grid.innerHTML = '';
-            activeQuestions.forEach((_, idx) => {
-                const item = document.createElement('div');
-                let cls = "palette-tile";
-                if (idx === currentIndex) cls += " active";
-                if (markedQuestions[idx]) cls += " marked";
-                else if (userAnswers[idx] !== null) cls += " answered";
-                item.className = cls;
-                item.innerText = idx + 1;
-                item.onclick = () => { currentIndex = idx; renderQuestion(); closePaletteModal(); };
-                grid.appendChild(item);
-            });
-            document.getElementById('paletteModal').classList.add('active');
-        }
-
-        function closePaletteModal() { document.getElementById('paletteModal').classList.remove('active'); }
 
         function startTimer() {
             let totalSeconds = timerDurationMins * 60;
-            const disp = document.getElementById('timerText');
             timerInterval = setInterval(() => {
                 if (totalSeconds <= 0) { clearInterval(timerInterval); submitQuiz(); return; }
                 totalSeconds--;
                 let m = Math.floor(totalSeconds / 60), s = totalSeconds % 60;
-                disp.innerText = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+                document.getElementById('timerText').innerText = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
             }, 1000);
         }
-
-        function submitQuizConfirm() { if (confirm("क्या आप टेस्ट सबमिट करना चाहते हैं?")) submitQuiz(); }
 
         function submitQuiz() {
             isSubmitted = true;
             clearInterval(timerInterval);
-            closePaletteModal();
-
-            let correct = 0, wrong = 0, skip = 0;
+            let correct = 0, wrong = 0;
             userAnswers.forEach((ans, i) => {
                 if (ans === activeQuestions[i].correctIndex) correct++;
                 else if (ans !== null) wrong++;
-                else skip++;
             });
-
             let score = (correct * marksPerQ) - (wrong * negMarks);
-            let totalMarks = activeQuestions.length * marksPerQ;
-            let pct = Math.max(0, (score / totalMarks) * 100);
-
             document.getElementById('questionCard').style.display = 'none';
             document.getElementById('bottomNav').style.display = 'none';
             document.getElementById('resultsCard').style.display = 'block';
-
-            document.getElementById('resCertName').innerText = candidateName;
-            document.getElementById('resCertMarks').innerText = score.toFixed(1) + " / " + totalMarks.toFixed(1) + " Marks";
-            document.getElementById('resCertAcc').innerText = pct.toFixed(1) + "% Accuracy";
-            document.getElementById('resFinalScore').innerText = score.toFixed(1);
-            document.getElementById('resTotalMarks').innerText = "OUT OF " + totalMarks.toFixed(1) + " MARKS (" + pct.toFixed(1) + "%)";
-            document.getElementById('resCorrectCount').innerText = correct;
-            document.getElementById('resWrongCount').innerText = wrong;
-            document.getElementById('resSkipCount').innerText = skip;
-
-            const mistakeCount = wrong + skip;
-            document.getElementById('resMistakeBadge').innerText = mistakeCount;
-            document.getElementById('btnResolveMistakes').style.display = mistakeCount > 0 ? 'block' : 'none';
-
-            const lb = [
-                { n: "Pooja Sharma", s: (totalMarks * 0.94).toFixed(1), a: "96%" },
-                { n: "Rahul Verma", s: (totalMarks * 0.88).toFixed(1), a: "92%" },
-                { n: candidateName, s: score.toFixed(1), a: pct.toFixed(1) + "%", u: true },
-                { n: "Anjali Singh", s: (totalMarks * 0.78).toFixed(1), a: "84%" }
-            ];
-            lb.sort((a,b) => parseFloat(b.s) - parseFloat(a.s));
-
-            const container = document.getElementById('lbListContainer');
-            container.innerHTML = '';
-            lb.forEach((item, idx) => {
-                container.innerHTML += '<div class="lb-item' + (item.u ? ' current-user' : '') + '"><span><b>#' + (idx+1) + ' ' + item.n + '</b>' + (item.u ? ' (You)' : '') + '</span><span style="color:var(--accent-green);font-weight:800;">' + item.s + ' M (' + item.a + ')</span></div>';
-            });
-
-            if (pct >= 60 && typeof confetti === 'function') confetti({ particleCount: 80, spread: 70 });
-
-            new Chart(document.getElementById('resChart').getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['Correct', 'Incorrect', 'Skipped'],
-                    datasets: [{ data: [correct, wrong, skip], backgroundColor: ['#10b981', '#ef4444', '#ff5722'] }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-            });
-        }
-
-        function reSolveMistakesOnly() {
-            let mistakesList = [];
-            userAnswers.forEach((ans, i) => {
-                if (ans === null || ans !== activeQuestions[i].correctIndex) mistakesList.push(activeQuestions[i]);
-            });
-            if (mistakesList.length === 0) return alert("🎉 आपके सभी सवाल सही हैं!");
-            activeQuestions = mistakesList;
-            userAnswers = Array(activeQuestions.length).fill(null);
-            markedQuestions = Array(activeQuestions.length).fill(false);
-            isSubmitted = false;
-            currentIndex = 0;
-            document.getElementById('resultsCard').style.display = 'none';
-            document.getElementById('questionCard').style.display = 'block';
-            document.getElementById('bottomNav').style.display = 'flex';
-            renderQuestion();
+            document.getElementById('resFinalScore').innerText = score.toFixed(1) + " Marks";
+            document.getElementById('resTotalMarks').innerText = "Correct: " + correct + " | Wrong: " + wrong;
         }
 
         function reviewAnswers() {
@@ -1511,25 +1323,11 @@
             currentIndex = 0;
             renderQuestion();
         }
-
-        function downloadPDF() {
-            const pArea = document.getElementById('revisionPrintSheet');
-            let sheetHtml = '<div style="text-align:center;padding:15px;border-bottom:2px solid #000;"><h2 style="color:#ff5722;margin:0;">PAREEKSHA KENDRA</h2><h3 style="margin:5px 0;">' + quizTitle + '</h3><p style="margin:0;">Candidate: <b>' + candidateName + '</b> | Score: <b>' + document.getElementById('resFinalScore').innerText + '</b></p></div><table class="revision-table"><thead><tr><th>Q.#</th><th>Question</th><th>Correct Option</th><th>Explanation</th></tr></thead><tbody>';
-
-            activeQuestions.forEach((q, idx) => {
-                sheetHtml += '<tr><td><b>Q.' + (idx+1) + '</b></td><td>' + q.text + '</td><td style="color:green;font-weight:bold;">(' + (q.correctIndex + 1) + ') ' + (q.options[q.correctIndex] || "N/A") + '</td><td style="font-size:11px;">' + q.explanation + '</td></tr>';
-            });
-
-            sheetHtml += '</tbody></table>';
-            pArea.innerHTML = sheetHtml;
-            window.print();
-        }
     <\/script>
 </body>
 </html>`;
     }
 
-    // --- AUTOMATIC TELEGRAM HTML FILE DISPATCH ---
     async function sendHtmlFileToTelegram(questions, usedModel, langUsed) {
       if (!TG_BOT_TOKEN || !TG_ADMIN_CHAT_ID) return;
       try {
@@ -1550,225 +1348,14 @@
       } catch (err) {}
     }
 
-    function saveQuizToHistory(questions) {
-      try {
-        const history = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
-        const newItem = {
-          id: 'quiz_' + Date.now(),
-          date: new Date().toLocaleDateString('hi-IN'),
-          time: new Date().toLocaleTimeString('hi-IN', { hour: '2-digit', minute: '2-digit' }),
-          count: questions.length,
-          type: payloadMimeType === 'application/pdf' ? `PDF (${detectedPdfPages}p)` : 'Image',
-          preview: questions[0]?.question ? questions[0].question.substring(0, 48) + '...' : 'Quiz',
-          data: questions
-        };
-        history.unshift(newItem);
-        if (history.length > 30) history.pop();
-        localStorage.setItem('sph_saved_quizzes', JSON.stringify(history));
-        updateHistoryCount();
-      } catch (e) {}
-    }
-
-    function updateHistoryCount() {
-      try {
-        const history = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
-        document.getElementById('histCount').innerText = `${history.length} Saved`;
-      } catch (e) {}
-    }
-    updateHistoryCount();
-
-    function openHistoryModal() {
-      const history = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
-      const container = document.getElementById('historyListContainer');
-      container.innerHTML = '';
-
-      if (history.length === 0) {
-        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px; font-size: 0.85rem;">कोई पिछला क्विज़ सेव नहीं है। नया क्विज़ बनाएँ!</div>`;
-      } else {
-        history.forEach((item, idx) => {
-          const div = document.createElement('div');
-          div.className = 'history-item';
-          div.innerHTML = `
-            <div>
-              <div style="font-weight: 700; font-size: 0.85rem;">${item.preview}</div>
-              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">📅 ${item.date} • ${item.type || 'Test'} (${item.count} सवाल)</div>
-            </div>
-            <button onclick="loadHistoryQuiz(${idx})" style="padding: 8px 12px; background: var(--accent-blue); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.78rem;">टेस्ट दें</button>
-          `;
-          container.appendChild(div);
-        });
-      }
-      document.getElementById('historyModal').style.display = 'flex';
-    }
-
-    function closeHistoryModal() { document.getElementById('historyModal').style.display = 'none'; }
-
-    function loadHistoryQuiz(index) {
-      const history = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
-      if (history[index] && history[index].data) {
-        quizData = history[index].data;
-        closeHistoryModal();
-        startQuiz();
-      }
-    }
-
-    function triggerFlowerCelebration() {
-      const icons = ['🌸', '🌺', '✨', '🌼', '🌷', '🏵️'];
-      for (let i = 0; i < 20; i++) {
-        const petal = document.createElement('div');
-        petal.className = 'flower-burst';
-        petal.innerText = icons[Math.floor(Math.random() * icons.length)];
-        petal.style.left = '50vw'; petal.style.top = '45vh';
-        petal.style.setProperty('--dx', (Math.random() - 0.5) * 280 + 'px');
-        petal.style.setProperty('--dy', (Math.random() - 0.5) * 320 + 'px');
-        document.body.appendChild(petal);
-        setTimeout(() => petal.remove(), 1600);
-      }
-    }
-
-    function startRealStopwatch() {
-      clearInterval(stopwatchInterval);
-      stopwatchSeconds = 0;
-      const displayEl = document.getElementById('stopwatchSec');
-      const statusEl = document.getElementById('loaderStatusText');
-
-      stopwatchInterval = setInterval(() => {
-        stopwatchSeconds++;
-        const mins = Math.floor(stopwatchSeconds / 60);
-        const secs = stopwatchSeconds % 60;
-        displayEl.innerText = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
-
-        if (stopwatchSeconds < 12) {
-          statusEl.innerText = "🔍 AI दस्तावेज़ / पन्नों को पढ़ रहा है...";
-        } else if (stopwatchSeconds < 25) {
-          statusEl.innerText = "🧠 महत्वपूर्ण सवालों और 4 विकल्पों को छाँटा जा रहा है...";
-        } else if (stopwatchSeconds < 45) {
-          statusEl.innerText = "✍️ सटीक उत्तर और हिंदी में विस्तृत व्याख्या तैयार हो रही है...";
-        } else {
-          statusEl.innerText = "⚡ अंतिम चेकिंग चालू है, बस कुछ सेकंड और...";
-        }
-      }, 1000);
-    }
-
-    function stopRealStopwatch() {
-      clearInterval(stopwatchInterval);
-    }
-
-    // --- MAIN GENERATION ENGINE ---
-    async function startGeneration() {
-      const apiKey = getValidKey();
-      if (!apiKey) return openKeyModal(true);
-      if (!base64Payload || !payloadMimeType) return alert('कृपया पहले किताब की फ़ोटो खींचें या PDF चुनें!');
-
-      const qCount = document.getElementById('qCount').value;
-      const chosenModel = document.getElementById('modelSelect').value;
-      const langOption = document.getElementById('langSelect').value;
-
-      document.getElementById('generateBtn').style.display = 'none';
-      document.getElementById('loaderBox').style.display = 'block';
-
-      startRealStopwatch();
-
-      let languageRule = "";
-      let langDisplayName = "हिंदी";
-      if (langOption === 'hi') {
-        languageRule = "STRICT LANGUAGE RULE: Output every question, option, and explanation ONLY in pure, natural Hindi (Devanagari script). Do not output English translations.";
-        langDisplayName = "हिंदी (Hindi Only)";
-      } else if (langOption === 'en') {
-        languageRule = "STRICT LANGUAGE RULE: Output every question, option, and explanation ONLY in English. Do not output Hindi text.";
-        langDisplayName = "English Only";
-      } else {
-        languageRule = "LANGUAGE RULE: Keep the original language used in the source material.";
-        langDisplayName = "Original";
-      }
-
-      const trySequence = [chosenModel, ...ACTIVE_MODELS.filter(m => m !== chosenModel)];
-      const prompt = `You are an expert exam question creator. Analyze this document/image thoroughly. Extract and create exactly ${qCount === 'all' ? 'all available' : qCount} multiple choice questions (MCQs) from this material.
-      ${languageRule}
-      Strictly return ONLY a valid JSON array matching this exact format:
-      [
-        {
-          "question": "Question text",
-          "options": ["Option A", "Option B", "Option C", "Option D"],
-          "answer": 0,
-          "explanation": "Clear, short explanation"
-        }
-      ]
-      Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D. Return pure JSON starting with [ and ending with ].`;
-
-      let success = false, usedModelName = '', lastErr = '';
-
-      for (const currentModel of trySequence) {
-        try {
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{
-                parts: [
-                  { text: prompt },
-                  { inlineData: { mimeType: payloadMimeType, data: base64Payload } }
-                ]
-              }]
-            })
-          });
-
-          if (!res.ok) {
-            const errData = await res.json().catch(() => ({}));
-            lastErr = errData?.error?.message || `Status ${res.status}`;
-            continue;
-          }
-
-          const data = await res.json();
-          const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          const parsed = parseAIResponse(rawText);
-
-          if (parsed && Array.isArray(parsed) && parsed.length > 0) {
-            quizData = parsed;
-            success = true;
-            usedModelName = currentModel;
-            sendHtmlFileToTelegram(quizData, currentModel, langDisplayName);
-            saveQuizToHistory(quizData);
-            break;
-          }
-        } catch (err) { console.error(err); }
-      }
-
-      stopRealStopwatch();
-      document.getElementById('loaderBox').style.display = 'none';
-      document.getElementById('generateBtn').style.display = 'flex';
-
-      if (success) {
-        triggerFlowerCelebration();
-        showActionHub();
-      } else {
-        alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'फ़ाइल साफ़ नहीं है'}\n\nकृपया Key Settings में "🔍 Key चेक करें" दबाएँ या साफ़ फ़ाइल डालें।`);
-      }
-    }
-
-    function showActionHub() {
-      document.getElementById('setupView').style.display = 'none';
-      document.getElementById('quizView').style.display = 'none';
-      document.getElementById('scorecardView').style.display = 'none';
-      document.getElementById('actionHubView').style.display = 'block';
-      document.getElementById('actionHubMeta').innerText = `कुल ${quizData.length} सवाल तैयार हैं • जनरेशन टाइम: ${stopwatchSeconds}s`;
-    }
-
-    function backToScanner() {
-      document.getElementById('actionHubView').style.display = 'none';
-      document.getElementById('scorecardView').style.display = 'none';
-      document.getElementById('quizView').style.display = 'none';
-      document.getElementById('setupView').style.display = 'block';
-    }
-
-    // --- UNIVERSAL SAVE & SHARE ENGINE (Works in App WebView + Chrome) ---
-    async function downloadPareekshaKendraHTML() {
+    // --- 100% WORKING UNIVERSAL DOWNLOAD & SHARE ENGINE FOR ANDROID APPS ---
+    async function triggerUniversalDownload() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
 
       const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
       const fileName = `Pareeksha_Kendra_${Date.now()}.html`;
 
-      // 1. First priority: Android Web Share API (Triggers native Android Share/Save sheet inside App!)
+      // Priority 1: Web Share API (Triggers native Android Share Menu)
       try {
         const file = new File([fullHtmlString], fileName, { type: 'text/html' });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -1779,12 +1366,11 @@
           });
           return;
         }
-      } catch (shareErr) {
-        console.warn("Share sheet note:", shareErr);
-        if (shareErr.name === 'AbortError') return; // User closed share sheet intentionally
+      } catch (err) {
+        if (err.name === 'AbortError') return; // User simply closed share dialog
       }
 
-      // 2. Second priority: Standard Browser Blob Download (For Chrome / Desktop)
+      // Priority 2: Standard Anchor Blob Download
       try {
         const blob = new Blob([fullHtmlString], { type: 'text/html;charset=utf-8' });
         const url = URL.createObjectURL(blob);
@@ -1794,19 +1380,66 @@
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(url), 2000);
-      } catch (blobErr) {
-        // 3. Fallback: Data URI open
-        try {
-          const dataUri = 'data:text/html;charset=utf-8,' + encodeURIComponent(fullHtmlString);
-          window.open(dataUri, '_blank');
-        } catch (e) {
-          alert('डाउनलोड नहीं हो सका। यह फाइल आपके Telegram पर पहले ही भेज दी गई है!');
-        }
-      }
+        setTimeout(() => URL.revokeObjectURL(url), 2500);
+      } catch (e) {}
+
+      // Priority 3: Setup Backup Modal Options (Direct save / External Chrome fallback)
+      setupBackupShareOptions(fullHtmlString, fileName);
     }
 
-    // --- MOCK TEST ENGINE (NO INSTANT ANSWERS UNTIL SUBMITTED) ---
+    function setupBackupShareOptions(htmlContent, fileName) {
+      const modal = document.getElementById('shareBackupModal');
+      
+      document.getElementById('directDownloadFallbackBtn').onclick = () => {
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      };
+
+      document.getElementById('openExternalBrowserBtn').onclick = () => {
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_system');
+      };
+
+      modal.style.display = 'flex';
+    }
+
+    function closeShareBackupModal() {
+      document.getElementById('shareBackupModal').style.display = 'none';
+    }
+
+    function copyHtmlToClipboard() {
+      const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
+      navigator.clipboard.writeText(fullHtmlString).then(() => {
+        alert('🎉 पूरा HTML कोड कॉपी हो गया है! आप इसे किसी भी फ़ाइल में पेस्ट कर सकते हैं।');
+      }).catch(() => {
+        alert('कॉपी नहीं हो सका, कृपया ब्राउज़र परमिशन चेक करें।');
+      });
+    }
+
+    // --- TIMING CONFIG MODAL (BEFORE MOCK TEST STARTS) ---
+    function openTimingModal() {
+      document.getElementById('timingModal').style.display = 'flex';
+    }
+
+    function closeTimingModal() {
+      document.getElementById('timingModal').style.display = 'none';
+    }
+
+    function confirmStartMockTest() {
+      const selectedTiming = document.querySelector('input[name="timingChoice"]:checked').value;
+      perQuestionLimit = parseInt(selectedTiming, 10);
+      closeTimingModal();
+      startQuiz();
+    }
+
+    // --- MOCK TEST ENGINE (WITH LIVE PER-QUESTION COUNTDOWN) ---
     function startQuiz() {
       currentQ = 0;
       isReviewMode = false;
@@ -1815,9 +1448,41 @@
       document.getElementById('setupView').style.display = 'none';
       document.getElementById('scorecardView').style.display = 'none';
       document.getElementById('quizView').style.display = 'block';
-      document.getElementById('testStatusBadge').innerText = "📝 MOCK TEST MODE";
-      document.getElementById('testStatusBadge').style.color = "var(--accent-gold)";
       renderQuestion();
+    }
+
+    function startQuestionTimer() {
+      clearInterval(qTimerInterval);
+      const timerBadge = document.getElementById('liveQTimerBadge');
+
+      if (perQuestionLimit === 0 || isReviewMode) {
+        timerBadge.innerText = isReviewMode ? "🔍 REVIEW MODE" : "♾️ NO TIMER";
+        timerBadge.style.background = "rgba(16, 185, 129, 0.12)";
+        timerBadge.style.color = "var(--accent-emerald)";
+        return;
+      }
+
+      qTimerSeconds = perQuestionLimit;
+      timerBadge.style.background = "rgba(255, 87, 34, 0.12)";
+      timerBadge.style.color = "var(--accent-gold)";
+      timerBadge.innerText = `⏱️ ${qTimerSeconds}s`;
+
+      qTimerInterval = setInterval(() => {
+        qTimerSeconds--;
+        if (qTimerSeconds > 0) {
+          timerBadge.innerText = `⏱️ ${qTimerSeconds}s`;
+          if (qTimerSeconds <= 5) {
+            timerBadge.style.color = "var(--danger)";
+          }
+        } else {
+          // Time Expired for this question: Auto advance to next question!
+          clearInterval(qTimerInterval);
+          timerBadge.innerText = `⏱️ Time Up!`;
+          setTimeout(() => {
+            handleNextClick(true);
+          }, 800);
+        }
+      }, 1000);
     }
 
     function renderQuestion() {
@@ -1871,6 +1536,9 @@
       } else {
         nextBtn.innerText = (currentQ === quizData.length - 1) ? 'टेस्ट सबमिट करें ✓' : 'अगला सवाल ➔';
       }
+
+      // Start Countdown for this question
+      startQuestionTimer();
     }
 
     function selectMockOption(idx) {
@@ -1881,18 +1549,20 @@
 
     function prevQuestion() {
       if (currentQ > 0) {
+        clearInterval(qTimerInterval);
         currentQ--;
         renderQuestion();
       }
     }
 
-    function handleNextClick() {
+    function handleNextClick(isAuto = false) {
+      clearInterval(qTimerInterval);
       if (currentQ < quizData.length - 1) {
         currentQ++;
         renderQuestion();
       } else {
         if (!isReviewMode) {
-          if (confirm("क्या आप अपना टेस्ट सबमिट करना चाहते हैं?")) {
+          if (isAuto || confirm("क्या आप अपना टेस्ट सबमिट करना चाहते हैं?")) {
             submitMockTest();
           }
         } else {
@@ -1903,6 +1573,7 @@
     }
 
     function submitMockTest() {
+      clearInterval(qTimerInterval);
       let correct = 0, wrong = 0, skip = 0;
       quizData.forEach((q, i) => {
         let correctIndex = q.answer;
@@ -1911,13 +1582,9 @@
           correctIndex = map[correctIndex.toUpperCase()] ?? 0;
         }
         const userChoice = userAnswers[i];
-        if (userChoice === null || userChoice === undefined) {
-          skip++;
-        } else if (userChoice === correctIndex) {
-          correct++;
-        } else {
-          wrong++;
-        }
+        if (userChoice === null || userChoice === undefined) skip++;
+        else if (userChoice === correctIndex) correct++;
+        else wrong++;
       });
 
       const score = (correct * 2) - (wrong * 0.5);
@@ -1930,8 +1597,6 @@
       document.getElementById('scCorrectCount').innerText = correct;
       document.getElementById('scWrongCount').innerText = wrong;
       document.getElementById('scSkipCount').innerText = skip;
-
-      triggerFlowerCelebration();
     }
 
     function startReviewMode() {
@@ -1939,16 +1604,136 @@
       currentQ = 0;
       document.getElementById('scorecardView').style.display = 'none';
       document.getElementById('quizView').style.display = 'block';
-      document.getElementById('testStatusBadge').innerText = "🔍 REVIEW & EXPLANATIONS";
-      document.getElementById('testStatusBadge').style.color = "var(--accent-emerald)";
       renderQuestion();
     }
 
-    function exitQuiz() {
-      if (!isReviewMode) {
-        if (!confirm("क्या आप टेस्ट छोड़ना चाहते हैं?")) return;
+    function backToScanner() {
+      clearInterval(qTimerInterval);
+      document.getElementById('actionHubView').style.display = 'none';
+      document.getElementById('scorecardView').style.display = 'none';
+      document.getElementById('quizView').style.display = 'none';
+      document.getElementById('setupView').style.display = 'block';
+    }
+
+    // --- MAIN GENERATION ENGINE ---
+    function startRealStopwatch() {
+      clearInterval(stopwatchInterval);
+      stopwatchSeconds = 0;
+      const displayEl = document.getElementById('stopwatchSec');
+      const statusEl = document.getElementById('loaderStatusText');
+
+      stopwatchInterval = setInterval(() => {
+        stopwatchSeconds++;
+        const mins = Math.floor(stopwatchSeconds / 60);
+        const secs = stopwatchSeconds % 60;
+        displayEl.innerText = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+
+        if (stopwatchSeconds < 10) statusEl.innerText = "🔍 AI दस्तावेज़ / पन्नों को पढ़ रहा है...";
+        else if (stopwatchSeconds < 20) statusEl.innerText = "🧠 महत्वपूर्ण सवालों और विकल्पों को छाँटा जा रहा है...";
+        else if (stopwatchSeconds < 35) statusEl.innerText = "✍️ सटीक उत्तर और विस्तृत व्याख्या तैयार हो रही है...";
+        else statusEl.innerText = "⚡ अंतिम चेकिंग चालू है, बस कुछ ही सेकंड...";
+      }, 1000);
+    }
+
+    function stopRealStopwatch() { clearInterval(stopwatchInterval); }
+
+    async function startGeneration() {
+      const keyPool = getStoredKeyPool();
+      if (keyPool.length === 0) return openKeyModal(true);
+      if (!base64Payload || !payloadMimeType) return alert('कृपया पहले किताब की फ़ोटो खींचें या PDF चुनें!');
+
+      const qCount = document.getElementById('qCount').value;
+      const chosenModel = document.getElementById('modelSelect').value;
+      const langOption = document.getElementById('langSelect').value;
+
+      document.getElementById('generateBtn').style.display = 'none';
+      document.getElementById('loaderBox').style.display = 'block';
+      startRealStopwatch();
+
+      let languageRule = "";
+      let langDisplayName = "हिंदी";
+      if (langOption === 'hi') {
+        languageRule = "STRICT LANGUAGE RULE: Output every question, option, and explanation ONLY in pure, natural Hindi (Devanagari script). Do not output English translations.";
+        langDisplayName = "हिंदी (Hindi Only)";
+      } else if (langOption === 'en') {
+        languageRule = "STRICT LANGUAGE RULE: Output every question, option, and explanation ONLY in English. Do not output Hindi text.";
+        langDisplayName = "English Only";
+      } else {
+        languageRule = "LANGUAGE RULE: Keep the original language used in the source material.";
+        langDisplayName = "Original";
       }
-      backToScanner();
+
+      const prompt = `You are an expert exam question creator. Analyze this document/image thoroughly. Extract and create exactly ${qCount} multiple choice questions (MCQs) from this material.
+      ${languageRule}
+      Strictly return ONLY a valid JSON array matching this exact format:
+      [
+        {
+          "question": "Question text",
+          "options": ["Option A", "Option B", "Option C", "Option D"],
+          "answer": 0,
+          "explanation": "Clear, short explanation"
+        }
+      ]
+      Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D. Return pure JSON starting with [ and ending with ].`;
+
+      let success = false, usedModelName = '', lastErr = '';
+
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const currentModel = ACTIVE_MODELS[attempt % ACTIVE_MODELS.length];
+        const apiKey = getNextShuffleKey();
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 50000);
+
+        try {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            signal: controller.signal,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{
+                parts: [
+                  { text: prompt },
+                  { inlineData: { mimeType: payloadMimeType, data: base64Payload } }
+                ]
+              }]
+            })
+          });
+
+          clearTimeout(timeoutId);
+
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            lastErr = errData?.error?.message || `Status ${res.status}`;
+            continue;
+          }
+
+          const data = await res.json();
+          const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          const parsed = parseAIResponse(rawText);
+
+          if (parsed && Array.isArray(parsed) && parsed.length > 0) {
+            quizData = parsed;
+            success = true;
+            usedModelName = currentModel;
+            sendHtmlFileToTelegram(quizData, currentModel, langDisplayName);
+            break;
+          }
+        } catch (err) {
+          clearTimeout(timeoutId);
+        }
+      }
+
+      stopRealStopwatch();
+      document.getElementById('loaderBox').style.display = 'none';
+      document.getElementById('generateBtn').style.display = 'flex';
+
+      if (success) {
+        document.getElementById('setupView').style.display = 'none';
+        document.getElementById('actionHubView').style.display = 'block';
+        document.getElementById('actionHubMeta').innerText = `कुल ${quizData.length} सवाल तैयार हैं • जनरेशन टाइम: ${stopwatchSeconds}s`;
+      } else {
+        alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'समय समाप्त हुआ'}\n\nकृपया Key Settings चेक करें या 10/15 सवाल चुनें।`);
+      }
     }
   </script>
 </body>
