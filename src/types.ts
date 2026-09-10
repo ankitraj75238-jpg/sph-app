@@ -1,4 +1,4 @@
-export type TabType = 'ankitprep' | 'pareeksha' | 'books_practice' | 'ai_quiz';
+export type TabType = 'ankitprep' | 'pareeksha' | 'books_practice' | 'ai_quiz' | 'reels';
 
 export interface WebViewConfig {
   url: string;
