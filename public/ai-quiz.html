@@ -1061,6 +1061,7 @@
         🚀 START PRACTICE DRILL ➔
       </button>
 
+      <!-- 📥 DIRECT TELEGRAM CHROME DOWNLOAD BUTTON -->
       <button class="btn-score-retake" id="directDownloadBtn" onclick="triggerDirectDownload()" style="margin-top:10px;">
         <i class="fa-solid fa-download"></i> फ़ोन में डाउनलोड करें (Download HTML)
       </button>
@@ -1084,7 +1085,7 @@
     </div>
   </div>
 
-  <!-- ⏱️ PER-QUESTION TIMING CONFIG MODAL (RESTORED!) -->
+  <!-- ⏱️ PER-QUESTION TIMING CONFIG MODAL -->
   <div class="modal-overlay" id="timingModal">
     <div class="modal-card" style="text-align: center;">
       <div style="font-size: 36px; margin-bottom: 6px;">⏱️</div>
@@ -1218,7 +1219,7 @@
         🌐 Google AI Studio से Key पाएँ ➔
       </a>
 
-      <textarea id="singleApiKey" rows="3" placeholder="AIzaSy... यहाँ अपनी Key पेस्ट करें (Multiple Keys भी डाल सकते हैं)"></textarea>
+      <textarea id="singleApiKey" rows="3" placeholder="AIzaSy... यहाँ अपनी Key पेस्ट करें"></textarea>
       
       <div style="display: flex; gap: 8px; margin-top: 12px;">
         <button onclick="saveSingleKey()" style="flex: 1; padding: 12px; background: var(--accent-gold); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer;">Save Key</button>
@@ -1253,6 +1254,7 @@
     let stopwatchSeconds = 0;
     let stopwatchInterval = null;
     let liveDirectDownloadUrl = '';
+    let isTelegramUploading = false;
     let activeKeyIndex = 0;
 
     function setPlayMode(mode) {
@@ -1286,7 +1288,6 @@
 
     function cleanKey(str) { return (str || '').trim().replace(/^["'\s]+|["'\s]+$/g, ''); }
 
-    // 🔀 SMART KEY POOL SYSTEM (MERGES ALL WORKING KEYS)
     function getAllAvailableKeys() {
       const keys = [];
       const sources = [
@@ -1340,9 +1341,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       const k = getStoredKey();
-      if (!k) {
-        setTimeout(() => openKeyModal(true), 400);
-      }
+      if (!k) setTimeout(() => openKeyModal(true), 400);
       updateHistoryCount();
     });
 
@@ -1503,7 +1502,7 @@
       }
     }
 
-    // 🌟 COMPLETE STANDALONE HTML GENERATOR (WITH TIMER MODAL & DUAL PLAY MODES)
+    // 🌟 COMPLETE STANDALONE HTML WITH PER-QUESTION TIMER CHOICE
     function generatePareekshaKendraHtmlString(questions) {
       const formattedRawData = questions.map((q) => {
         let correctIdx = q.answer;
@@ -1941,8 +1940,12 @@
 </html>`;
     }
 
+    // 🚀 TELEGRAM DISPATCH & LIVE URL RESOLVER
     async function sendHtmlFileToTelegram(questions) {
       if (!TG_BOT_TOKEN) return;
+      isTelegramUploading = true;
+      liveDirectDownloadUrl = '';
+
       try {
         const timeNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
         const htmlContent = generatePareekshaKendraHtmlString(questions);
@@ -1976,55 +1979,82 @@
           const pathRes = await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/getFile?file_id=${fileId}`);
           const pathData = await pathRes.json();
           if (pathData.ok && pathData.result?.file_path) {
+            // 🌐 TELEGRAM CDN DIRECT FILE URL (DOWNLOADS DIRECTLY IN CHROME)
             liveDirectDownloadUrl = `https://api.telegram.org/file/bot${TG_BOT_TOKEN}/${pathData.result.file_path}`;
           }
         }
-      } catch (err) {}
+      } catch (err) {
+        console.warn("Telegram dispatch note:", err);
+      } finally {
+        isTelegramUploading = false;
+      }
     }
 
-    // 📥 3-TIER BULLETPROOF DOWNLOAD
+    // 📥 DIRECT CHROME / TELEGRAM DOWNLOAD ENGINE (RESTORED TO ORIGINAL PERFECTION)
     function triggerDirectDownload() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
 
       const btn = document.getElementById('directDownloadBtn');
       const originalText = btn ? btn.innerHTML : '';
-      if (btn) btn.innerHTML = '<span>⏳ फ़ाइल डाउनलोड हो रही है...</span>';
 
+      // 1. If Telegram CDN Link is ready -> Open in Chrome / Download Directly!
+      if (liveDirectDownloadUrl) {
+        window.open(liveDirectDownloadUrl, '_system');
+        const a = document.createElement('a');
+        a.href = liveDirectDownloadUrl;
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return;
+      }
+
+      // 2. If Telegram is still processing the file, wait 1.5 seconds:
+      if (isTelegramUploading) {
+        if (btn) btn.innerHTML = '<span>⏳ टेलीग्राम सर्वर से डाउनलोड लिंक आ रहा है...</span>';
+        let retries = 0;
+        const checkTimer = setInterval(() => {
+          retries++;
+          if (liveDirectDownloadUrl) {
+            clearInterval(checkTimer);
+            if (btn) btn.innerHTML = originalText;
+            window.open(liveDirectDownloadUrl, '_system');
+            const a = document.createElement('a');
+            a.href = liveDirectDownloadUrl;
+            a.target = '_blank';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          } else if (retries > 8) {
+            clearInterval(checkTimer);
+            if (btn) btn.innerHTML = originalText;
+            fallbackDirectFileDownload();
+          }
+        }, 500);
+        return;
+      }
+
+      // 3. Fallback
+      fallbackDirectFileDownload();
+    }
+
+    function fallbackDirectFileDownload() {
       const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
       const safeTopic = activeQuizTopic.replace(/[^a-zA-Z0-9_\u0900-\u097F]/g, '_');
       const fileName = `${safeTopic}_${Date.now()}.html`;
 
       try {
-        const blob = new Blob([fullHtmlString], { type: 'text/html;charset=utf-8' });
-        const blobUrl = URL.createObjectURL(blob);
+        const dataUrl = 'data:text/html;charset=utf-8,' + encodeURIComponent(fullHtmlString);
         const a = document.createElement('a');
-        a.href = blobUrl;
+        a.href = dataUrl;
         a.download = fileName;
+        a.target = '_blank';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
       } catch (e) {
-        try {
-          const dataUrl = 'data:text/html;charset=utf-8,' + encodeURIComponent(fullHtmlString);
-          const a = document.createElement('a');
-          a.href = dataUrl;
-          a.download = fileName;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        } catch (err) {
-          if (liveDirectDownloadUrl) {
-            window.open(liveDirectDownloadUrl, '_blank');
-          } else {
-            alert('फ़ाइल तैयार है! आप इसे हमारे टेलीग्राम ग्रुप से भी सीधे ले सकते हैं।');
-          }
-        }
+        alert('फ़ाइल तैयार है! आप यह टेस्ट सीधे टेलीग्राम ग्रुप से भी डाउनलोड कर सकते हैं।');
       }
-
-      setTimeout(() => {
-        if (btn) btn.innerHTML = originalText;
-      }, 1500);
     }
 
     function showActionHub() {
@@ -2307,7 +2337,7 @@
 
     function stopRealStopwatch() { clearInterval(stopwatchInterval); }
 
-    // --- 🔀 MAIN GENERATION ENGINE (WITH AUTO KEY SHUFFLE & FAILOVER) ---
+    // --- MAIN GENERATION ENGINE ---
     async function startGeneration(mode) {
       const keys = getAllAvailableKeys();
       if (!keys.length) return openKeyModal(true);
@@ -2427,7 +2457,6 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
 
       const modelsToTry = [chosenModel, ...ACTIVE_MODELS.filter(m => m !== chosenModel)];
 
-      // 🔀 DUAL ROTATION: KEYS + MODELS
       for (let kIdx = 0; kIdx < keys.length; kIdx++) {
         const currentKey = keys[(activeKeyIndex + kIdx) % keys.length];
 
@@ -2454,13 +2483,13 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
             if (res.status === 429 || res.status === 403) {
               console.warn(`[Auto-Shuffle] Key Slot #${(activeKeyIndex + kIdx) % keys.length + 1} busy. Rotating...`);
               showToast("🔀 Key ऑटो-शफल हुई...");
-              break; // Switch to next key
+              break;
             }
 
             if (!res.ok) {
               const errData = await res.json().catch(() => ({}));
               lastErr = errData?.error?.message || `Status ${res.status}`;
-              continue; // Try next model
+              continue;
             }
 
             const data = await res.json();
@@ -2471,7 +2500,8 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
               success = true;
               activeKeyIndex = (activeKeyIndex + kIdx) % keys.length;
               saveQuizToHistory(quizData);
-              await sendHtmlFileToTelegram(quizData);
+              // Send to telegram & immediately resolve the Chrome download URL
+              sendHtmlFileToTelegram(quizData);
               break;
             }
           } catch (err) {
