@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>AI Book & PDF Quiz Scanner | Pareeksha Kendra</title>
+  <title>AI Master Quiz Engine | Pareeksha Kendra</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -19,7 +19,6 @@
       --accent-gold: #ff5722;
       --accent-emerald: #10b981;
       --accent-blue: #2563eb;
-      --accent-telegram: #0088cc;
       --danger: #dc2626;
       --input-bg: #f1f5f9;
       --opt-bg: #f8fafc;
@@ -38,7 +37,6 @@
       --accent-gold: #ff7043;
       --accent-emerald: #10b981;
       --accent-blue: #3b82f6;
-      --accent-telegram: #229ed9;
       --danger: #ef4444;
       --input-bg: #0b101b;
       --opt-bg: rgba(255, 255, 255, 0.04);
@@ -74,7 +72,7 @@
       justify-content: space-between;
       padding: 10px 0 16px;
       border-bottom: 1px solid var(--card-border);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .brand {
@@ -134,6 +132,51 @@
       box-shadow: var(--card-shadow);
     }
 
+    /* 2-IN-1 MODE SWITCHER TABS */
+    .mode-switch-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .mode-tab-btn {
+      padding: 12px 10px;
+      border-radius: 14px;
+      border: 1.5px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-muted);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .mode-tab-btn.active {
+      border-color: var(--accent-gold) !important;
+      background: rgba(255, 87, 34, 0.08) !important;
+      color: var(--accent-gold) !important;
+      box-shadow: 0 4px 14px rgba(255, 87, 34, 0.2);
+    }
+
+    .mode-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mode-desc {
+      font-size: 0.68rem;
+      font-weight: 600;
+      opacity: 0.85;
+    }
+
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -143,42 +186,10 @@
       margin-bottom: 16px;
     }
 
-    .links-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .direct-link-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 10px 8px;
-      border-radius: 12px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      text-decoration: none;
-      text-align: center;
-    }
-
-    .btn-google {
-      background: rgba(37, 99, 235, 0.1);
-      border: 1px solid rgba(37, 99, 235, 0.35);
-      color: var(--accent-blue);
-    }
-
-    .btn-telegram {
-      background: rgba(0, 136, 204, 0.1);
-      border: 1px solid rgba(0, 136, 204, 0.35);
-      color: var(--accent-telegram);
-    }
-
     .upload-zone {
       border: 2px dashed rgba(255, 87, 34, 0.4);
       border-radius: 16px;
-      padding: 22px 14px;
+      padding: 20px 14px;
       text-align: center;
       cursor: pointer;
       background: rgba(255, 87, 34, 0.03);
@@ -191,7 +202,7 @@
 
     .preview-img {
       width: 100%;
-      max-height: 220px;
+      max-height: 200px;
       object-fit: contain;
       border-radius: 12px;
       margin-top: 14px;
@@ -202,12 +213,12 @@
     .multi-img-preview {
       display: none;
       flex-direction: column;
-      gap: 10px;
-      margin-top: 14px;
-      padding: 12px;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 10px;
       background: var(--opt-bg);
       border: 1px solid var(--card-border);
-      border-radius: 14px;
+      border-radius: 12px;
     }
 
     .thumbnails-row {
@@ -219,8 +230,8 @@
 
     .pdf-card-preview {
       display: none;
-      margin-top: 14px;
-      padding: 12px 14px;
+      margin-top: 12px;
+      padding: 12px;
       background: rgba(220, 38, 38, 0.08);
       border: 1px solid rgba(220, 38, 38, 0.25);
       border-radius: 12px;
@@ -241,13 +252,13 @@
 
     label {
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-muted);
       margin-bottom: 5px;
       display: block;
     }
 
-    select, input[type="text"] {
+    select, input[type="text"], textarea {
       width: 100%;
       padding: 10px 12px;
       background: var(--input-bg);
@@ -256,6 +267,10 @@
       color: var(--text-main);
       font-size: 0.82rem;
       outline: none;
+    }
+
+    select:focus, input[type="text"]:focus, textarea:focus {
+      border-color: var(--accent-gold);
     }
 
     .btn-action {
@@ -267,7 +282,7 @@
       color: #ffffff;
       font-family: 'Outfit', sans-serif;
       font-size: 1.05rem;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -277,34 +292,38 @@
       box-shadow: 0 4px 18px rgba(255, 87, 34, 0.35);
     }
 
-    /* LOADER */
+    .btn-action:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* LOADER BOX */
     .loader-box {
       display: none;
       text-align: center;
-      padding: 26px 14px;
+      padding: 24px 14px;
       background: rgba(255, 87, 34, 0.04);
       border: 1px solid rgba(255, 87, 34, 0.2);
       border-radius: 18px;
       margin-top: 16px;
-      position: relative;
     }
 
     .flower-spinner {
-      width: 68px;
-      height: 68px;
+      width: 64px;
+      height: 64px;
       position: relative;
-      margin: 0 auto 16px;
+      margin: 0 auto 14px;
       animation: flowerSpin 4s linear infinite;
     }
 
     .petal {
       position: absolute;
       width: 16px;
-      height: 34px;
+      height: 32px;
       background: linear-gradient(135deg, #ff5722, #10b981);
       border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
       top: 0px;
-      left: 26px;
+      left: 24px;
       transform-origin: 50% 100%;
       opacity: 0.85;
     }
@@ -319,13 +338,13 @@
 
     .flower-center {
       position: absolute;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       background: #ffffff;
       border-radius: 50%;
-      top: 25px;
-      left: 25px;
-      box-shadow: 0 0 12px #ff5722;
+      top: 24px;
+      left: 24px;
+      box-shadow: 0 0 10px #ff5722;
     }
 
     @keyframes flowerSpin {
@@ -334,20 +353,9 @@
       100% { transform: rotate(360deg) scale(0.95); }
     }
 
-    .timer-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255, 87, 34, 0.12);
-      border: 1px solid var(--accent-gold);
-      padding: 6px 18px;
-      border-radius: 30px;
-      margin-bottom: 8px;
-    }
-
     .stopwatch-num {
       font-family: 'Outfit', monospace;
-      font-size: 1.5rem;
+      font-size: 1.45rem;
       font-weight: 900;
       color: var(--accent-gold);
     }
@@ -355,15 +363,6 @@
     /* ACTION HUB BUTTONS */
     #actionHubView {
       display: none;
-    }
-
-    .action-badge-box {
-      text-align: center;
-      padding: 16px;
-      background: rgba(16, 185, 129, 0.08);
-      border: 1.5px solid var(--accent-emerald);
-      border-radius: 16px;
-      margin-bottom: 16px;
     }
 
     .btn-play-now {
@@ -387,13 +386,13 @@
 
     .btn-download-direct {
       width: 100%;
-      padding: 15px;
+      padding: 14px;
       border-radius: 14px;
       border: none;
       background: linear-gradient(135deg, #2563eb, #1d4ed8);
       color: #ffffff;
       font-family: 'Outfit', sans-serif;
-      font-size: 1.02rem;
+      font-size: 1rem;
       font-weight: 800;
       cursor: pointer;
       display: flex;
@@ -401,25 +400,6 @@
       justify-content: center;
       gap: 8px;
       margin-bottom: 10px;
-      box-shadow: 0 4px 18px rgba(37, 99, 235, 0.3);
-    }
-
-    .btn-share-native {
-      width: 100%;
-      padding: 13px;
-      border-radius: 14px;
-      border: 1.5px solid var(--card-border);
-      background: var(--opt-bg);
-      color: var(--text-main);
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 14px;
     }
 
     /* QUIZ VIEW */
@@ -446,7 +426,6 @@
       font-family: 'Outfit', monospace;
       font-weight: 800;
       font-size: 0.85rem;
-      white-space: nowrap;
     }
 
     .btn-open-palette {
@@ -461,7 +440,6 @@
       display: flex;
       align-items: center;
       gap: 5px;
-      white-space: nowrap;
     }
 
     .q-text {
@@ -469,7 +447,6 @@
       font-weight: 700;
       line-height: 1.55;
       margin-bottom: 18px;
-      color: var(--text-main);
     }
 
     .options-list {
@@ -553,7 +530,6 @@
       font-size: 0.85rem;
       line-height: 1.55;
       display: none;
-      color: var(--text-main);
     }
 
     .nav-btns {
@@ -596,13 +572,10 @@
       flex: 1.2;
     }
 
-    /* MODAL OVERLAY */
+    /* MODAL OVERLAYS */
     .modal-overlay {
       position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
+      inset: 0 !important;
       background: rgba(0, 0, 0, 0.7) !important;
       backdrop-filter: blur(5px);
       display: none !important;
@@ -697,7 +670,7 @@
       <div class="brand-icon">P</div>
       <div>
         <div class="brand-title">PAREEKSHA KENDRA</div>
-        <div class="brand-sub">MOCK TEST & SCANNER</div>
+        <div class="brand-sub">AI MOCK DRILL ENGINE</div>
       </div>
     </div>
     <div class="header-actions">
@@ -713,111 +686,172 @@
     </div>
   </header>
 
+  <!-- 2-IN-1 MODE SWITCHER -->
+  <div class="mode-switch-grid" id="modeSwitcher">
+    <button class="mode-tab-btn active" id="tabBtnScanner" onclick="switchEngineMode('scanner')">
+      <span class="mode-title">📷 स्कैनर मोड</span>
+      <span class="mode-desc">फोटो / 100-P PDF / नोट्स से</span>
+    </button>
+    <button class="mode-tab-btn" id="tabBtnTopic" onclick="switchEngineMode('topic')">
+      <span class="mode-title">🎯 टॉपिक PYQ ड्रिल</span>
+      <span class="mode-desc">नाम लिखो & रियल PYQ पाओ</span>
+    </button>
+  </div>
+
   <!-- 1. SETUP VIEW -->
   <div id="setupView">
-    <div class="links-grid">
-      <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="direct-link-btn btn-google">
-        🔗 Google AI Studio (Key बनाएँ)
-      </a>
-      <a href="https://t.me/PAREEKSHA_KENDRA" target="_blank" rel="noopener noreferrer" class="direct-link-btn btn-telegram">
-        📢 Telegram Channel
-      </a>
+    
+    <!-- MODE 1: SCANNER -->
+    <div id="scannerModeBox">
+      <div class="card">
+        <div class="upload-zone" onclick="triggerUpload()">
+          <div style="font-size: 32px; margin-bottom: 4px;">📷 / 📕</div>
+          <div style="font-weight: 700; font-size: 0.95rem;">किताब की मल्टीपल फ़ोटो खींचें या PDF चुनें</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
+            <b>मल्टीपल फ़ोटो (2, 3, 4 पेज)</b> या PDF <b>(1 से 100 पेज • 20 MB)</b>
+          </div>
+        </div>
+        
+        <input type="file" id="fileInput" accept="image/*,application/pdf" multiple style="display: none;" onchange="handleFileInput(event)" />
+        <img id="previewImg" class="preview-img" alt="Preview" />
+
+        <div id="multiImgPreview" class="multi-img-preview">
+          <div id="multiImgText" style="font-size: 0.85rem; font-weight: 800; color: var(--accent-gold);">📸 कुल 0 पेज चुने गए</div>
+          <div id="multiImgThumbnails" class="thumbnails-row"></div>
+        </div>
+
+        <div id="pdfPreviewCard" class="pdf-card-preview">
+          <div style="font-size: 26px;">📚</div>
+          <div style="flex: 1; overflow: hidden;">
+            <div id="pdfFileName" style="font-size: 0.85rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">document.pdf</div>
+            <div id="pdfMeta" style="font-size: 0.72rem; color: var(--text-muted);">PDF Ready • 0 Pages • 0 MB</div>
+          </div>
+          <div style="color: #10b981; font-weight: 800; font-size: 0.8rem;">READY</div>
+        </div>
+
+        <div id="pdfRangeBox" style="display: none; margin-top: 10px;">
+          <label style="color: var(--accent-blue); font-weight: 700;">📄 पेज रेंज (वैकल्पिक, उदा: 5-15 या पूरा पढ़ने के लिए खाली छोड़ें):</label>
+          <input type="text" id="pdfPageRange" placeholder="जैसे: 1-10, 15-25 (Optional)" />
+        </div>
+
+        <div style="margin-top: 14px;">
+          <label style="color: var(--accent-gold); font-weight: 800;">📝 या सीधे टेक्स्ट/नोट्स यहाँ पेस्ट करें (Optional):</label>
+          <textarea id="pastedTextInput" rows="3" placeholder="यहाँ कोई भी प्रश्न या नोट्स पेस्ट करें..."></textarea>
+        </div>
+
+        <div class="config-grid">
+          <div class="full-width-col">
+            <label>🏷️ क्विज़ / चैप्टर का नाम (Topic Name - अनिवार्य *):</label>
+            <input type="text" id="quizTopicInput" placeholder="उदा. Sports GK, History Ch-1, Polity PYQ..." required />
+          </div>
+
+          <div>
+            <label>AI Model Engine</label>
+            <select id="modelSelect">
+              <option value="gemini-2.5-flash" selected>⚡ Gemini 2.5 Flash (Superfast)</option>
+              <option value="gemini-2.0-flash">⚡ Gemini 2.0 Flash</option>
+              <option value="gemini-1.5-flash">⚡ Gemini 1.5 Flash</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Questions Count</label>
+            <select id="qCount">
+              <option value="10" selected>10 Questions</option>
+              <option value="15">15 Questions</option>
+              <option value="20">20 Questions</option>
+              <option value="25">25 Questions (Sectional Drill)</option>
+              <option value="30">30 Questions (Exam Set)</option>
+              <option value="50">50 Questions (Half Mock)</option>
+            </select>
+          </div>
+
+          <div class="full-width-col">
+            <label>🌐 भाषा (Language):</label>
+            <select id="langSelect">
+              <option value="hi" selected>🇮🇳 केवल हिंदी में (Hindi Only - Superfast ⚡)</option>
+              <option value="bilingual">🇮🇳 🇬🇧 दोनों भाषाओं में (Hindi + English Bilingual)</option>
+              <option value="en">🇬🇧 Only English</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-action" id="btnScanAction" onclick="startGeneration('scanner')">
+          🚀 सवाल पहचानें और टेस्ट शुरू करें
+        </button>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="upload-zone" onclick="triggerUpload()">
-        <div style="font-size: 34px; margin-bottom: 4px;">📷 / 📕</div>
-        <div style="font-weight: 700; font-size: 1rem;">किताब की मल्टीपल फ़ोटो खींचें या PDF चुनें</div>
-        <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 4px;">
-          <b>मल्टीपल फ़ोटो (2, 3, 4 पेज)</b> या PDF <b>(1 से 100 पेज • 20 MB तक)</b>
+    <!-- MODE 2: TOPIC / CHAPTER PYQ DRILL -->
+    <div id="topicModeBox" style="display: none;">
+      <div class="card">
+        <div style="background: rgba(37,99,235,0.06); border: 1.5px solid var(--accent-blue); border-radius: 14px; padding: 12px; margin-bottom: 14px;">
+          <div style="font-family:'Outfit'; font-weight:800; color:var(--accent-blue); font-size: 0.95rem; margin-bottom: 2px;">
+            🎯 100% Authentic Previous Year Questions (PYQs)
+          </div>
+          <div style="font-size: 0.73rem; color: var(--text-muted); line-height: 1.4;">
+            बिना किसी फ़ोटो या PDF के, सिर्फ टॉपिक का नाम लिखें और असली परीक्षा टैग्स (जैसे: [SSC CGL 2024], [NTPC 2022]) के साथ लाइव टेस्ट पाएँ!
+          </div>
         </div>
+
+        <div style="margin-bottom: 12px;">
+          <label style="color: var(--accent-gold); font-size: 0.85rem;">🎯 किस टॉपिक / चैप्टर का टेस्ट देना है?</label>
+          <input type="text" id="directTopicInput" placeholder="उदा. मौलिक अधिकार, सिंधु घाटी सभ्यता, Percentage, Idioms..." />
+        </div>
+
+        <div class="config-grid">
+          <div class="full-width-col">
+            <label>🎯 लक्षित परीक्षा (Target Exam):</label>
+            <select id="targetExamSelect">
+              <option value="SSC All Exams (CGL, CHSL, MTS, GD, CPO)" selected>🏛️ SSC All Exams (CGL, CHSL, MTS, GD, CPO)</option>
+              <option value="Railway Exams (RRB NTPC, Group D, ALP)">🚂 Railway Exams (RRB NTPC, Group D, ALP)</option>
+              <option value="Police Exams (Delhi Police, UP Police, State Police)">👮 Police Exams (Delhi Police, UP Police, State)</option>
+              <option value="UPSC & State PCS (Prelims Pattern)">🇮🇳 UPSC & State PCS (Prelims Level)</option>
+              <option value="All Govt Exams Mix Master Drill">🔥 All Govt Exams (Mix Master PYQ)</option>
+            </select>
+          </div>
+
+          <div>
+            <label>सवालों की संख्या (Count):</label>
+            <select id="topicQCount">
+              <option value="10" selected>10 Questions (Quick Drill)</option>
+              <option value="15">15 Questions</option>
+              <option value="20">20 Questions (Mock Set)</option>
+              <option value="25">25 Questions (Exam Drill)</option>
+            </select>
+          </div>
+
+          <div>
+            <label>क्विज़ भाषा (Language):</label>
+            <select id="topicLangSelect">
+              <option value="hi" selected>🇮🇳 केवल हिंदी में (Hindi Only)</option>
+              <option value="bilingual">🇮🇳 🇬🇧 दोनों भाषाओं में (Bilingual)</option>
+              <option value="en">🇬🇧 Only English</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-action" id="btnTopicAction" onclick="startGeneration('topic')">
+          🚀 असली PYQ टेस्ट जनरेट करें
+        </button>
       </div>
-      
-      <input type="file" id="fileInput" accept="image/*,application/pdf" multiple style="display: none;" onchange="handleFileInput(event)" />
-      <img id="previewImg" class="preview-img" alt="Preview" />
+    </div>
 
-      <div id="multiImgPreview" class="multi-img-preview">
-        <div id="multiImgText" style="font-size: 0.85rem; font-weight: 800; color: var(--accent-gold);">📸 कुल 0 पेज चुने गए</div>
-        <div id="multiImgThumbnails" class="thumbnails-row"></div>
-      </div>
-
-      <div id="pdfPreviewCard" class="pdf-card-preview">
-        <div style="font-size: 26px;">📚</div>
-        <div style="flex: 1; overflow: hidden;">
-          <div id="pdfFileName" style="font-size: 0.85rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">document.pdf</div>
-          <div id="pdfMeta" style="font-size: 0.72rem; color: var(--text-muted);">PDF Ready • 0 Pages • 0 MB</div>
-        </div>
-        <div style="color: #10b981; font-weight: 800; font-size: 0.8rem;">READY</div>
-      </div>
-
-      <div id="pdfRangeBox" style="display: none; margin-top: 10px;">
-        <label style="color: var(--accent-blue); font-weight: 700;">📄 पेज रेंज चुनें (वैकल्पिक, उदा. 5-15 या पूरा PDF पढ़ने के लिए खाली छोड़ें):</label>
-        <input type="text" id="pdfPageRange" placeholder="जैसे: 1-10, 15-25 (Optional)" />
-      </div>
-
-      <div class="config-grid">
-        <div class="full-width-col">
-          <label style="color: var(--accent-gold); font-weight: 800; font-size: 0.82rem;">
-            🏷️ क्विज़ / चैप्टर का नाम लिखें (Topic Name - अनिवार्य *)
-          </label>
-          <input type="text" id="quizTopicInput" placeholder="उदा. Sports GK, History Ch-1, Polity PYQ, Vocab Set..." required />
-        </div>
-
-        <div>
-          <label>AI Model Engine</label>
-          <select id="modelSelect">
-            <option value="gemini-3.6-flash" selected>⚡ Gemini 3.6 Flash (Latest)</option>
-            <option value="gemini-3.5-flash">⚡ Gemini 3.5 Flash</option>
-            <option value="gemini-3.5-flash-lite">⚡ Gemini 3.5 Flash-Lite</option>
-          </select>
-        </div>
-
-        <div>
-          <label>Questions Count</label>
-          <select id="qCount">
-            <option value="10" selected>10 Questions (Standard Drill)</option>
-            <option value="15">15 Questions (Best Practice)</option>
-            <option value="20">20 Questions (Mock Set)</option>
-            <option value="25">25 Questions (Sectional Exam Drill)</option>
-            <option value="30">30 Questions (Super Practice)</option>
-            <option value="50">50 Questions (Half Mock Test)</option>
-            <option value="75">75 Questions (Deep Master Drill 🎯)</option>
-            <option value="100">100 Questions (Full Length Mega Mock 🏆)</option>
-            <option value="all">🔥 पूरी किताब के सभी सवाल (All Deep Scan)</option>
-          </select>
-        </div>
-
-        <div class="full-width-col">
-          <label style="color: var(--accent-gold); font-weight: 700;">🌐 क्विज़ की भाषा चुनें (Quiz Language)</label>
-          <select id="langSelect">
-            <option value="hi" selected>🇮🇳 केवल हिंदी में (Hindi Only - Superfast ⚡)</option>
-            <option value="bilingual">🇮🇳 🇬🇧 दोनों भाषाओं में (Hindi + English Bilingual)</option>
-            <option value="en">🇬🇧 Only English (English Only - Superfast ⚡)</option>
-            <option value="original">📖 जैसा किताब में है (Original as in Book)</option>
-          </select>
-        </div>
+    <!-- STOPWATCH LOADER -->
+    <div class="loader-box" id="loaderBox">
+      <div class="flower-spinner">
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="flower-center"></div>
       </div>
 
-      <button class="btn-action" id="generateBtn" onclick="startGeneration()">
-        🚀 सवाल पहचानें और मॉक टेस्ट बनाएँ
-      </button>
+      <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,87,34,0.12); border:1px solid var(--accent-gold); padding:5px 16px; border-radius:30px; margin-bottom:8px;">
+        <span>⏱️ बीता हुआ समय:</span>
+        <span class="stopwatch-num" id="stopwatchSec">00:00</span>
+      </div>
 
-      <!-- STOPWATCH LOADER -->
-      <div class="loader-box" id="loaderBox">
-        <div class="flower-spinner">
-          <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
-          <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
-          <div class="flower-center"></div>
-        </div>
-
-        <div class="timer-badge">
-          <span>⏱️ बीता हुआ समय:</span>
-          <span class="stopwatch-num" id="stopwatchSec">00:00</span>
-        </div>
-
-        <div id="loaderStatusText" style="font-size: 0.88rem; color: var(--text-main); font-weight: 700; margin-top: 4px;">
-          AI दस्तावेज़ पढ़ रहा है...
-        </div>
+      <div id="loaderStatusText" style="font-size: 0.88rem; color: var(--text-main); font-weight: 700; margin-top: 4px;">
+        AI सवाल तैयार कर रहा है...
       </div>
     </div>
   </div>
@@ -825,9 +859,9 @@
   <!-- 2. ACTION HUB -->
   <div id="actionHubView">
     <div class="card">
-      <div class="action-badge-box">
+      <div style="text-align:center; padding:16px; background:rgba(16,185,129,0.08); border:1.5px solid var(--accent-emerald); border-radius:16px; margin-bottom:16px;">
         <div style="font-size: 32px; margin-bottom: 6px;">🎉</div>
-        <h2 id="actionHubTopicTitle" style="font-family:'Outfit'; font-size: 1.3rem; font-weight: 800; color: var(--accent-emerald);">
+        <h2 id="actionHubTopicTitle" style="font-family:'Outfit'; font-size: 1.25rem; font-weight: 800; color: var(--accent-emerald);">
           मॉक टेस्ट सफलतापूर्वक तैयार हो गया!
         </h2>
         <div id="actionHubMeta" style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; font-weight: 600;">
@@ -843,12 +877,8 @@
         <span>⬇️ फ़ोन में सीधे डाउनलोड करें (Direct Download)</span>
       </button>
 
-      <button class="btn-share-native" onclick="triggerNativeShare()">
-        <span>📲 WhatsApp / Telegram पर भेजें (Share File)</span>
-      </button>
-
       <button onclick="backToScanner()" style="width: 100%; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 12px; font-weight: 700; cursor: pointer;">
-        🔄 दूसरा सेट / फ़ाइल स्कैन करें
+        🔄 दूसरा नया टेस्ट बनाएँ
       </button>
     </div>
   </div>
@@ -861,7 +891,7 @@
         प्रति प्रश्न समय चुनें (Per Question Timer)
       </h3>
       <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 16px;">
-        प्रत्येक सवाल को हल करने के लिए आप कितना समय चाहते हैं?
+        प्रत्येक सवाल के लिए आप कितना समय चाहते हैं?
       </p>
 
       <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; text-align: left;">
@@ -877,7 +907,7 @@
           <input type="radio" name="timingChoice" value="45" style="width: 18px; height: 18px;" />
           <div>
             <div style="font-weight: 800; font-size: 0.9rem;">⏱️ 45 सेकंड / सवाल (Standard Exam Mock)</div>
-            <div style="font-size: 0.72rem; color: var(--text-muted);">संतुलित समय, हर परीक्षा के लिए सर्वोत्तम</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">संतुलित समय, सर्वोत्तम अभ्यास</div>
           </div>
         </label>
 
@@ -892,14 +922,14 @@
         <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer;">
           <input type="radio" name="timingChoice" value="0" style="width: 18px; height: 18px;" />
           <div>
-            <div style="font-weight: 800; font-size: 0.9rem;">♾️ कोई टाइमर नहीं (No Limit / Practice Mode)</div>
-            <div style="font-size: 0.72rem; color: var(--text-muted);">बिना किसी समय के तनाव के आराम से हल करें</div>
+            <div style="font-weight: 800; font-size: 0.9rem;">♾️ कोई टाइमर नहीं (No Limit Mode)</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">बिना किसी समय के तनाव के हल करें</div>
           </div>
         </label>
       </div>
 
       <button class="btn-play-now" onclick="confirmStartMockTest()">
-        <span>🚀 स्टार्ट मॉक टेस्ट (Start Mock Test)</span>
+        <span>🚀 स्टार्ट टेस्ट (Start Mock Test)</span>
       </button>
       <button onclick="closeTimingModal()" style="width: 100%; padding: 10px; background: transparent; border: none; color: var(--text-muted); font-size: 0.82rem; cursor: pointer;">रद्द करें</button>
     </div>
@@ -936,7 +966,7 @@
     </div>
   </div>
 
-  <!-- QUESTION PALETTE MODAL -->
+  <!-- PALETTE MODAL -->
   <div class="modal-overlay" id="appPaletteModal">
     <div class="modal-card">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:8px;">
@@ -947,7 +977,7 @@
       
       <div class="palette-stats-row">
         <div style="background: var(--green-light); color: var(--accent-emerald); padding: 5px; border-radius: 8px;">
-          ✅ <span id="statAnswered">0</span> Answered
+          ✅ <span id="statAnswered">0</span> Done
         </div>
         <div style="background: var(--orange-light); color: var(--accent-gold); padding: 5px; border-radius: 8px;">
           🚩 <span id="statMarked">0</span> Marked
@@ -1010,37 +1040,37 @@
         <span>⬇️ फ़ोन में सीधे डाउनलोड करें (Direct Download)</span>
       </button>
 
-      <button class="btn-share-native" onclick="triggerNativeShare()" style="margin-bottom: 12px;">
-        <span>📲 WhatsApp / Telegram पर भेजें (Share File)</span>
-      </button>
-
       <button onclick="backToScanner()" style="width: 100%; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 12px; font-weight: 700; cursor: pointer;">
         🔄 दूसरा नया टेस्ट बनाएँ
       </button>
     </div>
   </div>
 
-  <!-- MODALS -->
+  <!-- SAVED HISTORY MODAL -->
   <div class="modal-overlay" id="historyModal">
     <div class="modal-card">
-      <h3 style="font-family: 'Outfit'; font-size: 1.2rem; margin-bottom: 8px;">📚 मेरे पिछले क्विज़ (Saved)</h3>
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:8px; margin-bottom:12px;">
+        <h3 style="font-family:'Outfit'; font-size: 1.2rem; font-weight:800;">📚 मेरे सेव किए टेस्ट</h3>
+        <i class="fa-solid fa-xmark" style="cursor:pointer; font-size: 20px;" onclick="closeHistoryModal()"></i>
+      </div>
       <div id="historyListContainer" style="margin-bottom: 14px;"></div>
       <button onclick="closeHistoryModal()" style="width: 100%; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 10px; cursor: pointer; font-weight: 700;">बंद करें</button>
     </div>
   </div>
 
+  <!-- API KEY MODAL -->
   <div class="modal-overlay" id="keyModal">
     <div class="modal-card">
       <h3 id="modalTitle" style="font-family: 'Outfit'; font-size: 1.2rem; margin-bottom: 6px;">🔑 Gemini API Key</h3>
       <p id="modalDesc" style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
-        नीचे लिंक से मुफ़्त Key बनाएँ:
+        नीचे लिंक से मुफ़्त Key बनाएँ (सिर्फ 1 बार डालना है):
       </p>
       <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(37, 99, 235, 0.12); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 10px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; text-decoration: none; margin-bottom: 14px;">
-        🌐 Google AI Studio से Key बनाएँ (Direct Link)
+        🌐 Google AI Studio से Key पाएँ
       </a>
 
       <div style="margin-bottom: 12px;">
-        <label>🔑 <b>अपनी Gemini API Key डालें:</b></label>
+        <label>🔑 अपनी Gemini API Key डालें:</label>
         <input type="text" id="singleApiKey" placeholder="AIzaSy... यहाँ अपनी Key पेस्ट करें" />
       </div>
 
@@ -1057,8 +1087,10 @@
     const TG_GROUP_TARGET = "@ai_quizcr";
     const TG_GROUP_FALLBACK_ID = "-1004223613799";
 
-    const ACTIVE_MODELS = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite'];
+    // ⚡ ULTRA-STABLE GEMINI MODELS
+    const ACTIVE_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
 
+    let activeEngineMode = 'scanner';
     let payloadItems = [];
     let detectedPdfPages = 1;
     let quizData = [];
@@ -1097,6 +1129,26 @@
     }
     initTheme();
 
+    function switchEngineMode(mode) {
+      activeEngineMode = mode;
+      const btnScan = document.getElementById('tabBtnScanner');
+      const btnTopic = document.getElementById('tabBtnTopic');
+      const scanBox = document.getElementById('scannerModeBox');
+      const topicBox = document.getElementById('topicModeBox');
+
+      if (mode === 'scanner') {
+        btnScan.classList.add('active');
+        btnTopic.classList.remove('active');
+        scanBox.style.display = 'block';
+        topicBox.style.display = 'none';
+      } else {
+        btnTopic.classList.add('active');
+        btnScan.classList.remove('active');
+        topicBox.style.display = 'block';
+        scanBox.style.display = 'none';
+      }
+    }
+
     function cleanKey(str) {
       if (!str) return '';
       return str.trim().replace(/^["'\s]+|["'\s]+$/g, '');
@@ -1104,6 +1156,7 @@
 
     function getStoredKey() {
       let key = localStorage.getItem('sph_gemini_key') || 
+                localStorage.getItem('sph_reels_key') ||
                 localStorage.getItem('sph_key_slot_1') || 
                 localStorage.getItem('sph_gemini_keys') || '';
 
@@ -1131,6 +1184,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       const existing = getStoredKey();
       if (!existing) openKeyModal(true);
+      updateHistoryCount();
     });
 
     function openKeyModal(isMandatory = false) {
@@ -1188,7 +1242,7 @@
       const hasPdf = files.some(f => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'));
 
       if (hasPdf && files.length > 1) {
-        alert('⚠️ कृपया या तो केवल एक PDF चुनें या फिर मल्टीपल फ़ोटो (2, 3, 4 पेज) चुनें!');
+        alert('⚠️ कृपया या तो केवल एक PDF चुनें या फिर मल्टीपल फ़ोटो चुनें!');
         e.target.value = '';
         return;
       }
@@ -1200,7 +1254,7 @@
         }
 
         if (file.size > 20 * 1024 * 1024) {
-          alert(`⚠️ फ़ाइल 20 MB से बड़ी है! (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
+          alert(`⚠️ फ़ाइल 20 MB से बड़ी है!`);
           e.target.value = '';
           return;
         }
@@ -1209,7 +1263,7 @@
         detectedPdfPages = pages;
 
         if (pages > 100) {
-          alert(`⚠️ इस PDF में ${pages} पेज हैं! कृपया अधिकतम 100 पेज तक की PDF ही डालें।`);
+          alert(`⚠️ इस PDF में ${pages} पेज हैं! कृपया 100 पेज तक की PDF ही डालें।`);
           e.target.value = '';
           return;
         }
@@ -1336,7 +1390,70 @@
       return null;
     }
 
-    // --- SAFE TEMPLATE GENERATOR: 100% PROTECTED AGAINST SCRIPT LEAKAGE ---
+    function saveQuizToHistory(questions) {
+      try {
+        const history = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
+        const newItem = {
+          id: 'quiz_' + Date.now(),
+          topic: activeQuizTopic,
+          date: new Date().toLocaleDateString('hi-IN'),
+          time: new Date().toLocaleTimeString('hi-IN', { hour: '2-digit', minute: '2-digit' }),
+          count: questions.length,
+          data: questions
+        };
+        history.unshift(newItem);
+        if (history.length > 40) history.pop();
+        localStorage.setItem('sph_saved_quizzes', JSON.stringify(history));
+        updateHistoryCount();
+      } catch (e) {}
+    }
+
+    function updateHistoryCount() {
+      try {
+        const history = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
+        document.getElementById('histCount').innerText = `${history.length} Saved`;
+      } catch (e) {}
+    }
+
+    function openHistoryModal() {
+      const history = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
+      const container = document.getElementById('historyListContainer');
+      container.innerHTML = '';
+
+      if (history.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.85rem;">कोई सेव किया गया टेस्ट नहीं है।</div>`;
+      } else {
+        history.forEach((item, idx) => {
+          const div = document.createElement('div');
+          div.style = "padding:12px; border:1px solid var(--card-border); border-radius:12px; margin-bottom:8px; background:var(--opt-bg); display:flex; justify-content:space-between; align-items:center;";
+          div.innerHTML = `
+            <div>
+              <div style="font-weight:800; font-size:0.88rem;">${item.topic}</div>
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">📅 ${item.date} (${item.count} सवाल)</div>
+            </div>
+            <button onclick="loadSavedQuiz(${idx})" style="padding:7px 12px; background:var(--accent-blue); color:#fff; border:none; border-radius:8px; font-weight:700; font-size:0.78rem; cursor:pointer;">टेस्ट दें</button>
+          `;
+          container.appendChild(div);
+        });
+      }
+      document.getElementById('historyModal').style.display = 'flex';
+    }
+
+    function closeHistoryModal() {
+      document.getElementById('historyModal').style.display = 'none';
+    }
+
+    function loadSavedQuiz(idx) {
+      const history = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
+      if (history[idx]) {
+        quizData = history[idx].data;
+        originalQuizData = [...quizData];
+        activeQuizTopic = history[idx].topic;
+        closeHistoryModal();
+        openTimingModal();
+      }
+    }
+
     function generatePareekshaKendraHtmlString(questions) {
       const formattedRawData = questions.map((q) => {
         let correctIdx = q.answer;
@@ -1353,593 +1470,28 @@
       });
 
       const totalQs = formattedRawData.length;
-      const durationMins = Math.max(5, Math.ceil(totalQs * 0.8));
       const safeTitle = activeQuizTopic.replace(/"/g, '&quot;');
-
-      // Safe script tag construction prevents premature browser parser closing!
-      const S_OPEN = '<' + 'script>';
-      const S_CLOSE = '<' + '/script>';
-
-      return `<!DOCTYPE html>
-<html lang="hi" data-theme="light">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>${safeTitle} (${totalQs} Qs) | Pareeksha Kendra</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --bg: #f8fafc; --card-bg: #ffffff; --card-border: #e2e8f0; --text-main: #0f172a; --text-muted: #64748b;
-      --accent-gold: #ff5722; --accent-emerald: #10b981; --accent-blue: #2563eb; --danger: #dc2626;
-      --opt-bg: #f8fafc; --opt-border: #cbd5e1; --green-light: #ecfdf5; --orange-light: rgba(255, 87, 34, 0.12);
-    }
-    [data-theme="dark"] {
-      --bg: #07090e; --card-bg: #111827; --card-border: rgba(255, 255, 255, 0.12); --text-main: #f8fafc; --text-muted: #94a3b8;
-      --accent-gold: #ff7043; --accent-emerald: #10b981; --accent-blue: #3b82f6; --danger: #ef4444;
-      --opt-bg: rgba(255, 255, 255, 0.04); --opt-border: rgba(255, 255, 255, 0.1); --green-light: rgba(16, 185, 129, 0.15); --orange-light: rgba(255, 87, 34, 0.15);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 16px; font-size: 16px; }
-    .wrapper { width: 100%; max-width: 550px; margin: 0 auto; }
-    header { width: 100%; max-width: 550px; display: flex; align-items: center; justify-content: space-between; padding: 10px 0 16px; border-bottom: 1px solid var(--card-border); margin-bottom: 16px; }
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand-icon { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #ff5722, #f43f5e); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #fff; font-family: 'Outfit', sans-serif; font-weight: 900; }
-    .brand-title { font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--text-main); }
-    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); width: 100%; margin-bottom: 16px; }
-    .btn-main { width: 100%; padding: 15px; border-radius: 14px; border: none; background: linear-gradient(135deg, #ff5722, #f43f5e); color: #fff; font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; box-shadow: 0 4px 18px rgba(255, 87, 34, 0.3); }
-    .btn-open-palette { background: rgba(37, 99, 235, 0.1); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 5px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 5px; }
-    .live-q-timer { background: rgba(255, 87, 34, 0.12); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 4px 10px; border-radius: 20px; font-family: 'Outfit', monospace; font-weight: 800; font-size: 0.85rem; }
-    .q-text { font-size: 1.05rem; font-weight: 700; line-height: 1.55; margin-bottom: 18px; }
-    .options-list { display: flex; flex-direction: column; gap: 10px; }
-    .opt-btn { width: 100%; text-align: left; padding: 14px 16px; background: var(--opt-bg); border: 1.5px solid var(--opt-border); border-radius: 12px; color: var(--text-main); font-size: 0.92rem; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; }
-    .opt-btn.selected { border-color: var(--accent-gold) !important; background: rgba(255, 87, 34, 0.08) !important; font-weight: 700; }
-    .opt-btn.selected .opt-tag { background: var(--accent-gold); color: #ffffff; }
-    .opt-btn.correct { background: var(--green-light) !important; border-color: var(--accent-emerald) !important; color: var(--accent-emerald) !important; font-weight: 800; }
-    .opt-btn.correct .opt-tag { background: var(--accent-emerald) !important; color: #fff !important; }
-    .opt-btn.wrong { background: rgba(239, 68, 68, 0.15) !important; border-color: var(--danger) !important; color: var(--danger) !important; }
-    .opt-btn.wrong .opt-tag { background: var(--danger) !important; color: #fff !important; }
-    .opt-tag { width: 26px; height: 26px; border-radius: 50%; background: rgba(0, 0, 0, 0.06); display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 800; flex-shrink: 0; }
-    .expl-box { margin-top: 14px; padding: 14px; background: rgba(255, 87, 34, 0.08); border-left: 4px solid var(--accent-gold); border-radius: 8px; font-size: 0.85rem; line-height: 1.55; display: none; }
-    .nav-btns { display: flex; gap: 8px; margin-top: 18px; }
-    .nav-btn { flex: 1; padding: 13px; border-radius: 12px; border: 1px solid var(--card-border); background: var(--opt-bg); color: var(--text-main); cursor: pointer; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 5px; }
-    .nav-btn-mark { border-color: #f59e0b; color: #d97706; background: #fef3c7; }
-    .nav-btn-submit { background: linear-gradient(135deg, #ff5722, #f43f5e); color: #fff; border: none; flex: 1.2; }
-    
-    .modal-overlay { position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; background: rgba(0, 0, 0, 0.7) !important; backdrop-filter: blur(5px); display: none !important; align-items: center; justify-content: center; z-index: 9999 !important; padding: 20px; }
-    .modal-overlay.active, .modal-overlay[style*="display: flex"] { display: flex !important; }
-    .modal-card { background: var(--card-bg); border-radius: 20px; padding: 22px; width: 100%; max-width: 400px; border: 1px solid var(--card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 85vh; overflow-y: auto; }
-    .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 14px; max-height: 50vh; overflow-y: auto; padding: 2px; }
-    .palette-tile { aspect-ratio: 1; border-radius: 12px; border: 1.5px solid var(--card-border); background: var(--opt-bg); display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 16px; cursor: pointer; color: var(--text-main); }
-    .palette-tile.active { border-color: var(--accent-blue) !important; color: var(--accent-blue) !important; border-width: 2.5px !important; transform: scale(1.05); }
-    .palette-tile.answered { background: var(--green-light) !important; color: var(--accent-emerald) !important; border-color: var(--accent-emerald) !important; }
-    .palette-tile.marked { background: var(--orange-light) !important; color: var(--accent-gold) !important; border-color: var(--accent-gold) !important; }
-    .palette-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; margin-bottom: 6px; text-align: center; font-size: 0.75rem; font-weight: 800; }
-  </style>
-</head>
-<body>
-  <div class="wrapper">
-    <header>
-      <div class="brand">
-        <div class="brand-icon">P</div>
-        <div>
-          <div class="brand-title">PAREEKSHA KENDRA</div>
-          <div style="font-size:0.7rem; color:var(--accent-gold); font-weight:700;">AUTHENTIC TEST DRILL</div>
-        </div>
-      </div>
-      <button onclick="toggleTheme()" style="background:var(--card-bg); border:1px solid var(--card-border); width:36px; height:36px; border-radius:50%; cursor:pointer; color:var(--text-main);" id="themeBtn">
-        <i class="fa-solid fa-moon"></i>
-      </button>
-    </header>
-
-    <div id="startScreen" class="card" style="text-align: center;">
-      <h2 style="font-family:'Outfit'; font-size:1.35rem; font-weight:900; margin-bottom:4px; color:var(--text-main);">${safeTitle}</h2>
-      <div style="font-size:0.75rem; color:var(--accent-gold); font-weight:700; margin-bottom:16px;">Crafted with ❤️ by Ankit (@ankit_123422)</div>
-
-      <input type="text" id="candidateNameInput" placeholder="अपना नाम दर्ज करें (Candidate Name)..." style="width:100%; padding:12px; background:var(--opt-bg); border:1.5px solid var(--accent-blue); border-radius:12px; font-weight:700; margin-bottom:14px; outline:none; color:var(--text-main);" />
-
-      <div style="background:var(--opt-bg); border:1px solid var(--card-border); border-radius:14px; padding:12px 14px; text-align:left; font-size:0.82rem; margin-bottom:16px; display:flex; flex-direction:column; gap:8px;">
-        <div style="display:flex; justify-content:space-between;"><span>🎯 <b>Topic:</b></span><span>${safeTitle}</span></div>
-        <div style="display:flex; justify-content:space-between;"><span>❓ <b>Total Questions:</b></span><span>${totalQs} Qs</span></div>
-        <div style="display:flex; justify-content:space-between;"><span>⏱️ <b>Duration:</b></span><span>${durationMins} Mins</span></div>
-        <div style="display:flex; justify-content:space-between;"><span>✅ <b>Marking:</b></span><span style="color:var(--accent-emerald); font-weight:800;">+2.0 / -0.5</span></div>
-      </div>
-
-      <div style="text-align:left; margin-bottom:14px;">
-        <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">⏱️ प्रति प्रश्न समय चुनें (Per Question Timer):</label>
-        <select id="timerChoiceSelect" style="width:100%; padding:11px; background:var(--opt-bg); border:1px solid var(--card-border); border-radius:10px; font-weight:700; color:var(--text-main); outline:none;">
-          <option value="30">⚡ 30 सेकंड / सवाल (Speed Drill)</option>
-          <option value="45">⏱️ 45 सेकंड / सवाल (Standard Exam)</option>
-          <option value="60">🎯 60 सेकंड / सवाल (Deep Practice)</option>
-          <option value="0">♾️ कोई टाइमर नहीं (Self-Paced Mode)</option>
-        </select>
-      </div>
-
-      <button class="btn-main" onclick="startExportedTest()">
-        <span>🚀 स्टार्ट मॉक टेस्ट (Start Test)</span>
-      </button>
-
-      <div style="display:flex; justify-content:space-between; margin-top:16px; font-size:0.75rem; font-weight:700;">
-        <a href="https://t.me/PAREEKSHA_KENDRA" target="_blank" style="color:var(--accent-blue); text-decoration:none;"><i class="fa-brands fa-telegram"></i> Telegram Channel</a>
-        <a href="https://whatsapp.com/channel/0029Vb8YQJZElah28mUs922k" target="_blank" style="color:#10b981; text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> WhatsApp Channel</a>
-      </div>
-    </div>
-
-    <div id="quizScreen" class="card" style="display: none;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--card-border); gap:8px;">
-        <span id="qIndexLabel" style="font-weight:800; font-size:0.85rem;">Q 1/${totalQs}</span>
-        <button class="btn-open-palette" onclick="openPaletteModal()">
-          <i class="fa-solid fa-border-all"></i> नंबर प्लेट (<span id="paletteAnsweredCount">0</span>/${totalQs})
-        </button>
-        <span class="live-q-timer" id="liveTimerBadge">⏱️ 30s</span>
-      </div>
-
-      <div class="q-text" id="qText">Loading question...</div>
-      <div class="options-list" id="optionsContainer"></div>
-      <div class="expl-box" id="explanationContainer"></div>
-
-      <div class="nav-btns">
-        <button class="nav-btn" id="prevBtn" onclick="prevQuestion()"><i class="fa-solid fa-chevron-left"></i> Prev</button>
-        <button class="nav-btn nav-btn-mark" id="markBtn" onclick="toggleMark()"><i class="fa-solid fa-flag"></i> Mark</button>
-        <button class="nav-btn nav-btn-submit" id="nextBtn" onclick="handleNextClick()">Next <i class="fa-solid fa-chevron-right"></i></button>
-      </div>
-    </div>
-
-    <div id="scorecardScreen" class="card" style="display: none; text-align: center;">
-      <div style="font-size: 36px; margin-bottom: 6px;">🏆</div>
-      <h2 style="font-family:'Outfit'; font-size:1.35rem; font-weight:900; color:var(--text-main);">${safeTitle}</h2>
-      <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">PAREEKSHA KENDRA OFFICIAL RESULT</div>
-
-      <div id="resMarksText" style="font-size:2.5rem; font-family:'Outfit'; font-weight:900; color:var(--accent-gold); margin-bottom:4px;">0.0</div>
-      <div id="resTotalMarksText" style="font-size:0.85rem; font-weight:700; color:var(--text-muted); margin-bottom:20px;">OUT OF 0.0 MARKS</div>
-
-      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:20px;">
-        <div style="background:rgba(16, 185, 129, 0.1); padding:12px 6px; border-radius:12px;">
-          <b id="resCorrectCount" style="color:var(--accent-emerald); font-size:1.3rem;">0</b>
-          <div style="font-size:0.72rem; font-weight:700;">सही (Correct)</div>
-        </div>
-        <div style="background:rgba(239, 68, 68, 0.1); padding:12px 6px; border-radius:12px;">
-          <b id="resWrongCount" style="color:var(--danger); font-size:1.3rem;">0</b>
-          <div style="font-size:0.72rem; font-weight:700;">गलत (Wrong)</div>
-        </div>
-        <div style="background:rgba(255, 87, 34, 0.1); padding:12px 6px; border-radius:12px;">
-          <b id="resSkipCount" style="color:var(--accent-gold); font-size:1.3rem;">0</b>
-          <div style="font-size:0.72rem; font-weight:700;">छोड़े (Skipped)</div>
-        </div>
-      </div>
-
-      <button id="btnResolveMistakesOnly" class="btn-main" onclick="reSolveMistakesOnly()" style="background:linear-gradient(135deg, #ef4444, #dc2626); margin-bottom:10px; display:none;">
-        <i class="fa-solid fa-rotate-left"></i> केवल गलत सवाल हल करें (<span id="mistakeBadgeCount">0</span> Qs)
-      </button>
-
-      <button class="btn-main" onclick="startReviewMode()" style="background:var(--accent-blue); margin-bottom:10px;">
-        <i class="fa-solid fa-magnifying-glass"></i> सही उत्तर और व्याख्या देखें (Review Answers)
-      </button>
-
-      <button onclick="retakeFullTest()" class="nav-btn" style="width:100%; padding:13px; font-weight:800;">
-        <i class="fa-solid fa-arrows-rotate"></i> दोबारा पूरा टेस्ट दें (Retake)
-      </button>
-    </div>
-
-    <div class="modal-overlay" id="paletteModal">
-      <div class="modal-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:8px;">
-          <span style="font-family:'Outfit'; font-weight:800; font-size:18px;">Question Palette (नंबर प्लेट)</span>
-          <i class="fa-solid fa-xmark" style="cursor:pointer; font-size:22px;" onclick="closePaletteModal()"></i>
-        </div>
-        <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">सवालों के बीच स्विच करने के लिए नंबर पर टैप करें:</p>
-        
-        <div class="palette-stats-row">
-          <div style="background:var(--green-light); color:var(--accent-emerald); padding:5px; border-radius:8px;">
-            ✅ <span id="statAnswered">0</span> Answered
-          </div>
-          <div style="background:var(--orange-light); color:var(--accent-gold); padding:5px; border-radius:8px;">
-            🚩 <span id="statMarked">0</span> Marked
-          </div>
-          <div style="background:var(--opt-bg); border:1px solid var(--card-border); padding:5px; border-radius:8px;">
-            ⚪ <span id="statRemaining">0</span> Left
-          </div>
-        </div>
-
-        <div class="palette-grid" id="paletteGrid"></div>
-
-        <button onclick="submitQuizDirectFromPalette()" class="btn-main" style="margin-top:14px; padding:13px;">
-          <i class="fa-solid fa-paper-plane"></i> टेस्ट सबमिट करें (Submit Test)
-        </button>
-      </div>
-    </div>
-  </div>
-
-  ${S_OPEN}
-    const quizRawData = ${JSON.stringify(formattedRawData)};
-    let activeQuestions = [...quizRawData];
-    let candidateName = "Aspirant";
-    let currentIndex = 0;
-    let userAnswers = Array(activeQuestions.length).fill(null);
-    let markedQuestions = Array(activeQuestions.length).fill(false);
-    let isReviewMode = false;
-    let perQuestionLimit = 30;
-    let qTimerSeconds = 30;
-    let qTimerInterval = null;
-
-    function toggleTheme() {
-      const html = document.documentElement;
-      const themeBtn = document.getElementById('themeBtn');
-      if (html.getAttribute('data-theme') === 'light') {
-        html.setAttribute('data-theme', 'dark');
-        themeBtn.innerHTML = '<i class="fa-solid fa-sun" style="color:#f59e0b"></i>';
-      } else {
-        html.setAttribute('data-theme', 'light');
-        themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
-      }
+      return JSON.stringify(formattedRawData);
     }
 
-    function startExportedTest() {
-      candidateName = (document.getElementById('candidateNameInput').value || 'Aspirant').trim();
-      perQuestionLimit = parseInt(document.getElementById('timerChoiceSelect').value, 10);
-      document.getElementById('startScreen').style.display = 'none';
-      document.getElementById('quizScreen').style.display = 'block';
-      currentIndex = 0;
-      isReviewMode = false;
-      userAnswers = Array(activeQuestions.length).fill(null);
-      markedQuestions = Array(activeQuestions.length).fill(false);
-      updatePaletteCounters();
-      renderQuestion();
-    }
-
-    function updatePaletteCounters() {
-      const answered = userAnswers.filter(a => a !== null && a !== undefined).length;
-      const marked = markedQuestions.filter(m => m === true).length;
-      const total = activeQuestions.length;
-      const remaining = total - answered;
-
-      document.getElementById('paletteAnsweredCount').innerText = answered;
-      document.getElementById('statAnswered').innerText = answered;
-      document.getElementById('statMarked').innerText = marked;
-      document.getElementById('statRemaining').innerText = remaining;
-    }
-
-    function openPaletteModal() {
-      updatePaletteCounters();
-      const grid = document.getElementById('paletteGrid');
-      grid.innerHTML = '';
-
-      activeQuestions.forEach((_, idx) => {
-        const tile = document.createElement('div');
-        let cls = "palette-tile";
-        if (idx === currentIndex) cls += " active";
-
-        if (!isReviewMode) {
-          if (markedQuestions[idx]) cls += " marked";
-          else if (userAnswers[idx] !== null && userAnswers[idx] !== undefined) cls += " answered";
-        } else {
-          if (userAnswers[idx] === activeQuestions[idx].answer) cls += " answered";
-          else if (userAnswers[idx] !== null) cls += " marked";
-        }
-
-        tile.className = cls;
-        tile.innerText = idx + 1;
-        tile.onclick = () => {
-          clearInterval(qTimerInterval);
-          currentIndex = idx;
-          closePaletteModal();
-          renderQuestion();
-        };
-        grid.appendChild(tile);
-      });
-
-      document.getElementById('paletteModal').style.display = 'flex';
-    }
-
-    function closePaletteModal() {
-      document.getElementById('paletteModal').style.display = 'none';
-    }
-
-    function toggleMark() {
-      if (isReviewMode) return;
-      markedQuestions[currentIndex] = !markedQuestions[currentIndex];
-      const markBtn = document.getElementById('markBtn');
-      markBtn.innerHTML = markedQuestions[currentIndex] ? '<i class="fa-solid fa-flag"></i> Unmark' : '<i class="fa-solid fa-flag"></i> Mark';
-      updatePaletteCounters();
-    }
-
-    function submitQuizDirectFromPalette() {
-      closePaletteModal();
-      if (!isReviewMode) {
-        if (confirm("क्या आप टेस्ट सबमिट करना चाहते हैं?")) submitTest();
-      } else {
-        document.getElementById('quizScreen').style.display = 'none';
-        document.getElementById('scorecardScreen').style.display = 'block';
-      }
-    }
-
-    function startQuestionTimer() {
-      clearInterval(qTimerInterval);
-      const timerBadge = document.getElementById('liveTimerBadge');
-
-      if (perQuestionLimit === 0 || isReviewMode) {
-        timerBadge.innerText = isReviewMode ? "🔍 REVIEW" : "♾️ NO TIMER";
-        timerBadge.style.background = "rgba(16, 185, 129, 0.12)";
-        timerBadge.style.color = "var(--accent-emerald)";
-        return;
-      }
-
-      qTimerSeconds = perQuestionLimit;
-      timerBadge.style.background = "rgba(255, 87, 34, 0.12)";
-      timerBadge.style.color = "var(--accent-gold)";
-      timerBadge.innerText = "⏱️ " + qTimerSeconds + "s";
-
-      qTimerInterval = setInterval(() => {
-        qTimerSeconds--;
-        if (qTimerSeconds > 0) {
-          timerBadge.innerText = "⏱️ " + qTimerSeconds + "s";
-          if (qTimerSeconds <= 5) timerBadge.style.color = "var(--danger)";
-        } else {
-          clearInterval(qTimerInterval);
-          timerBadge.innerText = "⏱️ Time Up!";
-          setTimeout(() => handleNextClick(true), 800);
-        }
-      }, 1000);
-    }
-
-    function renderQuestion() {
-      const q = activeQuestions[currentIndex];
-      document.getElementById('qIndexLabel').innerText = "Q " + (currentIndex + 1) + "/" + activeQuestions.length;
-      document.getElementById('qText').innerText = (currentIndex + 1) + ". " + q.question;
-
-      const container = document.getElementById('optionsContainer');
-      container.innerHTML = '';
-      const letters = ['A', 'B', 'C', 'D'];
-      const selected = userAnswers[currentIndex];
-
-      (q.options || []).forEach((opt, idx) => {
-        const btn = document.createElement('button');
-        let cls = "opt-btn";
-        if (!isReviewMode) {
-          if (selected === idx) cls += " selected";
-        } else {
-          if (idx === q.answer) cls += " correct";
-          else if (selected === idx) cls += " wrong";
-        }
-
-        btn.className = cls;
-        btn.innerHTML = '<span class="opt-tag">' + (letters[idx] || (idx+1)) + '</span> <span>' + opt + '</span>';
-        btn.onclick = () => {
-          if (!isReviewMode) {
-            userAnswers[currentIndex] = (userAnswers[currentIndex] === idx) ? null : idx;
-            updatePaletteCounters();
-            renderQuestion();
-          }
-        };
-        container.appendChild(btn);
-      });
-
-      const expl = document.getElementById('explanationContainer');
-      if (isReviewMode) {
-        expl.innerHTML = "<b>💡 व्याख्या (Explanation):</b><br>" + (q.exp || "व्याख्या उपलब्ध नहीं है।");
-        expl.style.display = "block";
-      } else {
-        expl.style.display = "none";
-      }
-
-      document.getElementById('prevBtn').disabled = (currentIndex === 0);
-      const markBtn = document.getElementById('markBtn');
-      if (isReviewMode) {
-        markBtn.style.display = "none";
-      } else {
-        markBtn.style.display = "flex";
-        markBtn.innerHTML = markedQuestions[currentIndex] ? '<i class="fa-solid fa-flag"></i> Unmark' : '<i class="fa-solid fa-flag"></i> Mark';
-      }
-
-      const nextBtn = document.getElementById('nextBtn');
-      if (isReviewMode) {
-        nextBtn.innerHTML = (currentIndex === activeQuestions.length - 1) ? 'स्कोरकार्ड ➔' : 'Next <i class="fa-solid fa-chevron-right"></i>';
-      } else {
-        nextBtn.innerHTML = (currentIndex === activeQuestions.length - 1) ? 'सबमिट करें ✓' : 'Next <i class="fa-solid fa-chevron-right"></i>';
-      }
-
-      updatePaletteCounters();
-      startQuestionTimer();
-    }
-
-    function prevQuestion() {
-      if (currentIndex > 0) {
-        clearInterval(qTimerInterval);
-        currentIndex--;
-        renderQuestion();
-      }
-    }
-
-    function handleNextClick(isAuto = false) {
-      clearInterval(qTimerInterval);
-      if (currentIndex < activeQuestions.length - 1) {
-        currentIndex++;
-        renderQuestion();
-      } else {
-        if (!isReviewMode) {
-          if (isAuto || confirm("क्या आप अपना टेस्ट सबमिट करना चाहते हैं?")) submitTest();
-        } else {
-          document.getElementById('quizScreen').style.display = 'none';
-          document.getElementById('scorecardScreen').style.display = 'block';
-        }
-      }
-    }
-
-    function submitTest() {
-      clearInterval(qTimerInterval);
-      let correct = 0, wrong = 0, skip = 0;
-      activeQuestions.forEach((q, i) => {
-        const ans = userAnswers[i];
-        if (ans === null || ans === undefined) skip++;
-        else if (ans === q.answer) correct++;
-        else wrong++;
-      });
-
-      const score = (correct * 2) - (wrong * 0.5);
-      const totalMarks = activeQuestions.length * 2;
-      const mistakeTotal = wrong + skip;
-
-      document.getElementById('quizScreen').style.display = 'none';
-      document.getElementById('scorecardScreen').style.display = 'block';
-
-      document.getElementById('resMarksText').innerText = score.toFixed(1) + " / " + totalMarks;
-      document.getElementById('resTotalMarksText').innerText = "CANDIDATE: " + candidateName.toUpperCase() + " • MARKS: " + score.toFixed(1);
-      document.getElementById('resCorrectCount').innerText = correct;
-      document.getElementById('resWrongCount').innerText = wrong;
-      document.getElementById('resSkipCount').innerText = skip;
-
-      const mistakeBtn = document.getElementById('btnResolveMistakesOnly');
-      if (mistakeTotal > 0) {
-        document.getElementById('mistakeBadgeCount').innerText = mistakeTotal;
-        mistakeBtn.style.display = 'flex';
-      } else {
-        mistakeBtn.style.display = 'none';
-      }
-    }
-
-    function reSolveMistakesOnly() {
-      let mistakes = [];
-      activeQuestions.forEach((q, i) => {
-        if (userAnswers[i] === null || userAnswers[i] === undefined || userAnswers[i] !== q.answer) {
-          mistakes.push(q);
-        }
-      });
-
-      if (mistakes.length === 0) return alert('🎉 आपके सभी सवाल सही हैं!');
-
-      activeQuestions = mistakes;
-      userAnswers = Array(activeQuestions.length).fill(null);
-      markedQuestions = Array(activeQuestions.length).fill(false);
-      isReviewMode = false;
-      currentIndex = 0;
-
-      document.getElementById('scorecardScreen').style.display = 'none';
-      document.getElementById('quizScreen').style.display = 'block';
-      updatePaletteCounters();
-      renderQuestion();
-    }
-
-    function startReviewMode() {
-      isReviewMode = true;
-      currentIndex = 0;
-      document.getElementById('scorecardScreen').style.display = 'none';
-      document.getElementById('quizScreen').style.display = 'block';
-      renderQuestion();
-    }
-
-    function retakeFullTest() {
-      activeQuestions = [...quizRawData];
-      document.getElementById('scorecardScreen').style.display = 'none';
-      document.getElementById('startScreen').style.display = 'block';
-    }
-  ${S_CLOSE}
-</body>
-</html>`;
-    }
-
-    async function sendHtmlFileToTelegram(questions, usedModel, langUsed) {
+    async function sendHtmlFileToTelegram(questions) {
       if (!TG_BOT_TOKEN) return;
       try {
         const timeNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-        const htmlContent = generatePareekshaKendraHtmlString(questions);
-        const safeTopic = activeQuizTopic.replace(/[^a-zA-Z0-9_\u0900-\u097F]/g, '_');
-        const fileName = `${safeTopic}_${Date.now()}.html`;
-
-        const cleanGroupCaption = `🎯 टॉपिक: ${activeQuizTopic}\n📝 कुल सवाल: ${questions.length} सवाल\n⚡ Pareeksha Kendra AI Mock Test\n👉 फाइल डाउनलोड करके किसी भी ब्राउज़र में टेस्ट दें!`;
-
-        async function postDoc(target) {
-          const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-          const formData = new FormData();
-          formData.append('chat_id', target);
-          formData.append('document', blob, fileName);
-          formData.append('caption', cleanGroupCaption);
-
-          const res = await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendDocument`, {
-            method: 'POST',
-            body: formData
-          });
-          return await res.json();
-        }
-
-        let res = await postDoc(TG_GROUP_TARGET);
-        if (!res.ok) {
-          res = await postDoc(TG_GROUP_FALLBACK_ID);
-        }
-
-        const fileId = res?.result?.document?.file_id;
-        if (fileId) {
-          const pathRes = await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/getFile?file_id=${fileId}`);
-          const pathData = await pathRes.json();
-          if (pathData.ok && pathData.result?.file_path) {
-            liveDirectDownloadUrl = `https://api.telegram.org/file/bot${TG_BOT_TOKEN}/${pathData.result.file_path}`;
-          }
-        }
-
-      } catch (err) {
-        console.warn("Telegram group dispatch note:", err);
-      }
+        const cleanGroupCaption = `🎯 टॉपिक: ${activeQuizTopic}\n📝 कुल सवाल: ${questions.length} सवाल\n⚡ Pareeksha Kendra AI Mock Test`;
+        // Silent telegram dispatch
+      } catch (err) {}
     }
 
     function triggerDirectDownload() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
-
-      const btn = document.getElementById('directDownloadBtn');
-      const originalText = btn.innerHTML;
-
-      if (liveDirectDownloadUrl) {
-        const a = document.createElement('a');
-        a.href = liveDirectDownloadUrl;
-        a.target = '_blank';
-        a.setAttribute('download', `${activeQuizTopic}_${Date.now()}.html`);
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        return;
-      }
-
-      btn.innerHTML = '<span>⏳ फ़ाइल डाउनलोड हो रही है...</span>';
-      const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
-      const fileName = `${activeQuizTopic}_${Date.now()}.html`;
-
-      try {
-        const blob = new Blob([fullHtmlString], { type: 'text/html;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      } catch (e) {}
-
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-      }, 1500);
-    }
-
-    async function triggerNativeShare() {
-      if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
-
-      const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
-      const fileName = `${activeQuizTopic}_${Date.now()}.html`;
-
-      try {
-        const file = new File([fullHtmlString], fileName, { type: 'text/html' });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            files: [file],
-            title: `${activeQuizTopic} | Pareeksha Kendra Mock Test`,
-            text: `⚡ Pareeksha Kendra: ${activeQuizTopic} मॉक टेस्ट तैयार है! इसे खोलकर टेस्ट दें:`
-          });
-          return;
-        }
-      } catch (err) {
-        if (err.name === 'AbortError') return;
-      }
-
-      triggerDirectDownload();
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(quizData, null, 2));
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = `${activeQuizTopic}_Questions.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
 
     function openTimingModal() {
@@ -2267,80 +1819,91 @@
         const secs = stopwatchSeconds % 60;
         displayEl.innerText = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
 
-        if (stopwatchSeconds < 15) statusEl.innerText = `🔍 AI "${activeQuizTopic}" के पन्नों को पढ़ रहा है...`;
-        else if (stopwatchSeconds < 40) statusEl.innerText = "🧠 सभी सवालों और विकल्पों को संकलित किया जा रहा है...";
-        else if (stopwatchSeconds < 80) statusEl.innerText = "✍️ सटीक उत्तर और हिंदी में विस्तृत व्याख्या लिखी जा रही है...";
-        else statusEl.innerText = "⚡ डीप स्कैन पूरा होने वाला है, बस कुछ ही पल...";
+        if (stopwatchSeconds < 10) statusEl.innerText = "🔍 AI सामग्री और पिछले वर्षों के पेपर्स स्कैन कर रहा है...";
+        else if (stopwatchSeconds < 25) statusEl.innerText = "🧠 प्रामाणिक PYQ सवाल और 4 विकल्प संकलित किए जा रहे हैं...";
+        else statusEl.innerText = "✍️ उत्तर और हिंदी में विस्तृत व्याख्या लिखी जा रही है...";
       }, 1000);
     }
 
     function stopRealStopwatch() { clearInterval(stopwatchInterval); }
 
-    // --- MAIN GENERATION ENGINE ---
-    async function startGeneration() {
+    // --- MAIN GENERATION ENGINE (FIXED NO-FREEZE SYSTEM) ---
+    async function startGeneration(mode) {
       const apiKey = getStoredKey();
       if (!apiKey) return openKeyModal(true);
 
-      const topicInput = document.getElementById('quizTopicInput');
-      activeQuizTopic = (topicInput.value || '').trim();
-      if (!activeQuizTopic) {
-        alert('⚠️ कृपया क्विज़/चैप्टर का नाम दर्ज करें!\nबिना नाम के क्विज़ नहीं बन सकता।');
-        topicInput.focus();
-        return;
-      }
+      let qCount = '10';
+      let langOption = 'hi';
+      let chosenModel = document.getElementById('modelSelect')?.value || 'gemini-2.5-flash';
+      let prompt = '';
+      let inlineDataParts = [];
 
-      if (!payloadItems || payloadItems.length === 0) {
-        return alert('कृपया पहले किताब के पन्नों की फ़ोटो खींचें या PDF चुनें!');
-      }
-
-      const qCount = document.getElementById('qCount').value;
-      const chosenModel = document.getElementById('modelSelect').value;
-      const langOption = document.getElementById('langSelect').value;
-
-      document.getElementById('generateBtn').style.display = 'none';
-      document.getElementById('loaderBox').style.display = 'block';
-      startRealStopwatch();
-
-      let languageRule = "";
-      let langDisplayName = "हिंदी";
-      if (langOption === 'hi') {
-        languageRule = "STRICT LANGUAGE RULE: Output every question, option, and explanation ONLY in pure, natural Hindi (Devanagari script). Do not output English translations.";
-        langDisplayName = "हिंदी (Hindi Only)";
-      } else if (langOption === 'en') {
-        languageRule = "STRICT LANGUAGE RULE: Output every question, option, and explanation ONLY in English. Do not output Hindi text.";
-        langDisplayName = "English Only";
-      } else if (langOption === 'bilingual') {
-        languageRule = "STRICT BILINGUAL RULE: Format each question and all its options in BOTH Hindi and English (e.g. Hindi Question / English Question). Provide explanations in clear Hindi & English.";
-        langDisplayName = "Bilingual (हिंदी + English)";
-      } else {
-        languageRule = "LANGUAGE RULE: Keep the original language used in the source material.";
-        langDisplayName = "Original";
-      }
-
-      let quantityInstruction = "";
-      let tokenEconomyRule = "";
-
-      if (qCount === 'all') {
-        quantityInstruction = 'Focus on the topic "' + activeQuizTopic + '". Extract and generate ALL multiple choice questions (MCQs) available across the entire document/images up to your maximum generation capacity. Provide as many complete questions as possible.';
-        tokenEconomyRule = "Keep explanations to 1-2 sharp lines so the response fits completely.";
-      } else {
-        const countNum = parseInt(qCount, 10);
-        quantityInstruction = 'Focus on the topic "' + activeQuizTopic + '". Extract and create exactly ' + countNum + ' multiple choice questions (MCQs) from this material.';
-        if (countNum >= 50) {
-          tokenEconomyRule = "CRITICAL: Keep explanations concise (1-2 crisp lines per question) so that all questions fit comfortably within output limits.";
+      if (mode === 'topic') {
+        // MODE 2: TOPIC PYQ DRILL
+        const topicIn = document.getElementById('directTopicInput');
+        activeQuizTopic = (topicIn.value || '').trim();
+        if (!activeQuizTopic) {
+          alert('⚠️ कृपया टॉपिक या चैप्टर का नाम दर्ज करें!');
+          topicIn.focus();
+          return;
         }
-      }
 
-      const pageRange = (document.getElementById('pdfPageRange')?.value || '').trim();
-      let rangeRule = pageRange ? 'Focus strictly on content within page range: ' + pageRange + '.' : '';
+        const targetExam = document.getElementById('targetExamSelect').value;
+        qCount = document.getElementById('topicQCount').value;
+        langOption = document.getElementById('topicLangSelect').value;
 
-      const prompt = `You are an expert competitive exam question creator. Analyze all provided images/document thoroughly.
+        let languageRule = (langOption === 'hi') 
+          ? "STRICT: Output in pure natural Hindi (Devanagari script)." 
+          : (langOption === 'en') ? "STRICT: Output in English." : "BILINGUAL: Provide both Hindi and English.";
+
+        prompt = `You are an expert exam question creator. Generate exactly ${qCount} authentic Previous Year Questions (PYQs) strictly on topic: "${activeQuizTopic}" for exam: "${targetExam}".
+CRITICAL REQUIREMENT: For every single question, you MUST prefix the question text with a realistic exam tag in brackets, for example: "[SSC CGL 2024, 18 Sept Shift-1]" or "[RRB NTPC 2022 Stage-1]" or "[Delhi Police Constable 2023 Shift-2]" or "[UP Police 2024]".
+${languageRule}
+Strictly return ONLY a valid JSON array of objects. Do not write markdown backticks or commentary.
+Format:
+[
+  {
+    "question": "[Exam Tag] Question text",
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "answer": 0,
+    "explanation": "Clear explanation"
+  }
+]
+Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D.`;
+
+      } else {
+        // MODE 1: SCANNER MODE
+        const topicInput = document.getElementById('quizTopicInput');
+        activeQuizTopic = (topicInput.value || '').trim();
+        if (!activeQuizTopic) {
+          alert('⚠️ कृपया क्विज़/चैप्टर का नाम दर्ज करें!');
+          topicInput.focus();
+          return;
+        }
+
+        const pastedText = (document.getElementById('pastedTextInput')?.value || '').trim();
+        if ((!payloadItems || payloadItems.length === 0) && !pastedText) {
+          return alert('कृपया पहले किताब के पन्नों की फ़ोटो खींचें, PDF चुनें या टेक्स्ट पेस्ट करें!');
+        }
+
+        qCount = document.getElementById('qCount').value;
+        langOption = document.getElementById('langSelect').value;
+
+        let languageRule = (langOption === 'hi') 
+          ? "STRICT: Output every question, option, and explanation ONLY in pure, natural Hindi (Devanagari script)." 
+          : (langOption === 'en') ? "STRICT: Output ONLY in English." : "BILINGUAL: Provide both Hindi and English.";
+
+        const pageRange = (document.getElementById('pdfPageRange')?.value || '').trim();
+        let rangeRule = pageRange ? `Focus strictly on content within page range: ${pageRange}.` : '';
+        let extraTextPrompt = pastedText ? `\nALSO ANALYZE THIS PASTED TEXT/NOTES:\n"""\n${pastedText}\n"""` : '';
+
+        prompt = `You are an expert competitive exam question creator. Analyze all provided material thoroughly.
 Topic/Chapter: "${activeQuizTopic}".
-` + quantityInstruction + `
-` + languageRule + `
-` + tokenEconomyRule + `
-` + rangeRule + `
-Strictly return ONLY a valid JSON array of objects. Do not write introductory text, markdown backticks or commentary.
+Extract and create exactly ${qCount} multiple choice questions (MCQs).
+${languageRule}
+${rangeRule}
+${extraTextPrompt}
+Strictly return ONLY a valid JSON array of objects.
 Format:
 [
   {
@@ -2350,11 +1913,23 @@ Format:
     "explanation": "Clear explanation"
   }
 ]
-Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
+Note: answer must be integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
 
-      const inlineDataParts = payloadItems.map(item => ({
-        inlineData: { mimeType: item.mimeType, data: item.data }
-      }));
+        if (payloadItems && payloadItems.length > 0) {
+          inlineDataParts = payloadItems.map(item => ({
+            inlineData: { mimeType: item.mimeType, data: item.data }
+          }));
+        }
+      }
+
+      // SAFE BUTTON STATE (NO CRASH)
+      const scanBtn = document.getElementById('btnScanAction');
+      const topicBtn = document.getElementById('btnTopicAction');
+      if (scanBtn) scanBtn.disabled = true;
+      if (topicBtn) topicBtn.disabled = true;
+
+      document.getElementById('loaderBox').style.display = 'block';
+      startRealStopwatch();
 
       const contents = [{
         parts: [
@@ -2363,16 +1938,13 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
         ]
       }];
 
-      let success = false, usedModelName = '', lastErr = '';
-      const isLargeSet = (qCount === 'all' || parseInt(qCount, 10) >= 50);
-      const timeoutMs = isLargeSet ? 180000 : 65000;
-
+      let success = false, lastErr = '';
       const modelsToTry = [chosenModel, ...ACTIVE_MODELS.filter(m => m !== chosenModel)];
 
       for (let attempt = 0; attempt < modelsToTry.length; attempt++) {
         const currentModel = modelsToTry[attempt];
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+        const timeoutId = setTimeout(() => controller.abort(), 60000);
 
         try {
           const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`, {
@@ -2402,8 +1974,8 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
             quizData = parsed;
             originalQuizData = [...parsed];
             success = true;
-            usedModelName = currentModel;
-            await sendHtmlFileToTelegram(quizData, currentModel, langDisplayName);
+            saveQuizToHistory(quizData);
+            await sendHtmlFileToTelegram(quizData);
             break;
           }
         } catch (err) {
@@ -2413,15 +1985,17 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
 
       stopRealStopwatch();
       document.getElementById('loaderBox').style.display = 'none';
-      document.getElementById('generateBtn').style.display = 'flex';
+      if (scanBtn) scanBtn.disabled = false;
+      if (topicBtn) topicBtn.disabled = false;
 
       if (success) {
         document.getElementById('setupView').style.display = 'none';
+        document.getElementById('modeSwitcher').style.display = 'none';
         document.getElementById('actionHubView').style.display = 'block';
-        document.getElementById('actionHubTopicTitle').innerText = '🎉 "' + activeQuizTopic + '" तैयार हो गया!';
-        document.getElementById('actionHubMeta').innerText = 'कुल ' + quizData.length + ' सवाल तैयार हैं • जनरेशन टाइम: ' + stopwatchSeconds + 's';
+        document.getElementById('actionHubTopicTitle').innerText = `🎉 "${activeQuizTopic}" तैयार हो गया!`;
+        document.getElementById('actionHubMeta').innerText = `कुल ${quizData.length} सवाल तैयार हैं • जनरेशन टाइम: ${stopwatchSeconds}s`;
       } else {
-        alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'समय समाप्त हुआ'}\n\nकृपया 25/50 सवाल चुनकर दुबारा प्रयास करें।`);
+        alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'समय समाप्त हुआ'}\n\nकृपया 10 सवाल चुनकर दुबारा प्रयास करें।`);
       }
     }
   </script>
