@@ -42,8 +42,8 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
     },
     {
       id: 'ai_quiz' as TabType,
-      label: 'AI Quiz',
-      sublabel: '2-in-1 Mock',
+      label: 'AI Hub',
+      sublabel: 'AI Engine',
       icon: Sparkles,
       badge: 'AI',
     },
