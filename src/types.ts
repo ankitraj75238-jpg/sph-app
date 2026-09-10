@@ -12,7 +12,7 @@ export interface PracticeQuestion {
   questionHi?: string;
   options: string[];
   optionsHi?: string[];
-  correctAnswer: number; // 0-indexed
+  correctAnswer: number;
   explanation: string;
   explanationHi?: string;
   examTag?: string;
