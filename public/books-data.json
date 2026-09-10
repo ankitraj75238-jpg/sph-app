@@ -1,15 +1,15 @@
 {
   "app_control": {
-    "min_required_version": "2.0",
-    "latest_version": "2.0",
-    "update_title": "🚀 नया SPH V2.0 MEGA UPDATE आ चुका है!",
+    "min_required_version": "3.0",
+    "latest_version": "3.0",
+    "update_title": "🚀 नया SPH V3.0 MEGA UPDATE आ चुका है!",
     "telegram_url": "https://t.me/PAREEKSHA_KENDRA",
     "button_url": "https://t.me/PAREEKSHA_KENDRA",
     "button_text": "📲 TELEGRAM से नया APK डाउनलोड करें ➔"
   },
   "announcement": {
-    "min_version": "2.0",
-    "title": "🚀 नया SPH V2.0 MEGA UPDATE आ चुका है!",
+    "min_version": "3.0",
+    "title": "🚀 नया SPH V3.0 MEGA UPDATE आ चुका है!",
     "message": "Silent Preparation Hub का पुराना वर्ज़न बंद कर दिया गया है। 120Hz सुपरफास्ट स्पीड, बिना एरर के AI क्विज़ और सभी 15+ नई किताबों के लिए अभी नया V3.0 ऐप डाउनलोड करें!",
     "button_text": "📲 TELEGRAM से नया APK डाउनलोड करें ➔",
     "button_url": "https://t.me/PAREEKSHA_KENDRA"
