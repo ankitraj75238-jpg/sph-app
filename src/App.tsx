@@ -122,7 +122,7 @@ export default function App() {
         const actionHandle = await PushNotifications.addListener('pushNotificationActionPerformed', (notificationAction) => {
           try {
             const data = notificationAction?.notification?.data;
-            if (data?.tab && (data.tab === 'ankitprep' || data.tab === 'pareeksha' || data.tab === 'books_practice' || data.tab === 'ai_quiz')) {
+            if (data?.tab && (data.tab === 'ankitprep' || data.tab === 'pareeksha' || data.tab === 'books_practice' || data.tab === 'ai_quiz' || data.tab === 'reels')) {
               handleTabChange(data.tab as TabType);
             }
           } catch {}
@@ -326,7 +326,7 @@ export default function App() {
             />
           </div>
 
-          {/* Tab 4: AI Hub (Dynamic Engine from public/ai-quiz.html) */}
+          {/* Tab 4: AI Quiz Drill */}
           <div 
             id="tab-pane-ai-quiz"
             className={`w-full h-full flex-1 flex flex-col absolute inset-0 hw-accelerate ${
@@ -338,12 +338,33 @@ export default function App() {
             <WebViewContainer
               key={`ai-quiz-${refreshKey}`}
               url="./ai-quiz.html"
-              title="AI Hub"
-              subtitle="Smart AI Engine"
+              title="AI Quiz Drill"
+              subtitle="2-in-1 Engine"
               isOnline={isOnline}
               onRefreshTrigger={() => setIsRefreshing(false)}
               tabKey="ai_quiz"
               isActive={currentTab === 'ai_quiz'}
+            />
+          </div>
+
+          {/* Tab 5: Instagram Style Exam Reels */}
+          <div 
+            id="tab-pane-reels"
+            className={`w-full h-full flex-1 flex flex-col absolute inset-0 hw-accelerate ${
+              currentTab === 'reels' 
+                ? 'visible z-10 opacity-100' 
+                : 'invisible -z-10 opacity-0 pointer-events-none'
+            }`}
+          >
+            <WebViewContainer
+              key={`reels-${refreshKey}`}
+              url="./ai-reels.html"
+              title="Exam Reels"
+              subtitle="Instagram Style PYQ Feed"
+              isOnline={isOnline}
+              onRefreshTrigger={() => setIsRefreshing(false)}
+              tabKey="reels"
+              isActive={currentTab === 'reels'}
             />
           </div>
 
@@ -356,7 +377,7 @@ export default function App() {
           )}
         </main>
 
-        {/* Bottom Navigation Bar (White Theme) */}
+        {/* Bottom Navigation Bar (Now 5 Tabs!) */}
         <BottomNavBar
           currentTab={currentTab}
           onTabChange={handleTabChange}
