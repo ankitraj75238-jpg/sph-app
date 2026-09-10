@@ -2,7 +2,8 @@ import React from 'react';
 import { 
   Globe, 
   GraduationCap, 
-  BookOpen
+  BookOpen,
+  Sparkles
 } from 'lucide-react';
 import { TabType } from '../types';
 
@@ -39,6 +40,13 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
       icon: BookOpen,
       badge: modulesCount > 0 ? `${modulesCount}` : 'New',
     },
+    {
+      id: 'ai_quiz' as TabType,
+      label: 'AI Quiz',
+      sublabel: '2-in-1 Mock',
+      icon: Sparkles,
+      badge: 'AI',
+    },
   ];
 
   return (
@@ -48,8 +56,8 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
         paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 4px)',
       }}
     >
-      <div className="max-w-4xl w-full mx-auto px-2 sm:px-6">
-        <div className="grid grid-cols-3 items-center justify-items-stretch">
+      <div className="max-w-4xl w-full mx-auto px-1 sm:px-6">
+        <div className="grid grid-cols-4 items-center justify-items-stretch">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = currentTab === tab.id;
@@ -62,7 +70,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
                   if (navigator.vibrate) navigator.vibrate(15);
                   onTabChange(tab.id);
                 }}
-                className={`relative flex flex-col items-center justify-center py-1 px-1 transition-all duration-200 active:scale-95 group ${
+                className={`relative flex flex-col items-center justify-center py-1 px-0.5 transition-all duration-200 active:scale-95 group ${
                   isActive
                     ? 'text-white'
                     : 'text-[#94A3B8] hover:text-slate-200'
@@ -70,7 +78,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
               >
                 {/* Active Top Glowing Accent Line */}
                 {isActive && (
-                  <div className="absolute -top-[13px] left-1/2 -translate-x-1/2 w-10 h-1 bg-[#10B981] rounded-full shadow-[0_0_12px_#10B981]" />
+                  <div className="absolute -top-[13px] left-1/2 -translate-x-1/2 w-8 h-1 bg-[#10B981] rounded-full shadow-[0_0_12px_#10B981]" />
                 )}
 
                 {/* Tab Icon Container */}
@@ -100,7 +108,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
                 </div>
 
                 {/* Tab Title */}
-                <span className={`text-[10px] sm:text-xs font-black uppercase tracking-tight truncate max-w-full ${
+                <span className={`text-[9px] sm:text-xs font-black uppercase tracking-tight truncate max-w-full ${
                   isActive ? 'text-white font-extrabold drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]' : 'text-[#94A3B8] font-semibold'
                 }`}>
                   {tab.label}
@@ -113,4 +121,3 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
     </nav>
   );
 };
-
