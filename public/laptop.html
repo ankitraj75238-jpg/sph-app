@@ -52,7 +52,7 @@
       overflow: hidden;
     }
 
-    /* MAIN VIEWPORT (FULL SCREEN) */
+    /* MAIN VIEWPORT */
     main {
       flex: 1;
       width: 100%;
@@ -71,7 +71,7 @@
       background: var(--bg);
     }
 
-    /* BOTTOM NAVIGATION BAR (100% APP STYLE) */
+    /* BOTTOM NAVIGATION BAR (APP STYLE) */
     nav.bottom-nav {
       height: 68px;
       background: #ffffff;
@@ -209,7 +209,7 @@
       color: #dc2743;
     }
 
-    /* BOOKS & PRACTICE MODAL/VIEW */
+    /* BOOKS VIEW */
     #booksView {
       display: none;
       width: 100%;
@@ -241,7 +241,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .book-card:active {
@@ -294,11 +294,11 @@
 </head>
 <body>
 
-  <!-- 1. FULL-SCREEN CONTENT VIEWPORT -->
+  <!-- CONTENT VIEWPORT -->
   <main>
     <iframe id="portalFrame" src="https://ankitprep.silentpreparationhub.workers.dev/"></iframe>
 
-    <!-- BOOKS VIEW -->
+    <!-- BOOKS & PRACTICE VIEW -->
     <div id="booksView">
       <div class="books-container">
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #e2e8f0; padding-bottom:12px;">
@@ -306,7 +306,7 @@
             <h2 style="font-family:'Outfit'; font-size:1.35rem; font-weight:900; color:#0f172a;">📚 Study Library & PYQs</h2>
             <p style="font-size:0.75rem; color:#64748b; margin-top:2px;">संपूर्ण डिजिटल बुक्स और 15-Year PYQs संग्रह</p>
           </div>
-          <span style="background:rgba(16,185,129,0.1); color:#10b981; font-weight:800; padding:4px 10px; border-radius:20px; font-size:0.75rem;" id="booksCountBadge">Loading...</span>
+          <span style="background:rgba(16,185,129,0.1); color:#10b981; font-weight:800; padding:4px 10px; border-radius:20px; font-size:0.75rem;" id="booksCountBadge">लोड हो रहा है...</span>
         </div>
 
         <div class="books-grid" id="booksGrid"></div>
@@ -314,7 +314,7 @@
     </div>
   </main>
 
-  <!-- 2. BOTTOM NAVIGATION BAR (APP STYLE) -->
+  <!-- BOTTOM NAVIGATION BAR -->
   <nav class="bottom-nav">
     <div class="nav-container">
       
@@ -399,39 +399,64 @@
       }
     }
 
+    // 🛠️ AUTO-DETECTOR ENGINE (NO MORE 'UNDEFINED BOOKS')
     async function loadBooksData() {
       const grid = document.getElementById('booksGrid');
+      const badge = document.getElementById('booksCountBadge');
       if (grid.children.length > 0) return;
 
       try {
-        const res = await fetch('https://raw.githubusercontent.com/ankitraj75238-jpg/sph-app/main/public/books-data.json');
-        const books = await res.json();
+        // 1. Same-folder local fetch first (Instant & 100% reliable)
+        let res = await fetch('./books-data.json').catch(() => null);
+        if (!res || !res.ok) {
+          res = await fetch('https://raw.githubusercontent.com/ankitraj75238-jpg/sph-app/main/public/books-data.json');
+        }
+        
+        const rawData = await res.json();
+        
+        // Auto-extract array whether it's directly [...] or { modules: [...] } or { books: [...] }
+        const booksList = Array.isArray(rawData) 
+          ? rawData 
+          : (rawData.modules || rawData.books || rawData.data || rawData.items || Object.values(rawData).find(v => Array.isArray(v)) || []);
 
-        document.getElementById('booksCountBadge').innerText = `${books.length} Books`;
+        badge.innerText = `${booksList.length} Books Active`;
         grid.innerHTML = '';
 
-        books.forEach(b => {
+        if (booksList.length === 0) {
+          grid.innerHTML = '<div style="color:#64748b; padding:20px; text-align:center; grid-column:1/-1;">कोई किताब उपलब्ध नहीं है।</div>';
+          return;
+        }
+
+        booksList.forEach(b => {
           const card = document.createElement('div');
           card.className = 'book-card';
+          
+          let targetUrl = b.url || b.link || `./${b.id}.html`;
+          if (!targetUrl.startsWith('http') && !targetUrl.startsWith('./') && !targetUrl.startsWith('/')) {
+            targetUrl = './' + targetUrl;
+          }
+
           card.onclick = () => {
             document.getElementById('booksView').style.display = 'none';
             const iframe = document.getElementById('portalFrame');
             iframe.style.display = 'block';
-            iframe.src = b.url || `./${b.id}.html`;
+            iframe.src = targetUrl;
           };
 
           card.innerHTML = `
             <div>
-              <span class="book-badge">${b.badge || b.subject || 'PYQ Module'}</span>
-              <div class="book-title">${b.title}</div>
-              <div class="book-desc">${b.description || 'Complete official exam preparation module.'}</div>
+              <span class="book-badge">${b.badge || b.subject || b.category || 'Study Module'}</span>
+              <div class="book-title">${b.title || b.titleHindi || 'Study Book'}</div>
+              <div class="book-desc">${b.description || 'Complete official exam preparation module with PYQs.'}</div>
             </div>
             <button class="btn-read"><i class="fa-solid fa-book-open-reader"></i> पढ़ना शुरू करें</button>
           `;
           grid.appendChild(card);
         });
       } catch (e) {
-        grid.innerHTML = '<div style="color:#64748b; padding:20px;">बुक्स लोड करने में समस्या आई।</div>';
+        console.error("Books load error:", e);
+        badge.innerText = "Active";
+        grid.innerHTML = '<div style="color:#64748b; padding:20px; text-align:center; grid-column:1/-1;">बुक्स लोड हो रही हैं, कृपया कुछ सेकंड बाद पुनः प्रयास करें।</div>';
       }
     }
   </script>
