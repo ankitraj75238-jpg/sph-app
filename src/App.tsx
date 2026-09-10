@@ -73,7 +73,9 @@ export default function App() {
 
     const portalUrls = [
       'https://ankitprep.silentpreparationhub.workers.dev/',
-      'https://pareekshakendra.pareekshakendraankit.workers.dev/'
+      'https://pareekshakendra.pareekshakendraankit.workers.dev/',
+      'https://ankitraj75238-jpg.github.io/sph-app/public/ai-quiz.html',
+      'https://ankitraj75238-jpg.github.io/sph-app/public/ai-reels.html'
     ];
     portalUrls.forEach((url) => {
       try { fetch(url, { mode: 'no-cors', priority: 'high' } as RequestInit).catch(() => {}); } catch {}
@@ -326,7 +328,7 @@ export default function App() {
             />
           </div>
 
-          {/* Tab 4: AI Quiz Drill */}
+          {/* Tab 4: AI Quiz Drill (LIVE CLOUD URL - ALWAYS AUTO UPDATING) */}
           <div 
             id="tab-pane-ai-quiz"
             className={`w-full h-full flex-1 flex flex-col absolute inset-0 hw-accelerate ${
@@ -337,7 +339,7 @@ export default function App() {
           >
             <WebViewContainer
               key={`ai-quiz-${refreshKey}`}
-              url="./ai-quiz.html"
+              url="https://ankitraj75238-jpg.github.io/sph-app/public/ai-quiz.html"
               title="AI Quiz Drill"
               subtitle="2-in-1 Engine"
               isOnline={isOnline}
@@ -347,7 +349,7 @@ export default function App() {
             />
           </div>
 
-          {/* Tab 5: Instagram Style Exam Reels */}
+          {/* Tab 5: Instagram Style Exam Reels (LIVE CLOUD URL - ALWAYS AUTO UPDATING) */}
           <div 
             id="tab-pane-reels"
             className={`w-full h-full flex-1 flex flex-col absolute inset-0 hw-accelerate ${
@@ -358,7 +360,7 @@ export default function App() {
           >
             <WebViewContainer
               key={`reels-${refreshKey}`}
-              url="./ai-reels.html"
+              url="https://ankitraj75238-jpg.github.io/sph-app/public/ai-reels.html"
               title="Exam Reels"
               subtitle="Instagram Style PYQ Feed"
               isOnline={isOnline}
@@ -368,7 +370,6 @@ export default function App() {
             />
           </div>
 
-          {/* Interactive HTML Viewer Modal */}
           {activeModule && (
             <InteractiveModuleViewer
               module={activeModule}
@@ -377,7 +378,6 @@ export default function App() {
           )}
         </main>
 
-        {/* Bottom Navigation Bar (Now 5 Tabs!) */}
         <BottomNavBar
           currentTab={currentTab}
           onTabChange={handleTabChange}
