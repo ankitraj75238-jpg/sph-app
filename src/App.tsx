@@ -174,7 +174,7 @@ export default function App() {
         const actionHandle = await PushNotifications.addListener('pushNotificationActionPerformed', (notificationAction) => {
           try {
             const data = notificationAction?.notification?.data;
-            if (data?.tab && (data.tab === 'ankitprep' || data.tab === 'pareeksha' || data.tab === 'books_practice')) {
+            if (data?.tab && (data.tab === 'ankitprep' || data.tab === 'pareeksha' || data.tab === 'books_practice' || data.tab === 'ai_quiz')) {
               handleTabChange(data.tab as TabType);
             }
           } catch (actionErr) {
@@ -430,6 +430,27 @@ export default function App() {
               onModulesCountChange={(count) => setDynamicModulesCount(count)}
               onRegisterBackHandler={(handler) => { booksBackHandlerRef.current = handler; }}
               isDarkMode={isDarkMode}
+            />
+          </div>
+
+          {/* Tab 4: AI Quiz (2-in-1 Engine) */}
+          <div 
+            id="tab-pane-ai-quiz"
+            className={`w-full h-full flex-1 flex flex-col absolute inset-0 hw-accelerate ${
+              currentTab === 'ai_quiz' 
+                ? 'visible z-10 opacity-100' 
+                : 'invisible -z-10 opacity-0 pointer-events-none'
+            }`}
+          >
+            <WebViewContainer
+              key={`ai-quiz-${refreshKey}`}
+              url="./ai-quiz.html"
+              title="AI Quiz Drill"
+              subtitle="2-in-1 Engine"
+              isOnline={isOnline}
+              onRefreshTrigger={() => setIsRefreshing(false)}
+              tabKey="ai_quiz"
+              isActive={currentTab === 'ai_quiz'}
             />
           </div>
 
