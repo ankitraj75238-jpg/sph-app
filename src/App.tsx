@@ -40,7 +40,6 @@ export default function App() {
   const [versionLock, setVersionLock] = useState<VersionCheckResult | null>(null);
   const [showExitToast, setShowExitToast] = useState<boolean>(false);
 
-  // Sync dark class on documentElement and persist theme mode
   useEffect(() => {
     try {
       if (isDarkMode) {
@@ -50,12 +49,9 @@ export default function App() {
         document.documentElement.classList.remove('dark');
         localStorage.setItem('sph_theme_mode', 'light');
       }
-    } catch {
-      // Safe fallback
-    }
+    } catch {}
   }, [isDarkMode]);
 
-  // Synchronized state refs to prevent stale closure in async native Capacitor & hardware listeners
   const activeModuleRef = useRef<StudyModule | null>(activeModule);
   const currentTabRef = useRef<TabType>(currentTab);
   const tabHistoryRef = useRef<TabType[]>(tabHistory);
@@ -64,64 +60,37 @@ export default function App() {
   const booksBackHandlerRef = useRef<(() => boolean) | null>(null);
   const versionLockRef = useRef<VersionCheckResult | null>(versionLock);
 
-  useEffect(() => {
-    versionLockRef.current = versionLock;
-  }, [versionLock]);
+  useEffect(() => { versionLockRef.current = versionLock; }, [versionLock]);
+  useEffect(() => { activeModuleRef.current = activeModule; }, [activeModule]);
+  useEffect(() => { currentTabRef.current = currentTab; }, [currentTab]);
+  useEffect(() => { tabHistoryRef.current = tabHistory; }, [tabHistory]);
 
-  useEffect(() => {
-    activeModuleRef.current = activeModule;
-  }, [activeModule]);
-
-  useEffect(() => {
-    currentTabRef.current = currentTab;
-  }, [currentTab]);
-
-  useEffect(() => {
-    tabHistoryRef.current = tabHistory;
-  }, [tabHistory]);
-
-  // Initialize private anonymous telemetry, version lock check & background network pre-warming
   useEffect(() => {
     recordAppOpen();
-    
-    // Remote Version Lock check
     checkAppVersionLock().then((result) => {
-      if (result.isUpdateRequired) {
-        setVersionLock(result);
-      }
-    }).catch(() => {
-      // Ignore network errors gracefully
-    });
+      if (result.isUpdateRequired) setVersionLock(result);
+    }).catch(() => {});
 
-    // High-speed background pre-warming for both websites
     const portalUrls = [
       'https://ankitprep.silentpreparationhub.workers.dev/',
       'https://pareekshakendra.pareekshakendraankit.workers.dev/'
     ];
     portalUrls.forEach((url) => {
-      try {
-        fetch(url, { mode: 'no-cors', priority: 'high' } as RequestInit).catch(() => {});
-      } catch {
-        // Safe fallback
-      }
+      try { fetch(url, { mode: 'no-cors', priority: 'high' } as RequestInit).catch(() => {}); } catch {}
     });
   }, []);
 
-  // Sync browser online / offline state
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
-
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
 
-  // Handle Tab Switch
   const handleTabChange = useCallback((newTab: TabType) => {
     if (newTab === currentTabRef.current) return;
     recordTabVisit(newTab);
@@ -129,12 +98,8 @@ export default function App() {
     setCurrentTab(newTab);
   }, []);
 
-  // Safe Native Push Notification Lifecycle
   useEffect(() => {
-    if (!Capacitor.isNativePlatform()) {
-      return;
-    }
-
+    if (!Capacitor.isNativePlatform()) return;
     const listenerRemovers: Array<() => void> = [];
 
     const initializeNativePush = async () => {
@@ -152,24 +117,7 @@ export default function App() {
         });
 
         const perm = await PushNotifications.requestPermissions();
-        if (perm.receive === 'granted') {
-          await PushNotifications.register();
-        }
-
-        const regHandle = await PushNotifications.addListener('registration', (token) => {
-          console.log('[SPH Push] FCM Registration Token:', token.value);
-        });
-        listenerRemovers.push(() => { regHandle.remove(); });
-
-        const errHandle = await PushNotifications.addListener('registrationError', (error: any) => {
-          console.warn('[SPH Push] FCM Registration Error:', error);
-        });
-        listenerRemovers.push(() => { errHandle.remove(); });
-
-        const recvHandle = await PushNotifications.addListener('pushNotificationReceived', (notification) => {
-          console.log('[SPH Push] Push Notification Received:', notification);
-        });
-        listenerRemovers.push(() => { recvHandle.remove(); });
+        if (perm.receive === 'granted') await PushNotifications.register();
 
         const actionHandle = await PushNotifications.addListener('pushNotificationActionPerformed', (notificationAction) => {
           try {
@@ -177,25 +125,14 @@ export default function App() {
             if (data?.tab && (data.tab === 'ankitprep' || data.tab === 'pareeksha' || data.tab === 'books_practice' || data.tab === 'ai_quiz')) {
               handleTabChange(data.tab as TabType);
             }
-          } catch (actionErr) {
-            console.warn('[SPH Push] Error handling notification action:', actionErr);
-          }
+          } catch {}
         });
         listenerRemovers.push(() => { actionHandle.remove(); });
-      } catch (err) {
-        console.warn('[SPH Push] Push notification lifecycle handled non-fatal exception:', err);
-      }
+      } catch {}
     };
 
     initializeNativePush();
-
-    return () => {
-      listenerRemovers.forEach((remover) => {
-        try {
-          remover();
-        } catch {}
-      });
-    };
+    return () => { listenerRemovers.forEach((r) => { try { r(); } catch {} }); };
   }, [handleTabChange]);
 
   const handleSelectModule = (module: StudyModule) => {
@@ -208,11 +145,8 @@ export default function App() {
     setActiveModule(module);
   };
 
-  // Back navigation handling
   const handleDeepBackNavigation = useCallback(() => {
-    if (versionLockRef.current && versionLockRef.current.isUpdateRequired) {
-      return;
-    }
+    if (versionLockRef.current && versionLockRef.current.isUpdateRequired) return;
 
     if (activeModuleRef.current) {
       setActiveModule(null);
@@ -221,16 +155,12 @@ export default function App() {
 
     if (currentTabRef.current === 'books_practice' && booksBackHandlerRef.current) {
       const handled = booksBackHandlerRef.current();
-      if (handled) {
-        return;
-      }
+      if (handled) return;
     }
 
     const activeIframe = document.querySelector<HTMLIFrameElement>(`#webview-${currentTabRef.current}`);
     if (activeIframe && activeIframe.contentWindow) {
-      try {
-        activeIframe.contentWindow.postMessage({ type: 'SPH_NAV_BACK' }, '*');
-      } catch {}
+      try { activeIframe.contentWindow.postMessage({ type: 'SPH_NAV_BACK' }, '*'); } catch {}
     }
 
     if (currentTabRef.current !== 'ankitprep') {
@@ -240,57 +170,34 @@ export default function App() {
     }
 
     const now = Date.now();
-    const timeDiff = now - lastBackPressRef.current;
-
-    if (timeDiff < 2000) {
-      try {
-        CapacitorApp.exitApp();
-      } catch {}
+    if (now - lastBackPressRef.current < 2000) {
+      try { CapacitorApp.exitApp(); } catch {}
     } else {
       lastBackPressRef.current = now;
       setShowExitToast(true);
-
-      if (navigator.vibrate) {
-        navigator.vibrate(35);
-      }
-
-      if (toastTimeoutRef.current) {
-        clearTimeout(toastTimeoutRef.current);
-      }
-
-      toastTimeoutRef.current = setTimeout(() => {
-        setShowExitToast(false);
-      }, 2000);
+      if (navigator.vibrate) navigator.vibrate(35);
+      if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+      toastTimeoutRef.current = setTimeout(() => setShowExitToast(false), 2000);
     }
   }, []);
 
   useEffect(() => {
     let backListenerHandle: { remove: () => Promise<void> | void } | null = null;
-
     try {
-      CapacitorApp.addListener('backButton', () => {
-        handleDeepBackNavigation();
-      }).then((handle) => {
+      CapacitorApp.addListener('backButton', () => { handleDeepBackNavigation(); }).then((handle) => {
         backListenerHandle = handle;
       }).catch(() => {});
     } catch {}
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        handleDeepBackNavigation();
-      }
+      if (e.key === 'Escape') handleDeepBackNavigation();
     };
-
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      if (backListenerHandle?.remove) {
-        backListenerHandle.remove();
-      }
+      if (backListenerHandle?.remove) backListenerHandle.remove();
       window.removeEventListener('keydown', handleKeyDown);
-      if (toastTimeoutRef.current) {
-        clearTimeout(toastTimeoutRef.current);
-      }
+      if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
     };
   }, [handleDeepBackNavigation]);
 
@@ -299,17 +206,12 @@ export default function App() {
   const handleGlobalRefresh = () => {
     setIsRefreshing(true);
     setRefreshKey((prev) => prev + 1);
-
     if (navigator.vibrate) navigator.vibrate(30);
-
-    setTimeout(() => {
-      setIsRefreshing(false);
-    }, 800);
+    setTimeout(() => setIsRefreshing(false), 800);
   };
 
   return (
     <>
-      {/* Remote Version Lock Modal (Non-dismissible) */}
       {versionLock && versionLock.isUpdateRequired && (
         <ForceUpdateModal
           currentVersion={CURRENT_APP_VERSION}
@@ -318,28 +220,19 @@ export default function App() {
         />
       )}
 
-      {/* Floating Double-Tap Exit Confirmation Toast */}
       <AnimatePresence>
         {showExitToast && (
           <ExitToast message="ऐप से बाहर निकलने के लिए दोबारा बैक दबाएं" />
         )}
       </AnimatePresence>
 
-      {/* Animated Splash Screen */}
       <AnimatePresence mode="wait">
         {showSplash && (
           <motion.div
             key="sph-splash-overlay"
             initial={{ opacity: 1 }}
-            exit={{ 
-              opacity: 0, 
-              scale: 1.04,
-              filter: 'blur(4px)',
-            }}
-            transition={{ 
-              duration: 0.55, 
-              ease: [0.16, 1, 0.3, 1] 
-            }}
+            exit={{ opacity: 0, scale: 1.04, filter: 'blur(4px)' }}
+            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
             className="fixed inset-0 z-[9999] pointer-events-auto"
           >
             <SplashScreen 
@@ -433,7 +326,7 @@ export default function App() {
             />
           </div>
 
-          {/* Tab 4: AI Quiz (2-in-1 Engine) */}
+          {/* Tab 4: AI Hub (Dynamic Engine from public/ai-quiz.html) */}
           <div 
             id="tab-pane-ai-quiz"
             className={`w-full h-full flex-1 flex flex-col absolute inset-0 hw-accelerate ${
@@ -445,8 +338,8 @@ export default function App() {
             <WebViewContainer
               key={`ai-quiz-${refreshKey}`}
               url="./ai-quiz.html"
-              title="AI Quiz Drill"
-              subtitle="2-in-1 Engine"
+              title="AI Hub"
+              subtitle="Smart AI Engine"
               isOnline={isOnline}
               onRefreshTrigger={() => setIsRefreshing(false)}
               tabKey="ai_quiz"
@@ -463,7 +356,7 @@ export default function App() {
           )}
         </main>
 
-        {/* Bottom Navigation Bar */}
+        {/* Bottom Navigation Bar (White Theme) */}
         <BottomNavBar
           currentTab={currentTab}
           onTabChange={handleTabChange}
