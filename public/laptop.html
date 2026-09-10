@@ -2,15 +2,16 @@
 <html lang="hi" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Silent Preparation Hub (SPH) | Desktop & Laptop Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Silent Preparation Hub (SPH) | Web Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --bg: #f8fafc;
+      --bg: #090d16;
+      --card-bg: #ffffff;
       --nav-bg: #ffffff;
       --border: #e2e8f0;
       --text-main: #0f172a;
@@ -22,6 +23,7 @@
 
     [data-theme="dark"] {
       --bg: #090d16;
+      --card-bg: #111827;
       --nav-bg: #111827;
       --border: rgba(255, 255, 255, 0.12);
       --text-main: #f8fafc;
@@ -35,125 +37,30 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      -webkit-tap-highlight-color: transparent;
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-    body {
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
       background-color: var(--bg);
       color: var(--text-main);
-      height: 100vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
-    /* TOP NAVBAR FOR LAPTOP */
-    header {
-      background: var(--nav-bg);
-      border-bottom: 1.5px solid var(--border);
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      flex-shrink: 0;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand-logo {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #ff5722, #f43f5e);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 900;
-      font-size: 18px;
-    }
-
-    .brand-title {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 800;
-    }
-
-    .brand-sub {
-      font-size: 0.72rem;
-      color: var(--accent-emerald);
-      font-weight: 800;
-    }
-
-    /* 5 DESKTOP TABS */
-    .nav-tabs {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .nav-btn {
-      padding: 9px 16px;
-      border-radius: 12px;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 0.88rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-    }
-
-    .nav-btn:hover {
-      background: rgba(0, 0, 0, 0.04);
-      color: var(--text-main);
-    }
-
-    [data-theme="dark"] .nav-btn:hover {
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .nav-btn.active {
-      background: rgba(16, 185, 129, 0.12) !important;
-      color: var(--accent-emerald) !important;
-      border-color: var(--accent-emerald) !important;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .theme-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: var(--nav-bg);
-      color: var(--text-main);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* MAIN CONTENT IFRAME */
+    /* MAIN VIEWPORT (FULL SCREEN) */
     main {
       flex: 1;
       width: 100%;
-      height: calc(100vh - 64px);
+      height: calc(100dvh - 68px);
+      height: calc(100vh - 68px);
       position: relative;
+      overflow: hidden;
+      background: var(--bg);
     }
 
     iframe {
@@ -163,70 +70,369 @@
       display: block;
       background: var(--bg);
     }
+
+    /* BOTTOM NAVIGATION BAR (100% APP STYLE) */
+    nav.bottom-nav {
+      height: 68px;
+      background: #ffffff;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      flex-shrink: 0;
+      box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.06);
+      padding-bottom: max(env(safe-area-inset-bottom), 4px);
+    }
+
+    .nav-container {
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      padding: 0 4px;
+    }
+
+    .tab-btn {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 2px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #64748b;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .tab-btn:active {
+      transform: scale(0.92);
+    }
+
+    .tab-btn.active {
+      color: #0f172a;
+    }
+
+    .tab-accent-line {
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 3px;
+      border-radius: 4px;
+      background: #10b981;
+      display: none;
+    }
+
+    .tab-btn.active .tab-accent-line {
+      display: block;
+    }
+
+    .tab-btn.active.reels-tab .tab-accent-line {
+      background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);
+    }
+
+    .tab-icon-box {
+      position: relative;
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: #f1f5f9;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 2px;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active .tab-icon-box {
+      background: #10b981;
+      color: #ffffff;
+      border-color: #10b981;
+      transform: scale(1.05);
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+    }
+
+    .tab-btn.active.reels-tab .tab-icon-box {
+      background: linear-gradient(45deg, #f09433, #dc2743, #bc1888);
+      border-color: transparent;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(220, 39, 67, 0.35);
+    }
+
+    .tab-badge {
+      position: absolute;
+      top: -3px;
+      right: -4px;
+      font-size: 8px;
+      font-weight: 900;
+      padding: 1px 4px;
+      border-radius: 10px;
+      background: #e2e8f0;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      line-height: 1;
+    }
+
+    .tab-btn.active .tab-badge {
+      background: #0f172a;
+      color: #ffffff;
+      border-color: #0f172a;
+    }
+
+    .tab-label {
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .tab-btn.active .tab-label {
+      font-weight: 900;
+      color: #0f172a;
+    }
+
+    .tab-btn.active.reels-tab .tab-label {
+      color: #dc2743;
+    }
+
+    /* BOOKS & PRACTICE MODAL/VIEW */
+    #booksView {
+      display: none;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      padding: 20px 16px;
+      background: #f8fafc;
+    }
+
+    .books-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .book-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease;
+    }
+
+    .book-card:active {
+      transform: scale(0.98);
+    }
+
+    .book-badge {
+      display: inline-block;
+      align-self: flex-start;
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border: 1px solid #10b981;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .book-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      line-height: 1.35;
+      color: #0f172a;
+    }
+
+    .book-desc {
+      font-size: 0.8rem;
+      color: #64748b;
+      line-height: 1.45;
+      margin-bottom: 14px;
+    }
+
+    .btn-read {
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: #10b981;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.82rem;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="brand">
-      <div class="brand-logo">SPH</div>
-      <div>
-        <div class="brand-title">SILENT PREPARATION HUB</div>
-        <div class="brand-sub">💻 LAPTOP & DESKTOP WEB PORTAL</div>
-      </div>
-    </div>
-
-    <!-- 5 TABS FOR LAPTOP -->
-    <nav class="nav-tabs">
-      <button class="nav-btn active" onclick="loadTab('ankitprep', this)">
-        <i class="fa-solid fa-globe"></i> AnkitPrep
-      </button>
-      <button class="nav-btn" onclick="loadTab('pareeksha', this)">
-        <i class="fa-solid fa-graduation-cap"></i> Pareeksha Kendra
-      </button>
-      <button class="nav-btn" onclick="loadTab('books', this)">
-        <i class="fa-solid fa-book-open"></i> Books & Practice
-      </button>
-      <button class="nav-btn" onclick="loadTab('ai_quiz', this)">
-        <i class="fa-solid fa-wand-magic-sparkles"></i> AI Quiz Engine
-      </button>
-      <button class="nav-btn" onclick="loadTab('reels', this)">
-        <i class="fa-brands fa-instagram"></i> Exam Reels
-      </button>
-    </nav>
-
-    <div class="header-actions">
-      <button class="theme-btn" onclick="toggleTheme()" title="थीम बदलें">
-        <i class="fa-solid fa-moon" id="themeIcon"></i>
-      </button>
-    </div>
-  </header>
-
+  <!-- 1. FULL-SCREEN CONTENT VIEWPORT -->
   <main>
     <iframe id="portalFrame" src="https://ankitprep.silentpreparationhub.workers.dev/"></iframe>
+
+    <!-- BOOKS VIEW -->
+    <div id="booksView">
+      <div class="books-container">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #e2e8f0; padding-bottom:12px;">
+          <div>
+            <h2 style="font-family:'Outfit'; font-size:1.35rem; font-weight:900; color:#0f172a;">📚 Study Library & PYQs</h2>
+            <p style="font-size:0.75rem; color:#64748b; margin-top:2px;">संपूर्ण डिजिटल बुक्स और 15-Year PYQs संग्रह</p>
+          </div>
+          <span style="background:rgba(16,185,129,0.1); color:#10b981; font-weight:800; padding:4px 10px; border-radius:20px; font-size:0.75rem;" id="booksCountBadge">Loading...</span>
+        </div>
+
+        <div class="books-grid" id="booksGrid"></div>
+      </div>
+    </div>
   </main>
+
+  <!-- 2. BOTTOM NAVIGATION BAR (APP STYLE) -->
+  <nav class="bottom-nav">
+    <div class="nav-container">
+      
+      <!-- Tab 1: AnkitPrep -->
+      <button class="tab-btn active" id="tab-ankitprep" onclick="switchAppTab('ankitprep', this)">
+        <div class="tab-accent-line"></div>
+        <div class="tab-icon-box">
+          <i class="fa-solid fa-globe"></i>
+          <span class="tab-badge">Live</span>
+        </div>
+        <span class="tab-label">AnkitPrep</span>
+      </button>
+
+      <!-- Tab 2: Pareeksha Kendra -->
+      <button class="tab-btn" id="tab-pareeksha" onclick="switchAppTab('pareeksha', this)">
+        <div class="tab-accent-line"></div>
+        <div class="tab-icon-box">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span class="tab-badge">Speed</span>
+        </div>
+        <span class="tab-label">Pareeksha</span>
+      </button>
+
+      <!-- Tab 3: Books & Practice -->
+      <button class="tab-btn" id="tab-books" onclick="switchAppTab('books', this)">
+        <div class="tab-accent-line"></div>
+        <div class="tab-icon-box">
+          <i class="fa-solid fa-book-open"></i>
+          <span class="tab-badge">15</span>
+        </div>
+        <span class="tab-label">Books</span>
+      </button>
+
+      <!-- Tab 4: AI Quiz -->
+      <button class="tab-btn" id="tab-ai_quiz" onclick="switchAppTab('ai_quiz', this)">
+        <div class="tab-accent-line"></div>
+        <div class="tab-icon-box">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span class="tab-badge">AI</span>
+        </div>
+        <span class="tab-label">AI Quiz</span>
+      </button>
+
+      <!-- Tab 5: Exam Reels -->
+      <button class="tab-btn reels-tab" id="tab-reels" onclick="switchAppTab('reels', this)">
+        <div class="tab-accent-line"></div>
+        <div class="tab-icon-box">
+          <i class="fa-brands fa-instagram"></i>
+          <span class="tab-badge">🔥</span>
+        </div>
+        <span class="tab-label">Reels</span>
+      </button>
+
+    </div>
+  </nav>
 
   <script>
     const URLS = {
       ankitprep: 'https://ankitprep.silentpreparationhub.workers.dev/',
       pareeksha: 'https://pareekshakendra.pareekshakendraankit.workers.dev/',
-      books: 'https://ankitprep.silentpreparationhub.workers.dev/', // Books Portal
       ai_quiz: './ai-quiz.html',
       reels: './ai-reels.html'
     };
 
-    function loadTab(tabKey, btn) {
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    function switchAppTab(tabKey, btn) {
+      if (navigator.vibrate) navigator.vibrate(15);
+
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      document.getElementById('portalFrame').src = URLS[tabKey];
+
+      const iframe = document.getElementById('portalFrame');
+      const booksView = document.getElementById('booksView');
+
+      if (tabKey === 'books') {
+        iframe.style.display = 'none';
+        booksView.style.display = 'block';
+        loadBooksData();
+      } else {
+        booksView.style.display = 'none';
+        iframe.style.display = 'block';
+        iframe.src = URLS[tabKey];
+      }
     }
 
-    function toggleTheme() {
-      const html = document.documentElement;
-      const cur = html.getAttribute('data-theme');
-      const next = cur === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', next);
-      document.getElementById('themeIcon').className = next === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    async function loadBooksData() {
+      const grid = document.getElementById('booksGrid');
+      if (grid.children.length > 0) return;
+
+      try {
+        const res = await fetch('https://raw.githubusercontent.com/ankitraj75238-jpg/sph-app/main/public/books-data.json');
+        const books = await res.json();
+
+        document.getElementById('booksCountBadge').innerText = `${books.length} Books`;
+        grid.innerHTML = '';
+
+        books.forEach(b => {
+          const card = document.createElement('div');
+          card.className = 'book-card';
+          card.onclick = () => {
+            document.getElementById('booksView').style.display = 'none';
+            const iframe = document.getElementById('portalFrame');
+            iframe.style.display = 'block';
+            iframe.src = b.url || `./${b.id}.html`;
+          };
+
+          card.innerHTML = `
+            <div>
+              <span class="book-badge">${b.badge || b.subject || 'PYQ Module'}</span>
+              <div class="book-title">${b.title}</div>
+              <div class="book-desc">${b.description || 'Complete official exam preparation module.'}</div>
+            </div>
+            <button class="btn-read"><i class="fa-solid fa-book-open-reader"></i> पढ़ना शुरू करें</button>
+          `;
+          grid.appendChild(card);
+        });
+      } catch (e) {
+        grid.innerHTML = '<div style="color:#64748b; padding:20px;">बुक्स लोड करने में समस्या आई।</div>';
+      }
     }
   </script>
 </body>
