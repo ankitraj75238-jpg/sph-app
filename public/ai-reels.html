@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>SPH AI Exam Reels | Real PYQ Feed</title>
+  <title>SPH AI Exam Reels | 3.6 Flash Feed</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -508,7 +508,7 @@
 
   <div id="toastPill" class="toast-pill">🔀 Smart Switch Active</div>
 
-  <!-- REELS CONTAINER -->
+  <!-- REELS FEED -->
   <div class="reels-feed-container" id="reelsFeed" onscroll="handleReelScroll()"></div>
 
   <!-- TOPIC CHANGER MODAL -->
@@ -575,7 +575,7 @@
     const TG_BOT_TOKEN = "8688081001:AAG0dYLKJC6rKDHX_Kvhqsy9AAUsCpPDuDk";
     const TG_ADMIN_CHAT_ID = "8986834583";
 
-    // ⚡ EXACT SAME MODELS AS AI-QUIZ
+    // ⚡ EXACT SAME LATEST MODELS AS AI-QUIZ
     const ACTIVE_MODELS = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite'];
 
     let activeTopic = "";
@@ -664,7 +664,6 @@
       document.getElementById('topicModal').style.display = 'none';
     }
 
-    // --- 1-TAP TOPIC SELECTION (NO DELAY, NO MISTAKE) ---
     function startWithTopic(topicName) {
       activeTopic = topicName;
       seenConcepts = [];
@@ -689,7 +688,7 @@
       startWithTopic(customVal);
     }
 
-    // --- STRICT TOPIC-BOUND AI GENERATION ENGINE ---
+    // --- STRICT TOPIC-BOUND AI GENERATION (GEMINI 3.6 / 3.5 ROTATION) ---
     async function fetchNextBatchOfReels(topic) {
       const keys = getAllAvailableKeys();
       if (keys.length === 0) {
@@ -702,7 +701,6 @@
 
       appendLoadingCard();
 
-      // DYNAMIC SUBJECT RULE (Guarantees Vocab gives Vocab, Science gives Science!)
       let strictSubjectRule = "";
       if (/vocab|english|black\s*book|idiom|synonym|antonym|spelling/i.test(topic)) {
         strictSubjectRule = `CRITICAL STRICT RULE: The topic is ENGLISH VOCABULARY. Every reel MUST be an important English Word or Idiom asked in SSC CGL, CHSL, MTS.
@@ -812,7 +810,7 @@ Format:
       loaderDiv.className = "reel-card loading-card";
       loaderDiv.innerHTML = `
         <div class="spinner-ring"></div>
-        <div>🧠 AI नए PYQ और ट्रिक्स लोड कर रहा है...</div>
+        <div>🧠 AI 3.6 Flash नए PYQ और ट्रिक्स लोड कर रहा है...</div>
       `;
       feed.appendChild(loaderDiv);
     }
@@ -965,13 +963,12 @@ Format:
       }
     }
 
-    // On Load: Prompt topic selection directly!
     window.addEventListener('DOMContentLoaded', () => {
       const key = getStoredKey();
       if (!key) {
         openSingleKeyModal();
       } else {
-        openTopicModal(); // Pops up topics so user chooses right away!
+        openTopicModal();
       }
     });
   </script>
