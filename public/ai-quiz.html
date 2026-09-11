@@ -1,13 +1,12 @@
 
 
+
 <!DOCTYPE html>
 <html lang="hi" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>AI Master Quiz Engine | Pareeksha Kendra</title>
-  
-  <meta name="monetag" content="831d0bfbf20b7f74ddeeda8b59f9bddf">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -450,13 +449,13 @@
       font-weight: 800;
     }
 
-    /* 🔥 30-60S IN-PAGE SMART VIDEO LOADER */
+    /* ⏱️ 60-SECOND SMART AI PROGRESS ENGINE */
     .loader-box {
       display: none;
       text-align: center;
       padding: 24px 16px;
       background: var(--card-bg);
-      border: 2.5px solid var(--accent-gold);
+      border: 2px solid var(--accent-gold);
       border-radius: 24px;
       margin-top: 16px;
       box-shadow: var(--card-shadow);
@@ -539,49 +538,6 @@
       background: linear-gradient(90deg, #ff5722, #f59e0b, #10b981);
       border-radius: 12px;
       transition: width 0.4s ease;
-    }
-
-    /* 🎬 30S IN-PAGE VIDEO AD CONTAINER (STAYS ON SCREEN) */
-    .inpage-ad-box {
-      background: var(--orange-light);
-      border: 1.5px dashed var(--accent-gold);
-      border-radius: 16px;
-      padding: 14px 10px;
-      margin-top: 14px;
-      text-align: center;
-    }
-
-    .inpage-ad-tag {
-      font-size: 0.72rem;
-      font-weight: 900;
-      color: var(--accent-gold);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .inpage-video-frame {
-      width: 100%;
-      height: 180px;
-      border-radius: 12px;
-      border: 1px solid var(--card-border);
-      background: #000000;
-      overflow: hidden;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 8px 0;
-    }
-
-    .inpage-video-frame iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
     }
 
     #actionHubView { display: none; width: 100%; }
@@ -1071,7 +1027,7 @@
       </div>
     </div>
 
-    <!-- ⏱️ 30-60S IN-PAGE VIDEO LOADER (STAYS 100% ON-PAGE) -->
+    <!-- ⏱️ 60-SECOND SMART AI PROGRESS ENGINE -->
     <div class="loader-box" id="loaderBox">
       <div class="flower-spinner">
         <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
@@ -1091,21 +1047,6 @@
 
       <div id="loaderStatusText" style="font-size: 0.88rem; font-weight: 800; color: var(--text-main); margin-top: 6px;">
         🔍 AI सामग्री और 15-Year PYQs का विश्लेषण कर रहा है...
-      </div>
-
-      <!-- 🎬 30-SECOND IN-PAGE SPONSORED VIDEO BOX -->
-      <div class="inpage-ad-box">
-        <div class="inpage-ad-tag">
-          <span>⚡ SPONSORED PARTNER VIDEO • 100% FREE INITIATIVE</span>
-        </div>
-
-        <div class="inpage-video-frame">
-          <iframe src="https://omg10.com/4/11772560" sandbox="allow-scripts allow-same-origin"></iframe>
-        </div>
-
-        <div id="adDynamicContent" style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); line-height: 1.4;">
-          ✨ वीडियो पूरा होते ही आपका 100% सटीक टेस्ट स्क्रीन पर लाइव हो जाएगा!
-        </div>
       </div>
     </div>
   </div>
@@ -2085,7 +2026,7 @@
       }
     }
 
-    // 📥 DIRECT CHROME / TELEGRAM DOWNLOAD ENGINE (CLEAN & NATIVE)
+    // 📥 DIRECT CHROME / TELEGRAM DOWNLOAD ENGINE (100% CLEAN & DIRECT)
     function triggerDirectDownload() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
 
@@ -2418,7 +2359,6 @@
       const displayEl = document.getElementById('stopwatchSec');
       const statusEl = document.getElementById('loaderStatusText');
       const progressFill = document.getElementById('aiProgressFill');
-      const adDynamic = document.getElementById('adDynamicContent');
 
       if (progressFill) progressFill.style.width = '0%';
 
@@ -2435,16 +2375,12 @@
         // Dynamic Engaging Status Updates
         if (stopwatchSeconds < 12) {
           statusEl.innerText = "🔍 AI सामग्री और 15-Year PYQs का विश्लेषण कर रहा है...";
-          if (adDynamic) adDynamic.innerText = "✨ ऑफिशियल TCS पैटर्न सवाल तैयार हो रहे हैं...";
         } else if (stopwatchSeconds < 25) {
           statusEl.innerText = "📝 50 नए प्रश्नों और चारों विकल्पों को संकलित किया जा रहा है...";
-          if (adDynamic) adDynamic.innerText = "🎯 100% सटीक प्रश्न संकलन प्रगति पर है...";
         } else if (stopwatchSeconds < 45) {
           statusEl.innerText = "✍️ प्रत्येक प्रश्न की हिंदी में विस्तृत व्याख्या लिखी जा रही है...";
-          if (adDynamic) adDynamic.innerText = "💡 स्पष्टीकरण और कॉन्सेप्ट जोड़े जा रहे हैं...";
         } else {
           statusEl.innerText = "⚡ अंतिम चेकिंग चालू है, बस कुछ ही पल में टेस्ट शुरू होगा...";
-          if (adDynamic) adDynamic.innerText = "🚀 आपका टेस्ट लगभग तैयार है!";
         }
       }, 1000);
     }
