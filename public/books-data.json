@@ -90,7 +90,7 @@
     {
       "id": "8",
       "series": "Parmar Sir Fatman GS",
-      "title": "Parmar Sir Fatman GS - Geography (23 Chapters Bilingual)",
+      "title": "Fatman GS - Geography (23 Chapters Bilingual)",
       "subject": "General Studies (GS)",
       "tag": "🔥 23 CHAPTERS BILINGUAL",
       "itemsCount": "23 Chapters (Hindi + English)",
@@ -99,7 +99,7 @@
     {
       "id": "9",
       "series": "Parmar Sir Fatman GS",
-      "title": "Parmar Sir Fatman GS - History Complete Practice (Bilingual)",
+      "title": "Fatman GS - History Complete Practice (Bilingual)",
       "subject": "General Studies (GS)",
       "tag": "🔥 HISTORY COMPLETE BILINGUAL",
       "itemsCount": "Complete History Chapters",
@@ -108,7 +108,7 @@
     {
       "id": "10",
       "series": "Parmar Sir Fatman GS",
-      "title": "Parmar Sir Fatman GS - Indian Polity (Bilingual)",
+      "title": "Fatman GS - Indian Polity (Bilingual)",
       "subject": "General Studies (GS)",
       "tag": "🔥 POLITY BILINGUAL",
       "itemsCount": "Complete Polity Chapters",
@@ -117,7 +117,7 @@
     {
       "id": "11",
       "series": "Parmar Sir Fatman GS",
-      "title": "Parmar Sir Fatman GS - Indian Economy (Bilingual)",
+      "title": "Fatman GS - Indian Economy (Bilingual)",
       "subject": "General Studies (GS)",
       "tag": "🔥 ECONOMY BILINGUAL",
       "itemsCount": "Complete Economy Chapters",
@@ -126,7 +126,7 @@
     {
       "id": "12",
       "series": "Parmar Sir Fatman GS",
-      "title": "Parmar Sir Fatman GS - Complete Science (Physics, Chemistry & Biology Bilingual)",
+      "title": "Fatman GS - Complete Science (Physics, Chemistry & Biology Bilingual)",
       "subject": "General Studies (GS)",
       "tag": "🔥 SCIENCE COMPLETE BILINGUAL",
       "itemsCount": "Complete Science Chapters",
@@ -134,6 +134,15 @@
     },
     {
       "id": "13",
+      "series": "Parmar Sir Fatman GS",
+      "title": "Fatman GS - Static GK (Complete Chapter-wise Bilingual)",
+      "subject": "General Studies (GS)",
+      "tag": "🔥 STATIC GK BILINGUAL",
+      "itemsCount": "Complete Static GK Chapters",
+      "url": "https://ankitraj75238-jpg.github.io/sph-app/public/fatman-static-gk.html"
+    },
+    {
+      "id": "14",
       "series": "ASO Rambaan Series",
       "title": "ASO RAMBAAN Static GK Book (3000+ Chapter-wise Questions)",
       "subject": "General Studies (GS)",
@@ -142,7 +151,7 @@
       "url": "https://ankitraj75238-jpg.github.io/sph-app/public/aso-rambaan-static-gk.html"
     },
     {
-      "id": "14",
+      "id": "15",
       "series": "DSSSB Exam Special",
       "title": "DSSSB GS Chapter-wise PYQ Master Practice Deck",
       "subject": "General Studies (GS)",
@@ -151,7 +160,7 @@
       "url": "https://ankitraj75238-jpg.github.io/sph-app/public/dsssb-gs-pyq.html"
     },
     {
-      "id": "15",
+      "id": "16",
       "series": "Black Book Series",
       "title": "Black Book Complete Idioms & Phrases (1800+ TCS PYQ)",
       "subject": "English Vocab",
