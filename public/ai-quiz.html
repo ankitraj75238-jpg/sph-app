@@ -7,9 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>AI Master Quiz Engine | Pareeksha Kendra</title>
   
-  <!-- 🛡️ MONETAG VERIFICATION & VIGNETTE IN-PAGE AD -->
   <meta name="monetag" content="831d0bfbf20b7f74ddeeda8b59f9bddf">
-  <script>(function(s){s.dataset.zone='11772630',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -452,13 +450,13 @@
       font-weight: 800;
     }
 
-    /* 🔥 60-SECOND SMART AI LOADER & IN-PAGE AD */
+    /* 🔥 30-60S IN-PAGE SMART VIDEO LOADER */
     .loader-box {
       display: none;
       text-align: center;
       padding: 24px 16px;
       background: var(--card-bg);
-      border: 2px solid var(--accent-gold);
+      border: 2.5px solid var(--accent-gold);
       border-radius: 24px;
       margin-top: 16px;
       box-shadow: var(--card-shadow);
@@ -543,22 +541,47 @@
       transition: width 0.4s ease;
     }
 
-    .ad-slot-card {
+    /* 🎬 30S IN-PAGE VIDEO AD CONTAINER (STAYS ON SCREEN) */
+    .inpage-ad-box {
       background: var(--orange-light);
       border: 1.5px dashed var(--accent-gold);
       border-radius: 16px;
-      padding: 12px;
+      padding: 14px 10px;
       margin-top: 14px;
       text-align: center;
     }
 
-    .ad-slot-tag {
-      font-size: 0.68rem;
-      font-weight: 800;
+    .inpage-ad-tag {
+      font-size: 0.72rem;
+      font-weight: 900;
       color: var(--accent-gold);
       letter-spacing: 1px;
       text-transform: uppercase;
       margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .inpage-video-frame {
+      width: 100%;
+      height: 180px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      background: #000000;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 8px 0;
+    }
+
+    .inpage-video-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
     }
 
     #actionHubView { display: none; width: 100%; }
@@ -1048,7 +1071,7 @@
       </div>
     </div>
 
-    <!-- ⏱️ 60-SECOND SMART AI LOADER & IN-PAGE AD -->
+    <!-- ⏱️ 30-60S IN-PAGE VIDEO LOADER (STAYS 100% ON-PAGE) -->
     <div class="loader-box" id="loaderBox">
       <div class="flower-spinner">
         <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
@@ -1057,7 +1080,7 @@
       </div>
 
       <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,87,34,0.12); border:1px solid var(--accent-gold); padding:5px 16px; border-radius:30px; margin-bottom:8px;">
-        <span>⏱️ बीता हुआ समय:</span>
+        <span>⏱️ लाइव AI प्रोग्रेस:</span>
         <span class="stopwatch-num" id="stopwatchSec">00:00</span>
       </div>
 
@@ -1070,11 +1093,18 @@
         🔍 AI सामग्री और 15-Year PYQs का विश्लेषण कर रहा है...
       </div>
 
-      <!-- 📢 SPONSORED AD FRAME -->
-      <div class="ad-slot-card" id="sponsoredAdBox">
-        <div class="ad-slot-tag">⚡ SPONSORED STUDY PARTNER • 100% FREE INITIATIVE</div>
+      <!-- 🎬 30-SECOND IN-PAGE SPONSORED VIDEO BOX -->
+      <div class="inpage-ad-box">
+        <div class="inpage-ad-tag">
+          <span>⚡ SPONSORED PARTNER VIDEO • 100% FREE INITIATIVE</span>
+        </div>
+
+        <div class="inpage-video-frame">
+          <iframe src="https://omg10.com/4/11772560" sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
+
         <div id="adDynamicContent" style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); line-height: 1.4;">
-          ✨ आपकी फ्री टेस्ट सीरीज तैयार हो रही है...
+          ✨ वीडियो पूरा होते ही आपका 100% सटीक टेस्ट स्क्रीन पर लाइव हो जाएगा!
         </div>
       </div>
     </div>
