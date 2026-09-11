@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="hi" data-theme="light">
 <head>
@@ -447,21 +445,29 @@
       font-weight: 800;
     }
 
+    /* 🔥 60-SECOND SMART AI LOADER & AD CONTAINER */
     .loader-box {
       display: none;
       text-align: center;
-      padding: 24px 14px;
-      background: var(--orange-light);
-      border: 1.5px solid var(--accent-gold);
-      border-radius: 20px;
+      padding: 24px 16px;
+      background: var(--card-bg);
+      border: 2px solid var(--accent-gold);
+      border-radius: 24px;
       margin-top: 16px;
+      box-shadow: var(--card-shadow);
+      animation: pulseGlow 3s infinite ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { border-color: var(--accent-gold); box-shadow: 0 0 15px rgba(194, 65, 12, 0.15); }
+      50% { border-color: var(--accent-emerald); box-shadow: 0 0 25px rgba(16, 185, 129, 0.25); }
     }
 
     .flower-spinner {
       width: 64px;
       height: 64px;
       position: relative;
-      margin: 0 auto 14px;
+      margin: 0 auto 12px;
       animation: flowerSpin 4s linear infinite;
     }
 
@@ -507,6 +513,46 @@
       font-size: 1.45rem;
       font-weight: 900;
       color: var(--accent-gold);
+    }
+
+    .ai-progress-track {
+      width: 100%;
+      height: 9px;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 12px 0 6px;
+    }
+
+    [data-theme="dark"] .ai-progress-track {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .ai-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff5722, #f59e0b, #10b981);
+      border-radius: 12px;
+      transition: width 0.4s ease;
+    }
+
+    /* 📢 SPONSORED AD BOX CONTAINER */
+    .ad-slot-card {
+      background: var(--orange-light);
+      border: 1.5px dashed var(--accent-gold);
+      border-radius: 16px;
+      padding: 12px;
+      margin-top: 14px;
+      text-align: center;
+    }
+
+    .ad-slot-tag {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
     }
 
     #actionHubView { display: none; width: 100%; }
@@ -996,7 +1042,7 @@
       </div>
     </div>
 
-    <!-- STOPWATCH LOADER -->
+    <!-- ⏱️ 60-SECOND SMART AI LOADER & AD CONTAINER -->
     <div class="loader-box" id="loaderBox">
       <div class="flower-spinner">
         <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
@@ -1009,8 +1055,21 @@
         <span class="stopwatch-num" id="stopwatchSec">00:00</span>
       </div>
 
-      <div id="loaderStatusText" style="font-size: 0.88rem; font-weight: 700;">
-        AI सवाल तैयार कर रहा है...
+      <!-- AI PROGRESS BAR (0% TO 100%) -->
+      <div class="ai-progress-track">
+        <div class="ai-progress-fill" id="aiProgressFill"></div>
+      </div>
+
+      <div id="loaderStatusText" style="font-size: 0.88rem; font-weight: 800; color: var(--text-main); margin-top: 6px;">
+        🔍 AI सामग्री और 15-Year PYQs का विश्लेषण कर रहा है...
+      </div>
+
+      <!-- 📢 SPONSORED AD / NOTICE FRAME -->
+      <div class="ad-slot-card" id="sponsoredAdBox">
+        <div class="ad-slot-tag">⚡ SPONSORED STUDY PARTNER • 100% FREE INITIATIVE</div>
+        <div id="adDynamicContent" style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); line-height: 1.4;">
+          ✨ आपकी फ्री टेस्ट सीरीज तैयार हो रही है...
+        </div>
       </div>
     </div>
   </div>
@@ -1229,6 +1288,12 @@
   </div>
 
   <script>
+    // =============================================================
+    // 📢 SPONSORED AD / MONETIZATION CONFIGURATION
+    // =============================================================
+    // 👉 अपना Monetag या Adsterra का Direct Link यहाँ "" के बीच में पेस्ट कर देना:
+    const SPH_AD_DIRECT_LINK = "https://omg10.com/4/11772560";
+
     const TG_BOT_TOKEN = "8688081001:AAG0dYLKJC6rKDHX_Kvhqsy9AAUsCpPDuDk";
     const TG_ADMIN_CHAT_ID = "8986834583";
     const TG_GROUP_TARGET = "@ai_quizcr";
@@ -1990,9 +2055,14 @@
       }
     }
 
-    // 📥 DIRECT CHROME / TELEGRAM DOWNLOAD ENGINE (RESTORED TO ORIGINAL PERFECTION)
+    // 📥 DIRECT CHROME / TELEGRAM DOWNLOAD ENGINE (WITH SPONSORED AD TRIGGER)
     function triggerDirectDownload() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
+
+      // 📢 AD TRIGGER ON DOWNLOAD:
+      if (typeof SPH_AD_DIRECT_LINK === 'string' && SPH_AD_DIRECT_LINK.startsWith('http')) {
+        window.open(SPH_AD_DIRECT_LINK, '_blank');
+      }
 
       const btn = document.getElementById('directDownloadBtn');
       const originalText = btn ? btn.innerHTML : '';
@@ -2316,11 +2386,16 @@
       document.getElementById('setupView').style.display = 'block';
     }
 
+    // ⏱️ 60-SECOND SMART AI PROGRESS ENGINE
     function startRealStopwatch() {
       clearInterval(stopwatchInterval);
       stopwatchSeconds = 0;
       const displayEl = document.getElementById('stopwatchSec');
       const statusEl = document.getElementById('loaderStatusText');
+      const progressFill = document.getElementById('aiProgressFill');
+      const adDynamic = document.getElementById('adDynamicContent');
+
+      if (progressFill) progressFill.style.width = '0%';
 
       stopwatchInterval = setInterval(() => {
         stopwatchSeconds++;
@@ -2328,14 +2403,32 @@
         const secs = stopwatchSeconds % 60;
         displayEl.innerText = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
 
-        if (stopwatchSeconds < 15) statusEl.innerText = "🔍 AI सामग्री का विश्लेषण कर रहा है...";
-        else if (stopwatchSeconds < 40) statusEl.innerText = "🧠 महत्वपूर्ण सवालों और विकल्पों को संकलित किया जा रहा है...";
-        else if (stopwatchSeconds < 80) statusEl.innerText = "✍️ उत्तर और हिंदी में विस्तृत व्याख्या लिखी जा रही है...";
-        else statusEl.innerText = "⚡ अंतिम चेकिंग चालू है, बस कुछ ही पल...";
+        // Smooth Progress Fill (0% to 95% over 50 seconds)
+        const pct = Math.min(95, Math.floor((stopwatchSeconds / 50) * 100));
+        if (progressFill) progressFill.style.width = pct + '%';
+
+        // Dynamic Engaging Status Updates
+        if (stopwatchSeconds < 12) {
+          statusEl.innerText = "🔍 AI सामग्री और 15-Year PYQs का विश्लेषण कर रहा है...";
+          if (adDynamic) adDynamic.innerText = "✨ ऑफिशियल TCS पैटर्न सवाल तैयार हो रहे हैं...";
+        } else if (stopwatchSeconds < 25) {
+          statusEl.innerText = "📝 50 नए प्रश्नों और चारों विकल्पों को संकलित किया जा रहा है...";
+          if (adDynamic) adDynamic.innerText = "🎯 100% सटीक प्रश्न संकलन प्रगति पर है...";
+        } else if (stopwatchSeconds < 45) {
+          statusEl.innerText = "✍️ प्रत्येक प्रश्न की हिंदी में विस्तृत व्याख्या लिखी जा रही है...";
+          if (adDynamic) adDynamic.innerText = "💡 स्पष्टीकरण और कॉन्सेप्ट जोड़े जा रहे हैं...";
+        } else {
+          statusEl.innerText = "⚡ अंतिम चेकिंग चालू है, बस कुछ ही पल में टेस्ट शुरू होगा...";
+          if (adDynamic) adDynamic.innerText = "🚀 आपका टेस्ट लगभग तैयार है!";
+        }
       }, 1000);
     }
 
-    function stopRealStopwatch() { clearInterval(stopwatchInterval); }
+    function stopRealStopwatch() {
+      clearInterval(stopwatchInterval);
+      const progressFill = document.getElementById('aiProgressFill');
+      if (progressFill) progressFill.style.width = '100%';
+    }
 
     // --- MAIN GENERATION ENGINE ---
     async function startGeneration(mode) {
