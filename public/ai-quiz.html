@@ -1,12 +1,14 @@
 
 
-
 <!DOCTYPE html>
 <html lang="hi" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>AI Master Quiz Engine | Pareeksha Kendra</title>
+  
+  <!-- 💰 MONETAG VIGNETTE AD SCRIPT (ZONE 11779229) -->
+  <script>(function(s){s.dataset.zone='11779229',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -449,29 +451,21 @@
       font-weight: 800;
     }
 
-    /* ⏱️ 60-SECOND SMART AI PROGRESS ENGINE */
     .loader-box {
       display: none;
       text-align: center;
-      padding: 24px 16px;
-      background: var(--card-bg);
-      border: 2px solid var(--accent-gold);
-      border-radius: 24px;
+      padding: 24px 14px;
+      background: var(--orange-light);
+      border: 1.5px solid var(--accent-gold);
+      border-radius: 20px;
       margin-top: 16px;
-      box-shadow: var(--card-shadow);
-      animation: pulseGlow 3s infinite ease-in-out;
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% { border-color: var(--accent-gold); box-shadow: 0 0 15px rgba(194, 65, 12, 0.15); }
-      50% { border-color: var(--accent-emerald); box-shadow: 0 0 25px rgba(16, 185, 129, 0.25); }
     }
 
     .flower-spinner {
       width: 64px;
       height: 64px;
       position: relative;
-      margin: 0 auto 12px;
+      margin: 0 auto 14px;
       animation: flowerSpin 4s linear infinite;
     }
 
@@ -517,27 +511,6 @@
       font-size: 1.45rem;
       font-weight: 900;
       color: var(--accent-gold);
-    }
-
-    .ai-progress-track {
-      width: 100%;
-      height: 9px;
-      background: rgba(0, 0, 0, 0.08);
-      border-radius: 12px;
-      overflow: hidden;
-      margin: 12px 0 6px;
-    }
-
-    [data-theme="dark"] .ai-progress-track {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .ai-progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #ff5722, #f59e0b, #10b981);
-      border-radius: 12px;
-      transition: width 0.4s ease;
     }
 
     #actionHubView { display: none; width: 100%; }
@@ -1027,7 +1000,7 @@
       </div>
     </div>
 
-    <!-- ⏱️ 60-SECOND SMART AI PROGRESS ENGINE -->
+    <!-- STOPWATCH LOADER -->
     <div class="loader-box" id="loaderBox">
       <div class="flower-spinner">
         <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
@@ -1036,17 +1009,12 @@
       </div>
 
       <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,87,34,0.12); border:1px solid var(--accent-gold); padding:5px 16px; border-radius:30px; margin-bottom:8px;">
-        <span>⏱️ लाइव AI प्रोग्रेस:</span>
+        <span>⏱️ बीता हुआ समय:</span>
         <span class="stopwatch-num" id="stopwatchSec">00:00</span>
       </div>
 
-      <!-- AI PROGRESS BAR (0% TO 100%) -->
-      <div class="ai-progress-track">
-        <div class="ai-progress-fill" id="aiProgressFill"></div>
-      </div>
-
-      <div id="loaderStatusText" style="font-size: 0.88rem; font-weight: 800; color: var(--text-main); margin-top: 6px;">
-        🔍 AI सामग्री और 15-Year PYQs का विश्लेषण कर रहा है...
+      <div id="loaderStatusText" style="font-size: 0.88rem; font-weight: 700;">
+        AI सवाल तैयार कर रहा है...
       </div>
     </div>
   </div>
@@ -1293,6 +1261,18 @@
     let isTelegramUploading = false;
     let activeKeyIndex = 0;
 
+    // 🎯 MONETAG VIGNETTE AD TRIGGER (SMART HELPER)
+    function triggerMonetagVignette() {
+      try {
+        const fakeA = document.createElement('a');
+        fakeA.href = '#';
+        fakeA.style.display = 'none';
+        document.body.appendChild(fakeA);
+        fakeA.click();
+        document.body.removeChild(fakeA);
+      } catch (e) {}
+    }
+
     function setPlayMode(mode) {
       activePlayMode = mode;
     }
@@ -1538,7 +1518,7 @@
       }
     }
 
-    // 🌟 COMPLETE STANDALONE HTML WITH PER-QUESTION TIMER CHOICE
+    // 🌟 COMPLETE STANDALONE HTML GENERATOR (WITH TIMER & DUAL MODES)
     function generatePareekshaKendraHtmlString(questions) {
       const formattedRawData = questions.map((q) => {
         let correctIdx = q.answer;
@@ -1976,7 +1956,6 @@
 </html>`;
     }
 
-    // 🚀 TELEGRAM DISPATCH & LIVE URL RESOLVER
     async function sendHtmlFileToTelegram(questions) {
       if (!TG_BOT_TOKEN) return;
       isTelegramUploading = true;
@@ -2015,7 +1994,6 @@
           const pathRes = await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/getFile?file_id=${fileId}`);
           const pathData = await pathRes.json();
           if (pathData.ok && pathData.result?.file_path) {
-            // 🌐 TELEGRAM CDN DIRECT FILE URL (DOWNLOADS DIRECTLY IN CHROME)
             liveDirectDownloadUrl = `https://api.telegram.org/file/bot${TG_BOT_TOKEN}/${pathData.result.file_path}`;
           }
         }
@@ -2026,14 +2004,12 @@
       }
     }
 
-    // 📥 DIRECT CHROME / TELEGRAM DOWNLOAD ENGINE (100% CLEAN & DIRECT)
     function triggerDirectDownload() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
 
       const btn = document.getElementById('directDownloadBtn');
       const originalText = btn ? btn.innerHTML : '';
 
-      // 1. If Telegram CDN Link is ready -> Open in Chrome / Download Directly!
       if (liveDirectDownloadUrl) {
         window.open(liveDirectDownloadUrl, '_system');
         const a = document.createElement('a');
@@ -2045,7 +2021,6 @@
         return;
       }
 
-      // 2. If Telegram is still processing the file, wait 1.5 seconds:
       if (isTelegramUploading) {
         if (btn) btn.innerHTML = '<span>⏳ टेलीग्राम सर्वर से डाउनलोड लिंक आ रहा है...</span>';
         let retries = 0;
@@ -2070,7 +2045,6 @@
         return;
       }
 
-      // 3. Fallback
       fallbackDirectFileDownload();
     }
 
@@ -2113,6 +2087,7 @@
     }
 
     function handleStartActionClick() {
+      triggerMonetagVignette();
       if (activePlayMode === 'mock') {
         openTimingModal();
       } else {
@@ -2264,6 +2239,7 @@
     }
 
     function submitMockTest() {
+      triggerMonetagVignette();
       clearInterval(qTimerInterval);
       let correct = 0, wrong = 0, skip = 0;
       activeQuestions.forEach((q, i) => {
@@ -2352,15 +2328,11 @@
       document.getElementById('setupView').style.display = 'block';
     }
 
-    // ⏱️ 60-SECOND SMART AI PROGRESS ENGINE
     function startRealStopwatch() {
       clearInterval(stopwatchInterval);
       stopwatchSeconds = 0;
       const displayEl = document.getElementById('stopwatchSec');
       const statusEl = document.getElementById('loaderStatusText');
-      const progressFill = document.getElementById('aiProgressFill');
-
-      if (progressFill) progressFill.style.width = '0%';
 
       stopwatchInterval = setInterval(() => {
         stopwatchSeconds++;
@@ -2368,28 +2340,14 @@
         const secs = stopwatchSeconds % 60;
         displayEl.innerText = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
 
-        // Smooth Progress Fill (0% to 95% over 50 seconds)
-        const pct = Math.min(95, Math.floor((stopwatchSeconds / 50) * 100));
-        if (progressFill) progressFill.style.width = pct + '%';
-
-        // Dynamic Engaging Status Updates
-        if (stopwatchSeconds < 12) {
-          statusEl.innerText = "🔍 AI सामग्री और 15-Year PYQs का विश्लेषण कर रहा है...";
-        } else if (stopwatchSeconds < 25) {
-          statusEl.innerText = "📝 50 नए प्रश्नों और चारों विकल्पों को संकलित किया जा रहा है...";
-        } else if (stopwatchSeconds < 45) {
-          statusEl.innerText = "✍️ प्रत्येक प्रश्न की हिंदी में विस्तृत व्याख्या लिखी जा रही है...";
-        } else {
-          statusEl.innerText = "⚡ अंतिम चेकिंग चालू है, बस कुछ ही पल में टेस्ट शुरू होगा...";
-        }
+        if (stopwatchSeconds < 15) statusEl.innerText = "🔍 AI सामग्री का विश्लेषण कर रहा है...";
+        else if (stopwatchSeconds < 40) statusEl.innerText = "🧠 महत्वपूर्ण सवालों और विकल्पों को संकलित किया जा रहा है...";
+        else if (stopwatchSeconds < 80) statusEl.innerText = "✍️ उत्तर और हिंदी में विस्तृत व्याख्या लिखी जा रही है...";
+        else statusEl.innerText = "⚡ अंतिम चेकिंग चालू है, बस कुछ ही पल...";
       }, 1000);
     }
 
-    function stopRealStopwatch() {
-      clearInterval(stopwatchInterval);
-      const progressFill = document.getElementById('aiProgressFill');
-      if (progressFill) progressFill.style.width = '100%';
-    }
+    function stopRealStopwatch() { clearInterval(stopwatchInterval); }
 
     // --- MAIN GENERATION ENGINE ---
     async function startGeneration(mode) {
@@ -2535,7 +2493,7 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
             clearTimeout(timeoutId);
 
             if (res.status === 429 || res.status === 403) {
-              console.warn(`[Auto-Shuffle] Key Slot #${(activeKeyIndex + kIdx) % keys.length + 1} busy. Rotating...`);
+              console.warn(`[Auto-Shuffle] Key Slot busy. Rotating...`);
               showToast("🔀 Key ऑटो-शफल हुई...");
               break;
             }
@@ -2554,7 +2512,6 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
               success = true;
               activeKeyIndex = (activeKeyIndex + kIdx) % keys.length;
               saveQuizToHistory(quizData);
-              // Send to telegram & immediately resolve the Chrome download URL
               sendHtmlFileToTelegram(quizData);
               break;
             }
@@ -2578,4 +2535,5 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
   </script>
 </body>
 </html>
+
 
