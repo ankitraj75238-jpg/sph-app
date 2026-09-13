@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="hi" data-theme="light">
 <head>
@@ -787,48 +785,9 @@
       max-height: 85vh;
       overflow-y: auto;
     }
-
-    /* ⚡ FLOATING REDIRECT NOTICE TOAST */
-    .redirect-alert-toast {
-      position: fixed;
-      top: 60px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 420px;
-      background: #0f172a;
-      border: 1.5px solid #10b981;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      border-radius: 18px;
-      padding: 14px 16px;
-      z-index: 999999;
-      display: none;
-      animation: slideDown 0.3s ease-out;
-    }
-
-    @keyframes slideDown {
-      from { transform: translate(-50%, -20px); opacity: 0; }
-      to { transform: translate(-50%, 0); opacity: 1; }
-    }
   </style>
 </head>
 <body>
-
-  <!-- ⚡ SMART REDIRECT IN-APP GUIDANCE MODAL -->
-  <div id="redirectToast" class="redirect-alert-toast">
-    <div style="display:flex; align-items:flex-start; gap:12px;">
-      <div style="font-size:26px;">⚡</div>
-      <div style="flex:1;">
-        <div style="font-family:'Outfit'; font-size:0.95rem; font-weight:900; color:#10b981; margin-bottom:2px;">
-          स्पॉन्सर लिंक नया खुला है!
-        </div>
-        <div style="font-size:0.75rem; color:#cbd5e1; line-height:1.45;" id="toastActionDesc">
-          कृपया वापस ऐप पर आ जाएँ, आपका AI टेस्ट बैकग्राउंड में तैयार हो रहा है...
-        </div>
-      </div>
-      <i class="fa-solid fa-xmark" style="color:#94a3b8; cursor:pointer; font-size:16px;" onclick="closeRedirectToast()"></i>
-    </div>
-  </div>
 
   <header>
     <div class="brand">
@@ -1090,11 +1049,11 @@
         </div>
       </div>
 
+      <!-- 100% CLEAN DIRECT START -->
       <button class="btn-main" onclick="handleStartActionClick()">
         🚀 START PRACTICE DRILL ➔
       </button>
 
-      <!-- 📥 DOWNLOAD BUTTON (WITH DIRECT AD + FILE DOWNLOAD) -->
       <button class="btn-score-retake" id="directDownloadBtn" onclick="triggerDirectDownload()" style="margin-top:10px;">
         <i class="fa-solid fa-download"></i> फ़ोन में डाउनलोड करें (Download HTML)
       </button>
@@ -1267,9 +1226,6 @@
     const TG_GROUP_TARGET = "@ai_quizcr";
     const TG_GROUP_FALLBACK_ID = "-1004223613799";
 
-    // 💰 MONETAG DIRECT AD LINK
-    const MONETAG_DIRECT_LINK = "https://omg10.com/4/11781794";
-
     const ACTIVE_MODELS = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite'];
 
     let activeEngineMode = 'scanner';
@@ -1292,38 +1248,6 @@
     let liveDirectDownloadUrl = '';
     let isTelegramUploading = false;
     let activeKeyIndex = 0;
-
-    // 🚀 SMART DIRECT AD TRIGGER (OPEN IN NEW TAB + HELP NOTIFICATION)
-    function openDirectAd(actionMsg) {
-      try {
-        const win = window.open(MONETAG_DIRECT_LINK, '_blank');
-        if (!win) {
-          const a = document.createElement('a');
-          a.href = MONETAG_DIRECT_LINK;
-          a.target = '_blank';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        }
-      } catch (e) {}
-
-      showRedirectToast(actionMsg || "✅ स्पॉन्सर लिंक नया खुला है! कृपया वापस ऐप पर आ जाएँ, आपका AI टेस्ट बैकग्राउंड में तैयार हो रहा है...");
-    }
-
-    function showRedirectToast(msg) {
-      const toast = document.getElementById('redirectToast');
-      const desc = document.getElementById('toastActionDesc');
-      if (desc) desc.innerText = msg;
-      if (toast) {
-        toast.style.display = 'block';
-        setTimeout(() => { toast.style.display = 'none'; }, 6000);
-      }
-    }
-
-    function closeRedirectToast() {
-      const toast = document.getElementById('redirectToast');
-      if (toast) toast.style.display = 'none';
-    }
 
     function setPlayMode(mode) {
       activePlayMode = mode;
@@ -1561,7 +1485,7 @@
       }
     }
 
-    // 🌟 COMPLETE STANDALONE HTML WITH PER-QUESTION TIMER CHOICE
+    // 🌟 COMPLETE STANDALONE HTML GENERATOR (100% BUG-FREE & AD-FREE)
     function generatePareekshaKendraHtmlString(questions) {
       const formattedRawData = questions.map((q) => {
         let correctIdx = q.answer;
@@ -2048,12 +1972,8 @@
       }
     }
 
-    // 📥 DIRECT AD + SMART DOWNLOAD TRIGGER
     function triggerDirectDownload() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
-
-      // 1. Trigger Monetag Direct Link in background/new tab
-      openDirectAd("✅ स्पॉन्सर लिंक खुल गया! आपकी फ़ाइल भी डाउनलोड हो रही है...");
 
       const btn = document.getElementById('directDownloadBtn');
       const originalText = btn ? btn.innerHTML : '';
@@ -2351,6 +2271,7 @@
     }
 
     function startReviewMode() {
+      clearInterval(qTimerInterval);
       isReviewMode = true;
       currentQ = 0;
       document.getElementById('scorecardView').style.display = 'none';
@@ -2392,7 +2313,7 @@
 
     function stopRealStopwatch() { clearInterval(stopwatchInterval); }
 
-    // --- MAIN GENERATION ENGINE (TRIGGER DIRECT AD ON GENERATION) ---
+    // --- MAIN GENERATION ENGINE ---
     async function startGeneration(mode) {
       const keys = getAllAvailableKeys();
       if (!keys.length) return openKeyModal(true);
@@ -2464,10 +2385,16 @@ Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D.`;
           ? `Extract and generate ALL multiple choice questions (MCQs) available across the material.`
           : `Extract and create exactly ${qCount} multiple choice questions (MCQs) from this material.`;
 
+        const pageRange = (document.getElementById('pdfPageRange')?.value || '').trim();
+        let rangeRule = pageRange ? `Focus strictly on content within page range: ${pageRange}.` : '';
+        let extraTextPrompt = pastedText ? `\nALSO ANALYZE THIS PASTED TEXT/NOTES:\n"""\n${pastedText}\n"""` : '';
+
         prompt = `You are an expert competitive exam question creator. Analyze all provided images/document/text thoroughly.
 Topic/Chapter: "${activeQuizTopic}".
 ${quantityInstruction}
 ${languageRule}
+${rangeRule}
+${extraTextPrompt}
 Strictly return ONLY a valid JSON array of objects.
 Format:
 [
@@ -2487,10 +2414,6 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
         }
       }
 
-      // 💰 1. TRIGGER MONETAG DIRECT AD IMMEDIATELY IN NEW TAB
-      openDirectAd("✅ स्पॉन्सर लिंक नया खुला है! कृपया वापस ऐप पर आ जाएँ, आपका AI टेस्ट बैकग्राउंड में तैयार हो रहा है...");
-
-      // 2. CONTINUE GENERATION SEAMLESSLY IN APP
       const actionBtns = document.querySelectorAll('.btn-action');
       actionBtns.forEach(b => b.disabled = true);
 
@@ -2505,7 +2428,6 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
       }];
 
       const modelsToTry = [chosenModel, ...ACTIVE_MODELS.filter(m => m !== chosenModel)];
-      let success = false;
 
       for (let attempt = 0; attempt < modelsToTry.length; attempt++) {
         const currentModel = modelsToTry[attempt];
@@ -2529,7 +2451,6 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
 
           if (parsed && Array.isArray(parsed) && parsed.length > 0) {
             quizData = parsed;
-            success = true;
             saveQuizToHistory(quizData);
             sendHtmlFileToTelegram(quizData);
             break;
@@ -2543,7 +2464,7 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
       document.getElementById('loaderBox').style.display = 'none';
       actionBtns.forEach(b => b.disabled = false);
 
-      if (success) {
+      if (quizData && quizData.length > 0) {
         showActionHub();
       } else {
         alert('सवाल जनरेट नहीं हो सके। कृपया दोबारा प्रयास करें।');
@@ -2552,4 +2473,3 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
   </script>
 </body>
 </html>
-
