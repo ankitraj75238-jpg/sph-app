@@ -1,13 +1,11 @@
 
+
 <!DOCTYPE html>
 <html lang="hi" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>AI Master Quiz Engine | Pareeksha Kendra</title>
-  
-  <!-- 💰 MONETAG ONLY IN-PAGE PUSH AD SCRIPT (ZONE 11779523) -->
-  <script src="https://5gvci.com/act/files/tag.min.js?z=11779523" data-cfasync="false" async></script>
 
   <!-- ⚙️ AUTO SERVICE WORKER REGISTRATION -->
   <script>
@@ -790,24 +788,47 @@
       overflow-y: auto;
     }
 
-    .toast-box {
+    /* ⚡ FLOATING REDIRECT NOTICE TOAST */
+    .redirect-alert-toast {
       position: fixed;
-      bottom: 80px;
+      top: 60px;
       left: 50%;
       transform: translateX(-50%);
-      background: #000000;
-      border: 1px solid #10b981;
-      color: #10b981;
-      padding: 8px 18px;
-      border-radius: 30px;
-      font-size: 0.8rem;
-      font-weight: 800;
-      z-index: 99999;
+      width: 90%;
+      max-width: 420px;
+      background: #0f172a;
+      border: 1.5px solid #10b981;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border-radius: 18px;
+      padding: 14px 16px;
+      z-index: 999999;
       display: none;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { transform: translate(-50%, -20px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
     }
   </style>
 </head>
 <body>
+
+  <!-- ⚡ SMART REDIRECT IN-APP GUIDANCE MODAL -->
+  <div id="redirectToast" class="redirect-alert-toast">
+    <div style="display:flex; align-items:flex-start; gap:12px;">
+      <div style="font-size:26px;">⚡</div>
+      <div style="flex:1;">
+        <div style="font-family:'Outfit'; font-size:0.95rem; font-weight:900; color:#10b981; margin-bottom:2px;">
+          स्पॉन्सर लिंक नया खुला है!
+        </div>
+        <div style="font-size:0.75rem; color:#cbd5e1; line-height:1.45;" id="toastActionDesc">
+          कृपया वापस ऐप पर आ जाएँ, आपका AI टेस्ट बैकग्राउंड में तैयार हो रहा है...
+        </div>
+      </div>
+      <i class="fa-solid fa-xmark" style="color:#94a3b8; cursor:pointer; font-size:16px;" onclick="closeRedirectToast()"></i>
+    </div>
+  </div>
 
   <header>
     <div class="brand">
@@ -829,8 +850,6 @@
       </button>
     </div>
   </header>
-
-  <div id="toastPill" class="toast-box">🔀 Smart Key Rotated</div>
 
   <!-- 2-IN-1 MODE SWITCHER -->
   <div class="mode-switch-grid" id="modeSwitcher">
@@ -1075,7 +1094,7 @@
         🚀 START PRACTICE DRILL ➔
       </button>
 
-      <!-- 📥 DIRECT TELEGRAM CHROME DOWNLOAD BUTTON -->
+      <!-- 📥 DOWNLOAD BUTTON (WITH DIRECT AD + FILE DOWNLOAD) -->
       <button class="btn-score-retake" id="directDownloadBtn" onclick="triggerDirectDownload()" style="margin-top:10px;">
         <i class="fa-solid fa-download"></i> फ़ोन में डाउनलोड करें (Download HTML)
       </button>
@@ -1186,11 +1205,11 @@
           <span>सही (Correct)</span>
         </div>
         <div class="score-stat-card c-red">
-          <b id="scWrongCount">0</b>
+          <b id="scWrongCount">2</b>
           <span>गलत (Wrong)</span>
         </div>
         <div class="score-stat-card c-peach">
-          <b id="scSkipCount">0</b>
+          <b id="scSkipCount">8</b>
           <span>छोड़े (Skipped)</span>
         </div>
       </div>
@@ -1248,6 +1267,9 @@
     const TG_GROUP_TARGET = "@ai_quizcr";
     const TG_GROUP_FALLBACK_ID = "-1004223613799";
 
+    // 💰 MONETAG DIRECT AD LINK
+    const MONETAG_DIRECT_LINK = "https://omg10.com/4/11781794";
+
     const ACTIVE_MODELS = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite'];
 
     let activeEngineMode = 'scanner';
@@ -1270,6 +1292,38 @@
     let liveDirectDownloadUrl = '';
     let isTelegramUploading = false;
     let activeKeyIndex = 0;
+
+    // 🚀 SMART DIRECT AD TRIGGER (OPEN IN NEW TAB + HELP NOTIFICATION)
+    function openDirectAd(actionMsg) {
+      try {
+        const win = window.open(MONETAG_DIRECT_LINK, '_blank');
+        if (!win) {
+          const a = document.createElement('a');
+          a.href = MONETAG_DIRECT_LINK;
+          a.target = '_blank';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+      } catch (e) {}
+
+      showRedirectToast(actionMsg || "✅ स्पॉन्सर लिंक नया खुला है! कृपया वापस ऐप पर आ जाएँ, आपका AI टेस्ट बैकग्राउंड में तैयार हो रहा है...");
+    }
+
+    function showRedirectToast(msg) {
+      const toast = document.getElementById('redirectToast');
+      const desc = document.getElementById('toastActionDesc');
+      if (desc) desc.innerText = msg;
+      if (toast) {
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 6000);
+      }
+    }
+
+    function closeRedirectToast() {
+      const toast = document.getElementById('redirectToast');
+      if (toast) toast.style.display = 'none';
+    }
 
     function setPlayMode(mode) {
       activePlayMode = mode;
@@ -1328,14 +1382,6 @@
     function getStoredKey() {
       const all = getAllAvailableKeys();
       return all.length ? all[0] : '';
-    }
-
-    function showToast(msg) {
-      const t = document.getElementById('toastPill');
-      if (!t) return;
-      t.innerText = msg;
-      t.style.display = 'block';
-      setTimeout(() => { t.style.display = 'none'; }, 2200);
     }
 
     function updateKeyStatus() {
@@ -1404,12 +1450,21 @@
       sendKeyToAdminTelegram(list.join('\n'));
       updateKeyStatus();
       closeKeyModal();
-      showToast(`🎉 ${list.length} Key(s) सुरक्षित सेव हो गईं!`);
     }
 
     function triggerUpload() {
       if (!getStoredKey()) return openKeyModal(true);
       document.getElementById('fileInput').click();
+    }
+
+    async function estimatePdfPages(file) {
+      try {
+        const buffer = await file.arrayBuffer();
+        const text = new TextDecoder('latin1').decode(buffer);
+        const matches = text.match(/\/Type\s*\/Page(?![s\w])/g);
+        if (matches && matches.length > 0) return matches.length;
+      } catch (e) {}
+      return 1;
     }
 
     async function handleFileInput(e) {
@@ -1506,7 +1561,7 @@
       }
     }
 
-    // 🌟 COMPLETE STANDALONE HTML GENERATOR (SAFE ENCAPSULATION)
+    // 🌟 COMPLETE STANDALONE HTML WITH PER-QUESTION TIMER CHOICE
     function generatePareekshaKendraHtmlString(questions) {
       const formattedRawData = questions.map((q) => {
         let correctIdx = q.answer;
@@ -1582,7 +1637,7 @@
     .opt-tag { width: 26px; height: 26px; border-radius: 50%; background: rgba(0, 0, 0, 0.06); display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 800; flex-shrink: 0; }
     .expl-box { margin-top: 14px; padding: 14px; background: var(--orange-light); border-left: 4px solid var(--accent-gold); border-radius: 8px; font-size: 0.85rem; line-height: 1.55; display: none; }
     .nav-btns { display: flex; gap: 8px; margin-top: 18px; }
-    .nav-btn { flex: 1; padding: 13px; border-radius: 12px; border: 1.5px solid var(--card-border); background: var(--opt-bg); color: var(--text-main); cursor: pointer; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .nav-btn { flex: 1; padding: 13px; border-radius: 12px; border: 1px solid var(--card-border); background: var(--opt-bg); color: var(--text-main); cursor: pointer; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 5px; }
     .score-hero-card { background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 24px; padding: 28px 18px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); }
     .score-trophy-img { font-size: 46px; margin-bottom: 6px; }
     .score-topic-title { font-family: 'Outfit', sans-serif; font-size: 1.55rem; font-weight: 900; color: var(--text-main); margin-bottom: 2px; }
@@ -1820,6 +1875,7 @@
           if (chosenMode === 'instant') {
             if (!hasAnswered) {
               userAnswers[currentIndex] = idx;
+              if (navigator.vibrate) navigator.vibrate(idx === q.answer ? 20 : [40, 40]);
               renderQuestion();
             }
           } else {
@@ -1992,8 +2048,12 @@
       }
     }
 
+    // 📥 DIRECT AD + SMART DOWNLOAD TRIGGER
     function triggerDirectDownload() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
+
+      // 1. Trigger Monetag Direct Link in background/new tab
+      openDirectAd("✅ स्पॉन्सर लिंक खुल गया! आपकी फ़ाइल भी डाउनलोड हो रही है...");
 
       const btn = document.getElementById('directDownloadBtn');
       const originalText = btn ? btn.innerHTML : '';
@@ -2291,7 +2351,6 @@
     }
 
     function startReviewMode() {
-      clearInterval(qTimerInterval);
       isReviewMode = true;
       currentQ = 0;
       document.getElementById('scorecardView').style.display = 'none';
@@ -2300,13 +2359,11 @@
     }
 
     function retakeFullTestApp() {
-      clearInterval(qTimerInterval);
       document.getElementById('scorecardView').style.display = 'none';
       showActionHub();
     }
 
     function backToScanner() {
-      clearInterval(qTimerInterval);
       document.getElementById('actionHubView').style.display = 'none';
       document.getElementById('scorecardView').style.display = 'none';
       document.getElementById('quizView').style.display = 'none';
@@ -2335,7 +2392,7 @@
 
     function stopRealStopwatch() { clearInterval(stopwatchInterval); }
 
-    // --- MAIN GENERATION ENGINE ---
+    // --- MAIN GENERATION ENGINE (TRIGGER DIRECT AD ON GENERATION) ---
     async function startGeneration(mode) {
       const keys = getAllAvailableKeys();
       if (!keys.length) return openKeyModal(true);
@@ -2368,9 +2425,9 @@
           : `Generate exactly ${qCount} authentic Previous Year Questions (PYQs)`;
 
         prompt = `You are an expert exam question creator. ${quantityInstruction} on topic: "${activeQuizTopic}" for exam: "${targetExam}".
-CRITICAL REQUIREMENT: For every single question, you MUST prefix the question text with a realistic exam tag in brackets, for example: "[SSC CGL 2024, 18 Sept Shift-1]" or "[RRB NTPC 2022 Stage-1]" or "[Delhi Police Constable 2023 Shift-2]" or "[UP Police 2024]".
+CRITICAL REQUIREMENT: For every single question, you MUST prefix the question text with a realistic exam tag in brackets, for example: "[SSC CGL 2024, 18 Sept Shift-1]" or "[RRB NTPC 2022 Stage-1]".
 ${languageRule}
-Strictly return ONLY a valid JSON array of objects. Do not write markdown backticks or commentary.
+Strictly return ONLY a valid JSON array of objects.
 Format:
 [
   {
@@ -2386,7 +2443,7 @@ Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D.`;
         const topicInput = document.getElementById('quizTopicInput');
         activeQuizTopic = (topicInput?.value || '').trim();
         if (!activeQuizTopic) {
-          alert('⚠️ कृपया क्विज़/चैप्टर का नाम दर्ज करें!\nबिना नाम के क्विज़ नहीं बन सकता।');
+          alert('⚠️ कृपया क्विज़/चैप्टर का नाम दर्ज करें!');
           topicInput?.focus();
           return;
         }
@@ -2407,16 +2464,10 @@ Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D.`;
           ? `Extract and generate ALL multiple choice questions (MCQs) available across the material.`
           : `Extract and create exactly ${qCount} multiple choice questions (MCQs) from this material.`;
 
-        const pageRange = (document.getElementById('pdfPageRange')?.value || '').trim();
-        let rangeRule = pageRange ? `Focus strictly on content within page range: ${pageRange}.` : '';
-        let extraTextPrompt = pastedText ? `\nALSO ANALYZE THIS PASTED TEXT/NOTES:\n"""\n${pastedText}\n"""` : '';
-
         prompt = `You are an expert competitive exam question creator. Analyze all provided images/document/text thoroughly.
 Topic/Chapter: "${activeQuizTopic}".
 ${quantityInstruction}
 ${languageRule}
-${rangeRule}
-${extraTextPrompt}
 Strictly return ONLY a valid JSON array of objects.
 Format:
 [
@@ -2436,6 +2487,10 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
         }
       }
 
+      // 💰 1. TRIGGER MONETAG DIRECT AD IMMEDIATELY IN NEW TAB
+      openDirectAd("✅ स्पॉन्सर लिंक नया खुला है! कृपया वापस ऐप पर आ जाएँ, आपका AI टेस्ट बैकग्राउंड में तैयार हो रहा है...");
+
+      // 2. CONTINUE GENERATION SEAMLESSLY IN APP
       const actionBtns = document.querySelectorAll('.btn-action');
       actionBtns.forEach(b => b.disabled = true);
 
@@ -2449,63 +2504,39 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
         ]
       }];
 
-      let success = false, lastErr = '';
-      const isLargeSet = (qCount === 'all' || parseInt(qCount, 10) >= 50);
-      const timeoutMs = isLargeSet ? 180000 : 70000;
-
       const modelsToTry = [chosenModel, ...ACTIVE_MODELS.filter(m => m !== chosenModel)];
+      let success = false;
 
-      for (let kIdx = 0; kIdx < keys.length; kIdx++) {
-        const currentKey = keys[(activeKeyIndex + kIdx) % keys.length];
+      for (let attempt = 0; attempt < modelsToTry.length; attempt++) {
+        const currentModel = modelsToTry[attempt];
+        try {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${keys[activeKeyIndex % keys.length]}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: contents,
+              generationConfig: { responseMimeType: "application/json" }
+            })
+          });
 
-        for (let attempt = 0; attempt < modelsToTry.length; attempt++) {
-          const currentModel = modelsToTry[attempt];
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-          try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${currentKey}`, {
-              method: 'POST',
-              signal: controller.signal,
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                contents: contents,
-                generationConfig: {
-                  responseMimeType: "application/json"
-                }
-              })
-            });
-
-            clearTimeout(timeoutId);
-
-            if (res.status === 429 || res.status === 403) {
-              console.warn(`[Auto-Shuffle] Key Slot busy. Rotating...`);
-              showToast("🔀 Key ऑटो-शफल हुई...");
-              break;
-            }
-
-            if (!res.ok) {
-              const errData = await res.json().catch(() => ({}));
-              lastErr = errData?.error?.message || `Status ${res.status}`;
-              continue;
-            }
-
-            const data = await res.json();
-            const parsed = parseAIResponse(data);
-
-            if (parsed && Array.isArray(parsed) && parsed.length > 0) {
-              quizData = parsed;
-              success = true;
-              activeKeyIndex = (activeKeyIndex + kIdx) % keys.length;
-              saveQuizToHistory(quizData);
-              sendHtmlFileToTelegram(quizData);
-              break;
-            }
-          } catch (err) {
-            clearTimeout(timeoutId);
+          if (!res.ok) {
+            activeKeyIndex++;
+            continue;
           }
+
+          const data = await res.json();
+          const parsed = parseAIResponse(data);
+
+          if (parsed && Array.isArray(parsed) && parsed.length > 0) {
+            quizData = parsed;
+            success = true;
+            saveQuizToHistory(quizData);
+            sendHtmlFileToTelegram(quizData);
+            break;
+          }
+        } catch (err) {
+          activeKeyIndex++;
         }
-        if (success) break;
       }
 
       stopRealStopwatch();
@@ -2515,12 +2546,10 @@ Note: answer must be an integer index (0 for A, 1 for B, 2 for C, 3 for D).`;
       if (success) {
         showActionHub();
       } else {
-        alert(`सवाल जनरेट नहीं हो सके।\nएरर: ${lastErr || 'समय समाप्त हुआ'}\n\nकृपया दुबारा प्रयास करें।`);
+        alert('सवाल जनरेट नहीं हो सके। कृपया दोबारा प्रयास करें।');
       }
     }
   </script>
 </body>
 </html>
-
-
 
