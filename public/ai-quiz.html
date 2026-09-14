@@ -922,7 +922,8 @@
           </div>
         </div>
 
-        <button class="btn-action" onclick="startGeneration('scanner')">
+        <!-- TRIGGERS FRIENDLY AD UNLOCK MODAL FIRST -->
+        <button class="btn-action" onclick="requestAdUnlockAndGenerate('scanner')">
           🚀 सवाल पहचानें और टेस्ट शुरू करें
         </button>
       </div>
@@ -982,7 +983,8 @@
           </div>
         </div>
 
-        <button class="btn-action" onclick="startGeneration('topic')">
+        <!-- TRIGGERS FRIENDLY AD UNLOCK MODAL FIRST -->
+        <button class="btn-action" onclick="requestAdUnlockAndGenerate('topic')">
           🚀 असली PYQ टेस्ट जनरेट करें
         </button>
       </div>
@@ -1049,11 +1051,12 @@
         </div>
       </div>
 
-      <!-- 100% CLEAN DIRECT START -->
+      <!-- DIRECT PLAY BUTTON (NO ADS, AS REQUESTED) -->
       <button class="btn-main" onclick="handleStartActionClick()">
         🚀 START PRACTICE DRILL ➔
       </button>
 
+      <!-- 📥 DOWNLOAD BUTTON WITH DIRECT LINK -->
       <button class="btn-score-retake" id="directDownloadBtn" onclick="triggerDirectDownload()" style="margin-top:10px;">
         <i class="fa-solid fa-download"></i> फ़ोन में डाउनलोड करें (Download HTML)
       </button>
@@ -1199,6 +1202,26 @@
     </div>
   </div>
 
+  <!-- 🎁 FRIENDLY AD UNLOCK MODAL (EXPLAINS TO USER BEFORE OPENING CHROME) -->
+  <div class="modal-overlay" id="adUnlockModal">
+    <div class="modal-card" style="text-align: center;">
+      <div style="font-size: 42px; margin-bottom: 8px;">🎁</div>
+      <h3 style="font-family: 'Outfit'; font-size: 1.25rem; font-weight: 900; color: var(--accent-gold); margin-bottom: 6px;">
+        निःशुल्क टेस्ट अनलॉक करें
+      </h3>
+      <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+        क्विज़ बनाने के लिए नीचे बटन पर टैप करें। यह आपको Chrome में ले जाएगा।<br><br>
+        💡 <b>वहाँ से सिर्फ 1 बार 'Back' दबाकर वापस आएँ — आपका टेस्ट बैकग्राउंड में तैयार मिलेगा!</b>
+      </p>
+      <button class="btn-main" onclick="confirmUnlockAndGenerate()" style="margin-top: 0; margin-bottom: 10px;">
+        🚀 अनलॉक करें और टेस्ट बनाएँ ➔
+      </button>
+      <button onclick="closeAdUnlockModal()" style="width: 100%; padding: 10px; background: transparent; border: none; color: var(--text-muted); font-size: 0.82rem; cursor: pointer;">
+        रद्द करें (Cancel)
+      </button>
+    </div>
+  </div>
+
   <!-- API KEY MODAL -->
   <div class="modal-overlay" id="keyModal">
     <div class="modal-card">
@@ -1226,6 +1249,9 @@
     const TG_GROUP_TARGET = "@ai_quizcr";
     const TG_GROUP_FALLBACK_ID = "-1004223613799";
 
+    // 💰 MONETAG DIRECT LINK AD
+    const MONETAG_DIRECT_LINK = "https://omg10.com/4/11772560";
+
     const ACTIVE_MODELS = ['gemini-3.6-flash', 'gemini-3.5-flash', 'gemini-3.5-flash-lite'];
 
     let activeEngineMode = 'scanner';
@@ -1238,6 +1264,7 @@
     let isReviewMode = false;
     let activeQuizTopic = "General Test";
     let activePlayMode = 'instant'; 
+    let pendingGenerationMode = 'scanner';
 
     let perQuestionLimit = 30;
     let qTimerSeconds = 30;
@@ -1485,7 +1512,52 @@
       }
     }
 
-    // 🌟 COMPLETE STANDALONE HTML GENERATOR (100% BUG-FREE & AD-FREE)
+    // 🎁 USER-FRIENDLY AD UNLOCK LOGIC
+    function requestAdUnlockAndGenerate(mode) {
+      // Validate inputs before showing ad popup
+      if (mode === 'topic') {
+        const topicIn = document.getElementById('directTopicInput');
+        const tVal = (topicIn?.value || '').trim();
+        if (!tVal) {
+          alert('⚠️ कृपया टॉपिक या चैप्टर का नाम दर्ज करें!');
+          topicIn?.focus();
+          return;
+        }
+      } else {
+        const topicInput = document.getElementById('quizTopicInput');
+        const tVal = (topicInput?.value || '').trim();
+        if (!tVal) {
+          alert('⚠️ कृपया क्विज़/चैप्टर का नाम दर्ज करें!\nबिना नाम के क्विज़ नहीं बन सकता।');
+          topicInput?.focus();
+          return;
+        }
+        const pastedText = (document.getElementById('pastedTextInput')?.value || '').trim();
+        if ((!payloadItems || payloadItems.length === 0) && !pastedText) {
+          return alert('कृपया पहले किताब के पन्नों की फ़ोटो खींचें, PDF चुनें या टेक्स्ट पेस्ट करें!');
+        }
+      }
+
+      pendingGenerationMode = mode;
+      document.getElementById('adUnlockModal').style.display = 'flex';
+    }
+
+    function closeAdUnlockModal() {
+      document.getElementById('adUnlockModal').style.display = 'none';
+    }
+
+    function confirmUnlockAndGenerate() {
+      closeAdUnlockModal();
+
+      // Open Monetag direct link in Chrome/browser
+      try {
+        window.open(MONETAG_DIRECT_LINK, '_blank');
+      } catch (e) {}
+
+      // Immediately start generation in the background!
+      startGeneration(pendingGenerationMode);
+    }
+
+    // 🌟 COMPLETE STANDALONE HTML GENERATOR
     function generatePareekshaKendraHtmlString(questions) {
       const formattedRawData = questions.map((q) => {
         let correctIdx = q.answer;
@@ -1561,7 +1633,7 @@
     .opt-tag { width: 26px; height: 26px; border-radius: 50%; background: rgba(0, 0, 0, 0.06); display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 800; flex-shrink: 0; }
     .expl-box { margin-top: 14px; padding: 14px; background: var(--orange-light); border-left: 4px solid var(--accent-gold); border-radius: 8px; font-size: 0.85rem; line-height: 1.55; display: none; }
     .nav-btns { display: flex; gap: 8px; margin-top: 18px; }
-    .nav-btn { flex: 1; padding: 13px; border-radius: 12px; border: 1px solid var(--card-border); background: var(--opt-bg); color: var(--text-main); cursor: pointer; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .nav-btn { flex: 1; padding: 13px; border-radius: 12px; border: 1.5px solid var(--card-border); background: var(--opt-bg); color: var(--text-main); cursor: pointer; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 5px; }
     .score-hero-card { background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 24px; padding: 28px 18px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); }
     .score-trophy-img { font-size: 46px; margin-bottom: 6px; }
     .score-topic-title { font-family: 'Outfit', sans-serif; font-size: 1.55rem; font-weight: 900; color: var(--text-main); margin-bottom: 2px; }
@@ -1775,7 +1847,7 @@
 
       const container = document.getElementById('optionsContainer');
       container.innerHTML = '';
-      const letters = ['A', 'B', 'C', 'D'];
+     const letters = ['A', 'B', 'C', 'D'];
       const selected = userAnswers[currentIndex];
       const hasAnswered = (selected !== null && selected !== undefined);
 
@@ -1799,7 +1871,6 @@
           if (chosenMode === 'instant') {
             if (!hasAnswered) {
               userAnswers[currentIndex] = idx;
-              if (navigator.vibrate) navigator.vibrate(idx === q.answer ? 20 : [40, 40]);
               renderQuestion();
             }
           } else {
@@ -1974,6 +2045,11 @@
 
     function triggerDirectDownload() {
       if (!quizData || quizData.length === 0) return alert('कोई सवाल उपलब्ध नहीं है!');
+
+      // 💰 Monetag Direct Link Ad on Download Button
+      try {
+        window.open(MONETAG_DIRECT_LINK, '_blank');
+      } catch (e) {}
 
       const btn = document.getElementById('directDownloadBtn');
       const originalText = btn ? btn.innerHTML : '';
@@ -2280,11 +2356,13 @@
     }
 
     function retakeFullTestApp() {
+      clearInterval(qTimerInterval);
       document.getElementById('scorecardView').style.display = 'none';
       showActionHub();
     }
 
     function backToScanner() {
+      clearInterval(qTimerInterval);
       document.getElementById('actionHubView').style.display = 'none';
       document.getElementById('scorecardView').style.display = 'none';
       document.getElementById('quizView').style.display = 'none';
@@ -2348,7 +2426,7 @@
         prompt = `You are an expert exam question creator. ${quantityInstruction} on topic: "${activeQuizTopic}" for exam: "${targetExam}".
 CRITICAL REQUIREMENT: For every single question, you MUST prefix the question text with a realistic exam tag in brackets, for example: "[SSC CGL 2024, 18 Sept Shift-1]" or "[RRB NTPC 2022 Stage-1]".
 ${languageRule}
-Strictly return ONLY a valid JSON array of objects.
+Strictly return ONLY a valid JSON array of objects. Do not write markdown backticks or commentary.
 Format:
 [
   {
@@ -2364,7 +2442,7 @@ Note: answer must be 0 for A, 1 for B, 2 for C, 3 for D.`;
         const topicInput = document.getElementById('quizTopicInput');
         activeQuizTopic = (topicInput?.value || '').trim();
         if (!activeQuizTopic) {
-          alert('⚠️ कृपया क्विज़/चैप्टर का नाम दर्ज करें!');
+          alert('⚠️ कृपया क्विज़/चैप्टर का नाम दर्ज करें!\nबिना नाम के क्विज़ नहीं बन सकता।');
           topicInput?.focus();
           return;
         }
